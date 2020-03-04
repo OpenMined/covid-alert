@@ -391,6 +391,11 @@ base64-js@^1.3.0:
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.3.1.tgz#58ece8cb75dd07e71ed08c736abc5fac4dbf8df1"
   integrity sha512-mLQ4i2QO1ytvGWFWmcngKO//JXAQueZvwEKtjgQFM4jIK0kU+ytMfplL8j+n5mspOfjHwoAg+9yhb7BwAHm36g==
 
+bigint-crypto-utils@^2.4.2:
+  version "2.4.7"
+  resolved "https://registry.yarnpkg.com/bigint-crypto-utils/-/bigint-crypto-utils-2.4.7.tgz#42440aec8b9ef2ff17f1b322656e751cd172de78"
+  integrity sha512-xncjGjacUIBKvUTPssNlXujY3kSyu9tM5g3j1sTG8lnj6E6iPnMG8sctB7F4WKhGyTdPD1KqYD5V8RH1c49pwA==
+
 bignumber.js@^7.0.0:
   version "7.2.1"
   resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-7.2.1.tgz#80c048759d826800807c4bfd521e50edbba57a5f"
@@ -1772,6 +1777,13 @@ p-try@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/p-try/-/p-try-2.2.0.tgz#cb2868540e313d61de58fafbe35ce9004d5540e6"
   integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
+
+paillier-bigint@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/paillier-bigint/-/paillier-bigint-2.0.0.tgz#6b95abd4523b16346dc4b178c857e532201246cf"
+  integrity sha512-i3Uzb4FVDhYFz1J+Hyl5dem0c30buQ2DW7C7i/i4+8ANhtcgZYT9Zv0aeobgGudp+aYa0ZzLizDyrib1OZT4aA==
+  dependencies:
+    bigint-crypto-utils "^2.4.2"
 
 parent-module@^1.0.0:
   version "1.0.1"
