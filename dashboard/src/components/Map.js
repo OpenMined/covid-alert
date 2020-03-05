@@ -1,83 +1,71 @@
-import React, { Component } from 'react';
-import { Box } from '@chakra-ui/core';
-import mapboxgl from 'mapbox-gl';
+import React, { useState, useRef } from 'react';
+import ReactMapGL, { Marker } from 'react-map-gl';
+import Geocoder from 'react-map-gl-geocoder';
+import { Box, theme, Button } from '@chakra-ui/core';
 
-mapboxgl.accessToken =
-  'pk.eyJ1IjoiY2VyZWFsbGFyY2VueSIsImEiOiJFQVg0NUNJIn0.uvV8uVFFhArIZdu9fVZO5Q';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
-// TODO: Do proper styles for map
-// TODO: Add address and business search box
-// TODO: Add ability to drop pin
-// TODO: Report coords on drop of a pin
-// TODO: List all pins on the map
+const MARKER_SIZE = 12;
 
-export default class Map extends Component {
-  constructor(props) {
-    super(props);
+const Location = ({ lng, lat }) => (
+  <Marker longitude={lng} latitude={lat}>
+    <svg
+      height={MARKER_SIZE}
+      viewBox={`0 0 ${MARKER_SIZE} ${MARKER_SIZE}`}
+      style={{
+        fill: theme.colors.red['500'],
+        stroke: 'none'
+      }}
+    >
+      <circle cx={MARKER_SIZE / 2} cy={MARKER_SIZE / 2} r={MARKER_SIZE / 2} />
+    </svg>
+  </Marker>
+);
 
-    this.state = {
-      lng: 5,
-      lat: 34,
-      zoom: 2
-    };
-  }
+export default ({ locations, reportCoordinates, ...props }) => {
+  const MAPBOX_TOKEN =
+    'pk.eyJ1IjoiY2VyZWFsbGFyY2VueSIsImEiOiJFQVg0NUNJIn0.uvV8uVFFhArIZdu9fVZO5Q';
+  const [viewport, setViewport] = useState({
+    longitude: 0,
+    latitude: 0,
+    zoom: 1
+  });
+  const mapRef = useRef(null);
 
-  componentDidMount() {
-    const map = new mapboxgl.Map({
-      container: this.mapContainer,
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [this.state.lng, this.state.lat],
-      zoom: this.state.zoom
-    });
-
-    map.on('move', () => {
-      const { lng, lat } = map.getCenter();
-      const zoom = map.getZoom();
-
-      this.props.reportCoordinates({ lng, lat });
-
-      this.setState({
-        lng,
-        lat,
-        zoom
-      });
-    });
-  }
-
-  render() {
-    const { lng, lat, zoom } = this.state;
-
-    return (
-      <Box position="relative" mt={4} height={600}>
-        <div
-          style={{
-            display: 'inline-block',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            margin: '12px',
-            backgroundColor: '#404040',
-            color: '#ffffff',
-            zIndex: 10,
-            padding: '6px',
-            fontWeight: 'bold'
-          }}
-        >
-          Longitude: {lng.toFixed(4)} | Latitude: {lat.toFixed(4)} | Zoom:{' '}
-          {zoom.toFixed(4)}
-        </div>
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            left: 0,
-            bottom: 0,
-            zIndex: 1
-          }}
-          ref={el => (this.mapContainer = el)}
+  return (
+    <Box position="relative" mt={4} {...props}>
+      <ReactMapGL
+        {...viewport}
+        onViewportChange={setViewport}
+        width="100%"
+        height="100%"
+        mapStyle="mapbox://styles/mapbox/dark-v10"
+        mapboxApiAccessToken={MAPBOX_TOKEN}
+        ref={mapRef}
+      >
+        <Geocoder
+          mapRef={mapRef}
+          onViewportChange={setViewport}
+          mapboxApiAccessToken={MAPBOX_TOKEN}
         />
-      </Box>
-    );
-  }
-}
+        {locations.map(({ lng, lat }) => (
+          <Location lng={lng} lat={lat} key={`marker-${lng},${lat}`} />
+        ))}
+        <Box position="absolute" right="10px" bottom="30px">
+          <Button
+            variantColor="blue"
+            onClick={() =>
+              reportCoordinates({
+                lat: viewport.latitude,
+                lng: viewport.longitude
+              })
+            }
+          >
+            Add Location
+          </Button>
+        </Box>
+      </ReactMapGL>
+    </Box>
+  );
+};

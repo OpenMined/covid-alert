@@ -12,10 +12,11 @@
     "dayjs": "^1.8.21",
     "emotion-theming": "^10.0.27",
     "firebase": "^7.9.3",
-    "mapbox-gl": "^1.8.1",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-hook-form": "^4.10.1",
+    "react-map-gl": "^5.2.3",
+    "react-map-gl-geocoder": "^2.0.11",
     "react-scripts": "3.4.0"
   },
   "scripts": {

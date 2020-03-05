@@ -64,7 +64,7 @@ export default () => {
   return (
     <>
       {user && !isLoading && <Header user={user} doLogout={doLogout} />}
-      <Box mx="auto" width={['100%', null, 720, 960, 1200]} px={3}>
+      <Box mx="auto" width={['100%', null, 720, 960, 1200]} px={3} pb={6}>
         {isLoading && <Loader />}
         {!user && !isLoading && (
           <Box pt={[3, null, 8]} width={[null, null, '75%', '50%']} mx="auto">

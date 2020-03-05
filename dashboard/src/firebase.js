@@ -1,4 +1,6 @@
+// TODO: Security rules
 // TODO: Restructure as a Firebase factory class
+// TODO: Redo subcollection read and writes
 
 import { useState, useEffect } from 'react';
 import * as firebase from 'firebase/app';
@@ -38,23 +40,21 @@ export const useCurrentUser = () => {
   return authState;
 };
 
-export const login = (email, password, onSuccess, onError) => {
+export const login = (email, password, onSuccess, onError) =>
   firebase
     .auth()
     .signInWithEmailAndPassword(email, password)
     .then(onSuccess)
     .catch(error => onError(error));
-};
 
-export const logout = (onSuccess, onError) => {
+export const logout = (onSuccess, onError) =>
   firebase
     .auth()
     .signOut()
     .then(onSuccess)
     .catch(error => onError(error));
-};
 
-export const createDocument = (collection, values, onSuccess, onError) => {
+export const createDocument = (collection, values, onSuccess, onError) =>
   firebase
     .firestore()
     .collection(collection)
@@ -64,23 +64,28 @@ export const createDocument = (collection, values, onSuccess, onError) => {
     })
     .then(doc => onSuccess(doc))
     .catch(error => onError(error));
-};
 
-// TODO: Come back to this later
-export const updateDocument = (collection, id, values, onSuccess, onError) => {
+export const createSubDocument = (
+  collection,
+  id,
+  subcollection,
+  values,
+  onSuccess,
+  onError
+) =>
   firebase
     .firestore()
     .collection(collection)
     .doc(id)
-    .update({
-      updated_at: firebase.firestore.FieldValue.serverTimestamp(),
+    .collection(subcollection)
+    .add({
+      created_at: firebase.firestore.FieldValue.serverTimestamp(),
       ...values
     })
     .then(doc => onSuccess(doc))
     .catch(error => onError(error));
-};
 
-export const getCollection = (collection, where, onSuccess, onError) => {
+export const getCollection = (collection, where, onSuccess, onError) =>
   firebase
     .firestore()
     .collection(collection)
@@ -99,4 +104,30 @@ export const getCollection = (collection, where, onSuccess, onError) => {
       onSuccess(docs);
     })
     .catch(error => onError(error));
-};
+
+export const getSubCollection = (
+  collection,
+  id,
+  subcollection,
+  onSuccess,
+  onError
+) =>
+  firebase
+    .firestore()
+    .collection(collection)
+    .doc(id)
+    .collection(subcollection)
+    .get()
+    .then(snapshot => {
+      const docs = [];
+
+      snapshot.forEach(doc => {
+        docs.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+
+      onSuccess(docs);
+    })
+    .catch(error => onError(error));

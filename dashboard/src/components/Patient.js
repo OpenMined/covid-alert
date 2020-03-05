@@ -2,12 +2,12 @@ import React from 'react';
 import dayjs from 'dayjs';
 import { Box, Heading, Text } from '@chakra-ui/core';
 
-export default ({ patient }) => {
+export default ({ patient, ...props }) => {
   const dob = dayjs(patient.dob.toDate());
   const years = dayjs().diff(dob, 'year');
 
   return (
-    <Box>
+    <Box {...props}>
       <Heading as="h2" size="lg">
         Patient Information
       </Heading>
