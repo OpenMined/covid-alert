@@ -1,4 +1,3 @@
-// TODO: Security rules
 // TODO: Restructure as a Firebase factory class
 // TODO: Redo subcollection read and writes
 
