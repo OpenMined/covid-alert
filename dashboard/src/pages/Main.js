@@ -1,66 +1,86 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import {
-  FormErrorMessage,
-  FormLabel,
-  FormControl,
-  Input,
-  Button
+  useDisclosure,
+  Flex,
+  Select,
+  Text,
+  Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody
 } from '@chakra-ui/core';
+import CreatePatientForm from '../components/CreatePatientForm';
+import Map from '../components/Map';
+import Patient from '../components/Patient';
+import LocationsList from '../components/LocationsList';
+import { createDocument } from '../firebase';
+
+// TODO: Add UI for patient information
+// TODO: Add UI for location list
+// TODO: Populate list of my patients from Firebase
+// TODO: Populate list of locations from Firebase
+// TODO: RESPONSIVE EVERYTHING
+
+const CreatePatientModal = ({ isOpen, onClose }) => (
+  <Modal isOpen={isOpen} onClose={onClose}>
+    <ModalOverlay />
+    <ModalContent>
+      <ModalHeader>Add Patient</ModalHeader>
+      <ModalCloseButton />
+      <ModalBody mb={4}>
+        <CreatePatientForm
+          doPatientCreate={values =>
+            createDocument(
+              'patients',
+              values,
+              // TODO: Handle this?
+              doc => console.log(doc),
+              // TODO: Do toast here
+              error => console.log(error)
+            )
+          }
+        />
+      </ModalBody>
+    </ModalContent>
+  </Modal>
+);
 
 export default () => {
   const [currentPatient, setCurrentPatient] = useState(null);
   const [patients, setPatients] = useState([]);
+  const [currentPatientLocations, setCurrentPatientLocations] = useState([]);
 
-  const { handleSubmit, errors, register, formState } = useForm();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const reportCoordinates = ({ lng, lat }) => {
+    console.log('Got the coordinates from the map!', lng, lat);
+  };
 
   return (
-    <div>
-      <form
-        onSubmit={handleSubmit(({ email, password }) => {
-          console.log(email, password);
-        })}
-      >
-        <FormControl isInvalid={errors.email}>
-          <FormLabel htmlFor="email">Email address</FormLabel>
-          <Input
-            name="email"
-            placeholder="me@example.com"
-            ref={register({
-              required: 'Email is required',
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                message: 'Invalid email address'
-              }
-            })}
-          />
-          <FormErrorMessage>
-            {errors.email && errors.email.message}
-          </FormErrorMessage>
-        </FormControl>
-        <FormControl isInvalid={errors.password}>
-          <FormLabel htmlFor="password">Password</FormLabel>
-          <Input
-            name="password"
-            type="password"
-            placeholder="password"
-            ref={register({
-              required: 'Password is required'
-            })}
-          />
-          <FormErrorMessage>
-            {errors.password && errors.password.message}
-          </FormErrorMessage>
-        </FormControl>
-        <Button
-          mt={4}
-          variantColor="blue"
-          isLoading={formState.isSubmitting}
-          type="submit"
+    <>
+      <Flex justifyContent="space-between" alignItems="center">
+        <Select
+          placeholder="Select a patient"
+          mr={4}
+          onChange={e => setCurrentPatient(e.target.value)}
         >
-          Submit
-        </Button>
-      </form>
-    </div>
+          <option value="option1">Option 1</option>
+        </Select>
+        <Text mr={4}>or</Text>
+        <Button onClick={onOpen}>Add Patient</Button>
+      </Flex>
+      <Map
+        reportCoordinates={reportCoordinates}
+        locations={currentPatientLocations}
+      />
+      {/* <Flex>
+        <Patient patient={currentPatient} />
+        <LocationsList locations={currentPatientLocations} />
+      </Flex> */}
+      <CreatePatientModal isOpen={isOpen} onClose={onClose} />
+    </>
   );
 };

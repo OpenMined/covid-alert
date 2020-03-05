@@ -1,7 +1,10 @@
+// TODO: Restructure as a Firebase factory class
+
 import { useState, useEffect } from 'react';
 import * as firebase from 'firebase/app';
 import 'firebase/analytics';
 import 'firebase/auth';
+import 'firebase/firestore';
 
 const config = {
   apiKey: 'AIzaSyCefPrb9I_AGrtPxKgAVWaYGf9GqyfAHYw',
@@ -48,5 +51,14 @@ export const logout = (onSuccess, onError) => {
     .auth()
     .signOut()
     .then(onSuccess)
+    .catch(error => onError(error));
+};
+
+export const createDocument = (collection, values, onSuccess, onError) => {
+  firebase
+    .firestore()
+    .collection(collection)
+    .add(values)
+    .then(doc => onSuccess(doc))
     .catch(error => onError(error));
 };

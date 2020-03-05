@@ -11,6 +11,7 @@
     "@testing-library/user-event": "^7.1.2",
     "emotion-theming": "^10.0.27",
     "firebase": "^7.9.3",
+    "mapbox-gl": "^1.8.1",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-hook-form": "^4.10.1",
