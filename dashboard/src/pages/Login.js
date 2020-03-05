@@ -41,7 +41,7 @@ export default ({ doLogin }) => {
           <Input
             name="password"
             type="password"
-            placeholder="password"
+            placeholder="Password"
             ref={register({
               required: 'Password is required'
             })}

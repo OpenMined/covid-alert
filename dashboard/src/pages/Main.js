@@ -91,8 +91,6 @@ export default ({ user, toast, toastProps }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const reportCoordinates = values => {
-    values.rep_id = user.uid;
-
     createSubDocument(
       'patients',
       currentPatient.id,
@@ -129,21 +127,25 @@ export default ({ user, toast, toastProps }) => {
         justifyContent="space-between"
         alignItems="center"
       >
-        <Select
-          placeholder="Select a patient"
-          mr={[0, null, 4]}
-          value={currentPatient ? currentPatient.id : ''}
-          onChange={e => setPatientById(e.target.value)}
-        >
-          {patients.map(({ id, first_name, last_name }) => (
-            <option value={id} key={id}>
-              {first_name} {last_name}
-            </option>
-          ))}
-        </Select>
-        <Text display={['none', null, 'block']} mr={4}>
-          or
-        </Text>
+        {patients.length > 0 && (
+          <Select
+            placeholder="Select a patient"
+            mr={[0, null, 4]}
+            value={currentPatient ? currentPatient.id : ''}
+            onChange={e => setPatientById(e.target.value)}
+          >
+            {patients.map(({ id, first_name, last_name }) => (
+              <option value={id} key={id}>
+                {first_name} {last_name}
+              </option>
+            ))}
+          </Select>
+        )}
+        {patients.length > 0 && (
+          <Text display={['none', null, 'block']} mr={4}>
+            or
+          </Text>
+        )}
         <Button
           onClick={onOpen}
           mt={[4, null, 0]}
@@ -179,11 +181,7 @@ export default ({ user, toast, toastProps }) => {
             ...toastProps
           });
 
-          getPatients().then(() => {
-            if (patients.length === 1) {
-              setPatientById(patients[0].id);
-            }
-          });
+          getPatients();
         }}
         onError={error =>
           toast({
