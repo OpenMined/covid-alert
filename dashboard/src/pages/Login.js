@@ -1,7 +1,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import {
-  Box,
+  Stack,
   FormErrorMessage,
   FormLabel,
   FormControl,
@@ -12,15 +12,13 @@ import {
 export default ({ doLogin }) => {
   const { handleSubmit, errors, register, formState } = useForm();
 
-  const onSubmit = ({ email, password }) => {
-    console.log(email, password);
-
-    doLogin(email, password);
-  };
-
   return (
-    <Box>
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <form
+      onSubmit={handleSubmit(({ email, password }) => {
+        doLogin(email, password);
+      })}
+    >
+      <Stack spacing={4}>
         <FormControl isInvalid={errors.email}>
           <FormLabel htmlFor="email">Email address</FormLabel>
           <Input
@@ -43,7 +41,7 @@ export default ({ doLogin }) => {
           <Input
             name="password"
             type="password"
-            placeholder="password"
+            placeholder="Password"
             ref={register({
               required: 'Password is required'
             })}
@@ -53,14 +51,13 @@ export default ({ doLogin }) => {
           </FormErrorMessage>
         </FormControl>
         <Button
-          mt={4}
-          variantColor="teal"
+          variantColor="blue"
           isLoading={formState.isSubmitting}
           type="submit"
         >
           Submit
         </Button>
-      </form>
-    </Box>
+      </Stack>
+    </form>
   );
 };
