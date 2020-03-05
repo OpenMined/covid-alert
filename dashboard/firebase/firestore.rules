@@ -14,8 +14,7 @@ service cloud.firestore {
       }
 
       match /locations/{locationId} {
-        allow read: if isSignedIn() && getPatientData().rep_id == request.auth.uid
-        allow create: if isSignedIn() && getPatientData().rep_id == request.auth.uid;
+        allow read, create: if isSignedIn() && getPatientData().rep_id == request.auth.uid
       }
     }
   }
