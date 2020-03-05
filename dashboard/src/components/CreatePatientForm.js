@@ -11,7 +11,7 @@ import {
 
 import firebase from '../firebase';
 
-export default ({ doPatientCreate }) => {
+export default ({ user, doPatientCreate }) => {
   const { handleSubmit, errors, register, formState } = useForm();
 
   return (
@@ -22,6 +22,8 @@ export default ({ doPatientCreate }) => {
         values.dob = firebase.firestore.Timestamp.fromDate(
           new Date(splitDOB[2], splitDOB[1] - 1, splitDOB[0])
         );
+        values.locations = [];
+        values.rep_id = user.uid;
 
         doPatientCreate(values);
       })}

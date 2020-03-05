@@ -48,7 +48,7 @@ export default class Map extends Component {
     const { lng, lat, zoom } = this.state;
 
     return (
-      <Box position="relative" mt={4}>
+      <Box position="relative" mt={4} height={600}>
         <div
           style={{
             display: 'inline-block',

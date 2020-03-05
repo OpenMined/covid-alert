@@ -71,7 +71,9 @@ export default () => {
             <Login doLogin={doLogin} />
           </Box>
         )}
-        {user && !isLoading && <Main />}
+        {user && !isLoading && (
+          <Main user={user} toast={toast} toastProps={toastProps} />
+        )}
       </Box>
     </>
   );

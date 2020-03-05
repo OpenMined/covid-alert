@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   useDisclosure,
+  Box,
   Flex,
   Select,
   Text,
@@ -16,15 +17,13 @@ import CreatePatientForm from '../components/CreatePatientForm';
 import Map from '../components/Map';
 import Patient from '../components/Patient';
 import LocationsList from '../components/LocationsList';
-import { createDocument } from '../firebase';
+import { createDocument, getCollection } from '../firebase';
 
-// TODO: Add UI for patient information
 // TODO: Add UI for location list
-// TODO: Populate list of my patients from Firebase
 // TODO: Populate list of locations from Firebase
 // TODO: RESPONSIVE EVERYTHING
 
-const CreatePatientModal = ({ isOpen, onClose }) => (
+const CreatePatientModal = ({ isOpen, onClose, user, onSuccess, onError }) => (
   <Modal isOpen={isOpen} onClose={onClose}>
     <ModalOverlay />
     <ModalContent>
@@ -32,15 +31,9 @@ const CreatePatientModal = ({ isOpen, onClose }) => (
       <ModalCloseButton />
       <ModalBody mb={4}>
         <CreatePatientForm
+          user={user}
           doPatientCreate={values =>
-            createDocument(
-              'patients',
-              values,
-              // TODO: Handle this?
-              doc => console.log(doc),
-              // TODO: Do toast here
-              error => console.log(error)
-            )
+            createDocument('patients', values, onSuccess, onError)
           }
         />
       </ModalBody>
@@ -48,10 +41,29 @@ const CreatePatientModal = ({ isOpen, onClose }) => (
   </Modal>
 );
 
-export default () => {
+export default ({ user, toast, toastProps }) => {
   const [currentPatient, setCurrentPatient] = useState(null);
   const [patients, setPatients] = useState([]);
-  const [currentPatientLocations, setCurrentPatientLocations] = useState([]);
+
+  const getPatients = () => {
+    getCollection(
+      'patients',
+      ['rep_id', '==', user.uid],
+      patients => setPatients(patients),
+      error => {
+        toast({
+          title: 'Error with creating a patient',
+          description: error.message,
+          status: 'error',
+          ...toastProps
+        });
+      }
+    );
+  };
+
+  useEffect(() => {
+    getPatients();
+  }, []);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -65,22 +77,48 @@ export default () => {
         <Select
           placeholder="Select a patient"
           mr={4}
-          onChange={e => setCurrentPatient(e.target.value)}
+          onChange={e => {
+            setCurrentPatient(patients.filter(p => p.id === e.target.value)[0]);
+          }}
         >
-          <option value="option1">Option 1</option>
+          {patients.map(({ id, first_name, last_name }) => (
+            <option value={id} key={id}>
+              {first_name} {last_name}
+            </option>
+          ))}
         </Select>
         <Text mr={4}>or</Text>
         <Button onClick={onOpen}>Add Patient</Button>
       </Flex>
-      <Map
-        reportCoordinates={reportCoordinates}
-        locations={currentPatientLocations}
+      {currentPatient && (
+        <Box>
+          <Map
+            reportCoordinates={reportCoordinates}
+            locations={currentPatient.locations}
+          />
+          <Flex mt={4}>
+            <Patient patient={currentPatient} />
+            {/* <LocationsList locations={currentPatient.locations} /> */}
+          </Flex>
+        </Box>
+      )}
+      <CreatePatientModal
+        isOpen={isOpen}
+        onClose={onClose}
+        user={user}
+        onSuccess={() => {
+          onClose();
+          getPatients();
+        }}
+        onError={error =>
+          toast({
+            title: 'Error with creating a patient',
+            description: error.message,
+            status: 'error',
+            ...toastProps
+          })
+        }
       />
-      {/* <Flex>
-        <Patient patient={currentPatient} />
-        <LocationsList locations={currentPatientLocations} />
-      </Flex> */}
-      <CreatePatientModal isOpen={isOpen} onClose={onClose} />
     </>
   );
 };

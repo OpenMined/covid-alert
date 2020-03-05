@@ -58,7 +58,45 @@ export const createDocument = (collection, values, onSuccess, onError) => {
   firebase
     .firestore()
     .collection(collection)
-    .add(values)
+    .add({
+      created_at: firebase.firestore.FieldValue.serverTimestamp(),
+      ...values
+    })
     .then(doc => onSuccess(doc))
+    .catch(error => onError(error));
+};
+
+// TODO: Come back to this later
+export const updateDocument = (collection, id, values, onSuccess, onError) => {
+  firebase
+    .firestore()
+    .collection(collection)
+    .doc(id)
+    .update({
+      updated_at: firebase.firestore.FieldValue.serverTimestamp(),
+      ...values
+    })
+    .then(doc => onSuccess(doc))
+    .catch(error => onError(error));
+};
+
+export const getCollection = (collection, where, onSuccess, onError) => {
+  firebase
+    .firestore()
+    .collection(collection)
+    .where(...where)
+    .get()
+    .then(snapshot => {
+      const docs = [];
+
+      snapshot.forEach(doc => {
+        docs.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+
+      onSuccess(docs);
+    })
     .catch(error => onError(error));
 };
