@@ -123,6 +123,9 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
   //////////////// BEGIN CLIENT APP LOGIC ////////////////////////
   ////////////////////////////////////////////////////////////////////////
 
+  // (asynchronous) creation of a random private, public key pair for the Paillier cryptosystem
+  const {publicKey, privateKey} = await paillier.generateRandomKeys(3072);
+
   // Step 1 - get current location
   var lat = parseFloat(request.query.lat);
   var lon = parseFloat(request.query.lon);
