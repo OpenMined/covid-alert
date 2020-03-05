@@ -1,11 +1,11 @@
 import React from 'react';
 import { useToast, Box } from '@chakra-ui/core';
-import firebase, { login, logout } from './firebase';
-import useAuth from './hooks/useAuth';
 
+import { login, logout, useCurrentUser } from './firebase';
 import Loader from './components/Loader';
-import Login from './Login';
-import Main from './Main';
+import Header from './components/Header';
+import Login from './pages/Login';
+import Main from './pages/Main';
 
 export default () => {
   const toast = useToast();
@@ -59,13 +59,20 @@ export default () => {
     );
   };
 
-  const { isLoading, user } = useAuth(firebase.auth());
+  const { isLoading, user } = useCurrentUser();
 
   return (
-    <Box mx="auto" width={['100%']}>
-      {isLoading && <Loader />}
-      {!user && !isLoading && <Login doLogin={doLogin} />}
-      {user && !isLoading && <Main user={user} doLogout={doLogout} />}
-    </Box>
+    <>
+      {user && !isLoading && <Header user={user} doLogout={doLogout} />}
+      <Box mx="auto" width={['100%', null, 720, 960, 1200]} px={3}>
+        {isLoading && <Loader />}
+        {!user && !isLoading && (
+          <Box pt={[3, null, 8]} width={[null, null, '75%', '50%']} mx="auto">
+            <Login doLogin={doLogin} />
+          </Box>
+        )}
+        {user && !isLoading && <Main />}
+      </Box>
+    </>
   );
 };

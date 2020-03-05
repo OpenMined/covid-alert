@@ -34,7 +34,7 @@ export default ({ doLogin }) => {
           {errors.email && errors.email.message}
         </FormErrorMessage>
       </FormControl>
-      <FormControl isInvalid={errors.password}>
+      <FormControl mt={4} isInvalid={errors.password}>
         <FormLabel htmlFor="password">Password</FormLabel>
         <Input
           name="password"
@@ -50,7 +50,7 @@ export default ({ doLogin }) => {
       </FormControl>
       <Button
         mt={4}
-        variantColor="teal"
+        variantColor="blue"
         isLoading={formState.isSubmitting}
         type="submit"
       >

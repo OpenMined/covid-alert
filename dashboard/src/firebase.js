@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import * as firebase from 'firebase/app';
 import 'firebase/analytics';
 import 'firebase/auth';
@@ -13,11 +14,26 @@ const config = {
   measurementId: 'G-46QNQHGWY9'
 };
 
-// Initialize Firebase
 firebase.initializeApp(config);
 firebase.analytics();
 
 export default firebase;
+
+export const useCurrentUser = () => {
+  const auth = firebase.auth();
+  const [authState, setState] = useState({
+    isLoading: true,
+    user: null
+  });
+
+  useEffect(() => {
+    return auth.onAuthStateChanged(authState =>
+      setState({ isLoading: false, user: authState })
+    );
+  }, [auth]);
+
+  return authState;
+};
 
 export const login = (email, password, onSuccess, onError) => {
   firebase
