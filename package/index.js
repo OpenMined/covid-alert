@@ -33,12 +33,18 @@ const gps2box = (lat, lng) => {
   const splitLat = lat.toString().split('.');
   const splitLng = lng.toString().split('.');
 
-  if (splitLat[1].length < outerPrecision + innerPrecision) {
-    splitLat[1] = splitLat[1].padEnd(outerPrecision + innerPrecision, '0');
+  if (splitLat[1].length < OUTER_BOX_PRECISION + INNER_BOX_PRECISION) {
+    splitLat[1] = splitLat[1].padEnd(
+      OUTER_BOX_PRECISION + INNER_BOX_PRECISION,
+      '0'
+    );
   }
 
-  if (splitLng[1].length < outerPrecision + innerPrecision) {
-    splitLng[1] = splitLng[1].padEnd(outerPrecision + innerPrecision, '0');
+  if (splitLng[1].length < OUTER_BOX_PRECISION + INNER_BOX_PRECISION) {
+    splitLng[1] = splitLng[1].padEnd(
+      OUTER_BOX_PRECISION + INNER_BOX_PRECISION,
+      '0'
+    );
   }
 
   const outerBoxLat = parseFloat(

@@ -13,6 +13,7 @@ admin.initializeApp({
 const db = admin.firestore();
 
 exports.performSectorMatch = functions.https.onRequest((req, res) => {
+  console.log(gps2box(10.12987334, -40.12987387));
   const { sectorKey } = JSON.parse(req.body);
 
   db.collection('locations')
