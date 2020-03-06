@@ -7,40 +7,9 @@ const OUTER_BOX_PRECISION = 2;
 // The number of rows and columns in a grid
 const NUM_ENTRIES = Math.pow(10, INNER_BOX_PRECISION - OUTER_BOX_PRECISION);
 
-export const gps2box = (lat, lng, innerBoxPrecision, outerBoxPrecision) => {
-  const splitLat = lat.toString().split('.');
-  const splitLng = lng.toString().split('.');
-
-  if (splitLat[1].length < outerPrecision + innerPrecision) {
-    splitLat[1] = splitLat[1].padEnd(outerPrecision + innerPrecision, '0');
-  }
-
-  if (splitLng[1].length < outerPrecision + innerPrecision) {
-    splitLng[1] = splitLng[1].padEnd(outerPrecision + innerPrecision, '0');
-  }
-
-  const outerBoxLat = parseFloat(
-    `${splitLat[0]}.${splitLat[1].substring(0, outerBoxPrecision)}`
-  );
-  const outerBoxLng = parseFloat(
-    `${splitLng[0]}.${splitLng[1].substring(0, outerBoxPrecision)}`
-  );
-
-  const sectorKey = `${outerBoxLat.toString()}:${outerBoxLng.toString()}`;
-
-  const row = parseInt(
-    splitLat[1].substring(outerBoxPrecision, innerBoxPrecision),
-    10
-  );
-  const col = parseInt(
-    splitLng[1].substring(outerBoxPrecision, innerBoxPrecision),
-    10
-  );
-
-  return { sectorKey, row, col };
-};
-
-export const makeLocationGrid = (r, c) => {
+// Make a grid of 0's with a width and height of NUM_ENTRIES
+// If an "r" and "c" value are provided, set it to 1
+const makeLocationGrid = (r, c) => {
   const grid = [];
 
   for (let i = 0; i < NUM_ENTRIES; i++) {
@@ -59,3 +28,40 @@ export const makeLocationGrid = (r, c) => {
 
   return grid;
 };
+
+const gps2box = (lat, lng) => {
+  const splitLat = lat.toString().split('.');
+  const splitLng = lng.toString().split('.');
+
+  if (splitLat[1].length < outerPrecision + innerPrecision) {
+    splitLat[1] = splitLat[1].padEnd(outerPrecision + innerPrecision, '0');
+  }
+
+  if (splitLng[1].length < outerPrecision + innerPrecision) {
+    splitLng[1] = splitLng[1].padEnd(outerPrecision + innerPrecision, '0');
+  }
+
+  const outerBoxLat = parseFloat(
+    `${splitLat[0]}.${splitLat[1].substring(0, OUTER_BOX_PRECISION)}`
+  );
+  const outerBoxLng = parseFloat(
+    `${splitLng[0]}.${splitLng[1].substring(0, OUTER_BOX_PRECISION)}`
+  );
+
+  const sectorKey = `${outerBoxLat.toString()}:${outerBoxLng.toString()}`;
+
+  const row = parseInt(
+    splitLat[1].substring(OUTER_BOX_PRECISION, INNER_BOX_PRECISION),
+    10
+  );
+  const col = parseInt(
+    splitLng[1].substring(OUTER_BOX_PRECISION, INNER_BOX_PRECISION),
+    10
+  );
+
+  const gridTensor = makeLocationGrid(row, col);
+
+  return { sectorKey, gridTensor };
+};
+
+export default gps2box;
