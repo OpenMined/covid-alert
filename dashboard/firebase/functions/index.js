@@ -1,6 +1,7 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const paillier = require('paillier-bigint');
+const gpsSectorGrid = require('gps-sector-grid');
 
 const serviceAccount = require('./coronavirus-mapper-firebase-adminsdk-i6ree-699f4198bb.json');
 
@@ -12,6 +13,7 @@ admin.initializeApp({
 const db = admin.firestore();
 
 exports.performSectorMatch = functions.https.onRequest((req, res) => {
+  console.log(gpsSectorGrid);
   const { sectorKey } = JSON.parse(req.body);
 
   db.collection('locations')
