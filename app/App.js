@@ -26,19 +26,27 @@ function generateGridTensor(lat, long) {
   const splitLat = lat.toString().split('.');
   const splitLong = long.toString().split('.');
 
+  if (splitLat[1].length < outerPrecision + innerPrecision) {
+    splitLat[1] = splitLat[1].padEnd(outerPrecision + innerPrecision, '0');
+  }
+
+  if (splitLong[1].length < outerPrecision + innerPrecision) {
+    splitLong[1] = splitLong[1].padEnd(outerPrecision + innerPrecision, '0');
+  }
+
   const outerBoxLat = parseFloat(
-    splitLat[0] + splitLat[1].substring(0, outerPrecision),
+    `${splitLat[0]}.${splitLat[1].substring(0, outerPrecision)}`,
   );
   const outerBoxLong = parseFloat(
-    splitLong[0] + splitLong[1].substring(0, outerPrecision),
+    `${splitLong[0]}.${splitLong[1].substring(0, outerPrecision)}`,
   );
 
   const row = parseInt(
-    splitLat[1].substring(innerPrecision, outerPrecision),
+    splitLat[1].substring(outerPrecision, outerPrecision + innerPrecision),
     10,
   );
   const col = parseInt(
-    splitLong[1].substring(innerPrecision, outerPrecision),
+    splitLong[1].substring(outerPrecision, outerPrecision + innerPrecision),
     10,
   );
 
