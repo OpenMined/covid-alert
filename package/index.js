@@ -1,5 +1,5 @@
 // This adjusts the precision with which someone can identify how close they are to a CV patient
-const INNER_BOX_PRECISION = 4;
+const INNER_BOX_PRECISION = 3;
 
 // This adjusts the precision that the server knows of a user's location
 const OUTER_BOX_PRECISION = 2;

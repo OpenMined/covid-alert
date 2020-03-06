@@ -13,14 +13,13 @@ admin.initializeApp({
 const db = admin.firestore();
 
 exports.performSectorMatch = functions.https.onRequest((req, res) => {
-  console.log(gps2box(10.12987334, -40.12987387));
-  const { sectorKey } = JSON.parse(req.body);
+  const { sectorKey } = req.body;
 
-  db.collection('locations')
+  db.collectionGroup('locations')
     .where('sector_key', '==', sectorKey)
     .get()
     .then(snapshot => {
-      if (snapshot.length >= 1) {
+      if (snapshot.size >= 1) {
         return res.send(JSON.stringify({ matches: true }));
       }
 
@@ -28,26 +27,96 @@ exports.performSectorMatch = functions.https.onRequest((req, res) => {
     })
     .catch(error => {
       console.log(`Could not perform lookup on sector ${sectorKey}`, error);
-    });
-});
-
-exports.performGridTensorComputation = functions.https.onRequest((req, res) => {
-  const { sectorKey, gridTensor, publicKey } = JSON.parse(req.body);
-
-  db.collection('locations')
-    .where('sector_key', '==', sectorKey)
-    .get()
-    .then(snapshot => {
-      if (snapshot.length >= 1) {
-        return res.send(JSON.stringify({ matches: true }));
-      }
 
       return res.send(JSON.stringify({ matches: false }));
-    })
-    .catch(error => {
-      console.log(`Could not perform lookup on sector ${sectorKey}`, error);
     });
 });
+
+exports.performGridTensorComputation = functions.https.onRequest(
+  async (req, res) => {
+    // const { sectorKey, gridTensor, publicKey } = req.body;
+
+    const sectorKey = 'hello';
+    const { publicKey, privateKey } = await paillier.generateRandomKeys(16);
+
+    const weakGridTensor = gps2box(33.77380000000002, -84.2961);
+
+    const loopGridTensor = (gridTensor, func) => {
+      const newGridTensor = [];
+
+      for (let i = 0; i < gridTensor.length; i++) {
+        const newGridTensorRow = [];
+
+        for (let j = 0; j < gridTensor[i].length; j++) {
+          newGridTensorRow.push(func(gridTensor[i][j], i, j));
+        }
+
+        newGridTensor.push(newGridTensorRow);
+      }
+
+      return newGridTensor;
+    };
+
+    const gridTensor = loopGridTensor(weakGridTensor.gridTensor, val =>
+      publicKey.encrypt(val)
+    );
+
+    console.log(gridTensor);
+
+    db.collectionGroup('locations')
+      .where('sector_key', '==', sectorKey)
+      .get()
+      .then(snapshot => {
+        if (snapshot.size >= 1) {
+          // An array for holding the resulting grid tensors of all multiplications on patientLocations, summed together
+          let eOverlapGridTensor;
+
+          // For each confirmed location in this sector
+          snapshot.forEach(doc => {
+            // Get the data for that location
+            const location = doc.data();
+
+            // Convert the patient's lat and lng to a gridTensor
+            const convertedLocation = gps2box(location.lat, location.lng);
+            const patientGridTensor = convertedLocation.gridTensor;
+
+            console.log(patientGridTensor.convertedLocation.gridTensor);
+
+            // Multiply that against the grid tensor from the user
+            const eMulVal = loopGridTensor(gridTensor, (v, i, j) =>
+              publicKey.multiply(gridTensor[i][j], patientGridTensor[i][j])
+            );
+
+            console.log(eMulVal);
+            // const eMulVal = publicKey.multiply(gridTensor, patientGridTensor);
+
+            // if (eOverlapGridTensor) {
+            //   // If eOverlapGridTensor already has a value, add it to the new eMulVal
+            //   eOverlapGridTensor = publicKey.addition(
+            //     eOverlapGridTensor,
+            //     eMulVal
+            //   );
+            // } else {
+            //   // If eOverlapGridTensor isn't set yet, set it to eMulVal
+            eOverlapGridTensor = eMulVal;
+            // }
+          });
+
+          console.log('FINAL', privateKey.decrypt(eOverlapGridTensor));
+
+          // Send the resulting tensor
+          return res.send(JSON.stringify({ result: eOverlapGridTensor }));
+        }
+
+        return res.send(JSON.stringify({ matches: false }));
+      })
+      .catch(error => {
+        console.log(`Could not perform lookup on sector ${sectorKey}`, error);
+
+        return res.send(JSON.stringify({ matches: false }));
+      });
+  }
+);
 
 const runClient = async (lat, lng) => {
   // Create a random public/private key pair for the Paillier cryptosystem
@@ -84,46 +153,4 @@ const runClient = async (lat, lng) => {
       console.log('THROW A PUSH NOTIFICATION TO GET OUT OF THE AREA');
     }
   }
-};
-
-const runServer = () => {
-  // Create fake data (we'll use real data input via a dashboard in the serverless endpoint)
-  const data = [];
-
-  // When the server receives a sectorKey
-  const onReceiveSectorKey = sectorKey => {
-    // If we have the sectorKey in our database
-    if (sectorKey in data) {
-      // Ask the user to send a grid tensor
-      console.log('REPLY WITH REQUEST FOR GRID TENSOR');
-    }
-  };
-
-  const onReceiveGridTensor = (sectorKey, gridTensor, publicKey) => {
-    // Get all patient locations in that sector
-    var patientLocations = data[sectorKey];
-
-    // An array for holding the resulting grid tensors of all multiplications on patientLocations, summed together
-    let eOverlapGridTensor;
-
-    // Multiply the grid tensor by all patient grid tensors
-    // Add the results of each multiplication to eOverlapGridTensor
-    for (let patient in patientLocations) {
-      // Convert the patient's lat and lng to a gridTensor
-      const { gridTensor } = gps2box(patient.lat, patient.lng);
-
-      // Multiply that against the grid tensor from the user
-      const eMulVal = publicKey.multiply(gridTensor, patientGridTensor);
-
-      if (eOverlapGridTensor) {
-        // If eOverlapGridTensor already has a value, add it to the new eMulVal
-        eOverlapGridTensor = publicKey.addition(eOverlapGridTensor, eMulVal);
-      } else {
-        // If eOverlapGridTensor isn't set yet, set it to eMulVal
-        eOverlapGridTensor = eMulVal;
-      }
-    }
-
-    console.log('REPLY WITH OVERLAPPING GRID TENSOR', eOverlapGridTensor);
-  };
 };
