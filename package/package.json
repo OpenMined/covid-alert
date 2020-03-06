@@ -1,6 +1,6 @@
 {
   "name": "gps-sector-grid",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Two functions for turning GPS coordinates into a sector and grid tensor",
   "main": "dist/index.js",
   "scripts": {
