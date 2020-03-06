@@ -1,0 +1,25 @@
+{
+  "name": "gps-sector-grid",
+  "version": "0.1.0",
+  "description": "Two functions for turning GPS coordinates into a sector and grid tensor",
+  "main": "index.js",
+  "scripts": {
+    "build": "rollup index.js --file dist/index.js --format umd --name \"gps-sector-grid\"",
+    "deploy": "yarn build && np",
+    "test": "echo \"Error: no test specified\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cereallarceny/coronavirus-mapper.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cereallarceny/coronavirus-mapper/issues"
+  },
+  "homepage": "https://github.com/cereallarceny/coronavirus-mapper#readme",
+  "devDependencies": {
+    "np": "^6.2.0",
+    "rollup": "^2.0.0"
+  }
+}

@@ -1,69 +1,53 @@
 const functions = require('firebase-functions');
+const admin = require('firebase-admin');
 const paillier = require('paillier-bigint');
 
-exports.helloWorld = functions.https.onRequest((request, response) => {
-  // This adjusts the precision with which someone can identify how close they are to a CV patient
-  const INNER_BOX_PRECISION = 4;
+const serviceAccount = require('./coronavirus-mapper-firebase-adminsdk-i6ree-699f4198bb.json');
 
-  // This adjusts the precision that the server knows of a user's location
-  const OUTER_BOX_PRECISION = 2;
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://coronavirus-mapper.firebaseio.com'
+});
 
-  // The number of rows and columns in a grid
-  const NUM_ENTRIES = Math.pow(10, INNER_BOX_PRECISION - OUTER_BOX_PRECISION);
+const db = admin.firestore();
 
-  const gps2box = (lat, lng, innerBoxPrecision, outerBoxPrecision) => {
-    const splitLat = lat.toString().split('.');
-    const splitLng = lng.toString().split('.');
+exports.performSectorMatch = functions.https.onRequest((req, res) => {
+  const { sectorKey } = JSON.parse(req.body);
 
-    if (splitLat[1].length < outerPrecision + innerPrecision) {
-      splitLat[1] = splitLat[1].padEnd(outerPrecision + innerPrecision, '0');
-    }
-
-    if (splitLng[1].length < outerPrecision + innerPrecision) {
-      splitLng[1] = splitLng[1].padEnd(outerPrecision + innerPrecision, '0');
-    }
-
-    const outerBoxLat = parseFloat(
-      `${splitLat[0]}.${splitLat[1].substring(0, outerBoxPrecision)}`
-    );
-    const outerBoxLng = parseFloat(
-      `${splitLng[0]}.${splitLng[1].substring(0, outerBoxPrecision)}`
-    );
-
-    const sectorKey = `${outerBoxLat.toString()}:${outerBoxLng.toString()}`;
-
-    const row = parseInt(
-      splitLat[1].substring(outerBoxPrecision, innerBoxPrecision),
-      10
-    );
-    const col = parseInt(
-      splitLng[1].substring(outerBoxPrecision, innerBoxPrecision),
-      10
-    );
-
-    return { sectorKey, row, col };
-  };
-
-  const makeLocationGrid = (r, c) => {
-    const grid = [];
-
-    for (let i = 0; i < NUM_ENTRIES; i++) {
-      const row = [];
-
-      for (let j = 0; j < NUM_ENTRIES; j++) {
-        row.push(0);
+  db.collection('locations')
+    .where('sector_key', '==', sectorKey)
+    .get()
+    .then(snapshot => {
+      if (snapshot.length >= 1) {
+        return res.send(JSON.stringify({ matches: true }));
       }
 
-      grid.push(row);
-    }
+      return res.send(JSON.stringify({ matches: false }));
+    })
+    .catch(error => {
+      console.log(`Could not perform lookup on sector ${sectorKey}`, error);
+    });
+});
 
-    if (r && c) {
-      grid[r][c] = 1;
-    }
+exports.performGridTensorComputation = functions.https.onRequest((req, res) => {
+  const { sectorKey, gridTensor, publicKey } = JSON.parse(req.body);
 
-    return grid;
-  };
+  db.collection('locations')
+    .where('sector_key', '==', sectorKey)
+    .get()
+    .then(snapshot => {
+      if (snapshot.length >= 1) {
+        return res.send(JSON.stringify({ matches: true }));
+      }
 
+      return res.send(JSON.stringify({ matches: false }));
+    })
+    .catch(error => {
+      console.log(`Could not perform lookup on sector ${sectorKey}`, error);
+    });
+});
+
+exports.helloWorld = functions.https.onRequest((request, response) => {
   const initFakeData = () => {
     // A fake location entry generator function
     const getEntry = id => ({
