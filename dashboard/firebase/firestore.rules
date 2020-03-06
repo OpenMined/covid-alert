@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth.uid != null;
+    }
+
+    match /patients/{patientId} {
+      allow read: if isSignedIn() && resource.data.rep_id == request.auth.uid
+      allow create: if isSignedIn();
+
+      function getPatientData() {
+        return get(/databases/$(database)/documents/patients/$(patientId)).data
+      }
+
+      match /locations/{locationId} {
+        allow read, create: if isSignedIn() && getPatientData().rep_id == request.auth.uid
+      }
+    }
+  }
+}
