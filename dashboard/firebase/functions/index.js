@@ -1,212 +1,211 @@
-const functions = require("firebase-functions");
-
-// import paillier
-const paillier = require("paillier-bigint");
-
-function gps2box(lat, lon, inner_box_precision, outer_box_precision) {
-  lat_str = lat.toString().split(".");
-  lon_str = lon.toString().split(".");
-
-  outer_box_lat = parseFloat(
-    lat_str[0] + "." + lat_str[1].substring(0, outer_box_precision)
-  );
-  outer_box_lon = parseFloat(
-    lon_str[0] + "." + lon_str[1].substring(0, outer_box_precision)
-  );
-
-  box_row = parseInt(
-    lat_str[1].substring(outer_box_precision, inner_box_precision)
-  );
-  box_col = parseInt(
-    lon_str[1].substring(outer_box_precision, inner_box_precision)
-  );
-
-  key = generateSectorKey(outer_box_lat, outer_box_lon);
-
-  return {
-    sector_key: key,
-    row: box_row,
-    col: box_col
-  };
-}
-
-function generateSectorKey(outer_box_lat, outer_box_lon) {
-  return outer_box_lat.toString() + ":" + outer_box_lon.toString();
-}
-
-function getEntry() {
-  entry = {
-    patient_id: "johndoe234",
-    latitude: 37.3761704 + Math.random() / 1000,
-    longitude: -122.0762373 + Math.random() / 1000,
-    timestamp: parseInt(1583357612000 + Math.random() * 10000),
-    user_id: "uk_worker_235"
-  };
-  return entry;
-}
-
-function makeSquareGridOfZeros(edge_size) {
-  grid = [];
-  var i, j;
-  for (i = 0; i < edge_size; i++) {
-    row = [];
-    for (j = 0; j < edge_size; j++) {
-      row.push(0);
-    }
-    grid.push(row);
-  }
-  return grid;
-}
+const functions = require('firebase-functions');
+const paillier = require('paillier-bigint');
 
 exports.helloWorld = functions.https.onRequest((request, response) => {
-  console.log(paillier);
+  // This adjusts the precision with which someone can identify how close they are to a CV patient
+  const INNER_BOX_PRECISION = 4;
 
-  // GLOBAL CONFIG (both the smartphone app and the server need to agree on this configuration)
-  var inner_box_precision = 4; // this adjusts the precision with which someone can identify how close they are to a CV patient
-  var outer_box_precision = 2; // this adjusts the precision that the server knows of a user's location
+  // This adjusts the precision that the server knows of a user's location
+  const OUTER_BOX_PRECISION = 2;
 
-  var num_entries = 100;
-  ////////////////////////////////////////////////////////////////////////
-  //////////////// BEGIN DATA LOADING LOGIC ////////////////////////
-  ////////////////////////////////////////////////////////////////////////
+  // The number of rows and columns in a grid
+  const NUM_ENTRIES = Math.pow(10, INNER_BOX_PRECISION - OUTER_BOX_PRECISION);
 
-  // INIT TABLE OF PATIENT LOCATIONS
-  var location_table = [];
+  const gps2box = (lat, lng, innerBoxPrecision, outerBoxPrecision) => {
+    const splitLat = lat.toString().split('.');
+    const splitLng = lng.toString().split('.');
 
-  // INPUT RAW DATA TO DATABASE
-  var i;
-  for (i = 0; i < num_entries; i++) {
-    entry = getEntry();
-    entry.id = i;
-    location_table.push(entry);
-  }
-
-  // INIT SECTOR TABLE
-  var sector_table = {};
-
-  // CONVERT RAW LOCATION TABLE INTO SECTOR TABLE
-  for (i = 0; i < location_table.length; i++) {
-    // get entry
-    var location = location_table[i];
-
-    // convert lat/lon to a Box (box key, box_row, box_col)
-    var box = gps2box(
-      location.latitude,
-      location.longitude,
-      inner_box_precision,
-      outer_box_precision
-    );
-
-    // if the box already exists in sector table, fetch it
-    if (box.sector_key in sector_table) {
-      var sector = sector_table[box.sector_key];
-
-      // if the box doesn't already exist in sector table, create one
-    } else {
-      var sector = makeSquareGridOfZeros(
-        10 ** (inner_box_precision - outer_box_precision)
-      );
+    if (splitLat[1].length < outerPrecision + innerPrecision) {
+      splitLat[1] = splitLat[1].padEnd(outerPrecision + innerPrecision, '0');
     }
 
-    // ensure that this sector has a "1" at the current location
-    sector[box.row][box.col] = 1;
+    if (splitLng[1].length < outerPrecision + innerPrecision) {
+      splitLng[1] = splitLng[1].padEnd(outerPrecision + innerPrecision, '0');
+    }
 
-    // save new sector table using sector key.
-    sector_table[box.sector_key] = sector;
-  }
+    const outerBoxLat = parseFloat(
+      `${splitLat[0]}.${splitLat[1].substring(0, outerBoxPrecision)}`
+    );
+    const outerBoxLng = parseFloat(
+      `${splitLng[0]}.${splitLng[1].substring(0, outerBoxPrecision)}`
+    );
 
-  ////////////////////////////////////////////////////////////////////////
-  //////////////// END DATA LOADING LOGIC ////////////////////////
-  ////////////////////////////////////////////////////////////////////////
+    const sectorKey = `${outerBoxLat.toString()}:${outerBoxLng.toString()}`;
 
-  ////////////////////////////////////////////////////////////////////////
-  //////////////// BEGIN CLIENT APP LOGIC ////////////////////////
-  ////////////////////////////////////////////////////////////////////////
+    const row = parseInt(
+      splitLat[1].substring(outerBoxPrecision, innerBoxPrecision),
+      10
+    );
+    const col = parseInt(
+      splitLng[1].substring(outerBoxPrecision, innerBoxPrecision),
+      10
+    );
 
-  // (asynchronous) creation of a random private, public key pair for the Paillier cryptosystem
-  // const {publicKey, privateKey} = await paillier.generateRandomKeys(3072);
+    return { sectorKey, row, col };
+  };
 
-  // Step 1 - get current location
-  var lat = parseFloat(request.query.lat);
-  var lon = parseFloat(request.query.lon);
+  const makeLocationGrid = (r, c) => {
+    const grid = [];
 
-  // Step 2 - convert latitude and longitude into inner and outeer box coordinates
-  var box = gps2box(lat, lon, inner_box_precision, outer_box_precision);
+    for (let i = 0; i < NUM_ENTRIES; i++) {
+      const row = [];
 
-  // Step 3 - convert box to grid
-  var sector_grid = makeSquareGridOfZeros(
-    10 ** (inner_box_precision - outer_box_precision)
-  );
+      for (let j = 0; j < NUM_ENTRIES; j++) {
+        row.push(0);
+      }
 
-  sector_grid[box.row][box.col] = 1;
+      grid.push(row);
+    }
 
-  // Step 4 - send sector key and sector_grid to server
-  var message = {};
-  message.sector_key = box.sector_key;
-  message.sector_grid = sector_grid;
+    if (r && c) {
+      grid[r][c] = 1;
+    }
 
-  ////////////////////////////////////////////////////////////////////////
-  //////////////// END CLIENT APP LOGIC ////////////////////////
-  ////////////////////////////////////////////////////////////////////////
+    return grid;
+  };
 
-  ////////////////////////////////////////////////////////////////////////
-  //////////////// BEGIN SERVER LOGIC ////////////////////////
-  ////////////////////////////////////////////////////////////////////////
+  const initFakeData = () => {
+    // A fake location entry generator function
+    const getEntry = id => ({
+      patient_id: 'johndoe234',
+      lat: 37.3761704 + Math.random() / 1000,
+      lng: -122.0762373 + Math.random() / 1000,
+      timestamp: parseInt(1583357612000 + Math.random() * 10000),
+      user_id: 'uk_worker_235',
+      id
+    });
 
-  // Step 1 - Unpack message
-  var client_sector_key = message.sector_key;
-  var client_sector_grid = message.sector_grid;
+    // Array of patient locations
+    const locationTable = [];
 
-  var result = 0;
+    // Object of sectors where patients have been
+    const sectorTable = {};
 
-  // Step 2 - look to see if box is in sector table.
-  if (client_sector_key in sector_table) {
-    // Step 2a - if box in sector table, select it
-    var patient_sector_grid = sector_table[client_sector_key];
+    // Populate locationTable with fake locations
+    for (let i = 0; i < NUM_ENTRIES; i++) {
+      locationTable.push(getEntry(i));
+    }
 
-    // Step 2b - multiply patient sector grid by client sector grid
-    var grid_size = 10 ** (inner_box_precision - outer_box_precision);
+    // Convert locationTable into a valid sectorTable
+    for (let i = 0; i < locationTable.length; i++) {
+      // Get a location
+      const { lat, lng } = locationTable[i];
 
-    var i, j;
-    for (i = 0; i < grid_size; i++) {
-      for (j = 0; j < grid_size; j++) {
-        result += client_sector_grid[i][j] * patient_sector_grid[i][j];
+      // Convert lat/lng to a box (sectorKey, row, col)
+      const { sectorKey, row, col } = gps2box(
+        lat,
+        lng,
+        INNER_BOX_PRECISION,
+        OUTER_BOX_PRECISION
+      );
+
+      // Either get a sector from the sectorTable, or create one if it doesn't exist yet
+      const sector =
+        sectorKey in sectorTable
+          ? sectorTable[sectorKey]
+          : makeLocationGrid(row, col);
+
+      // Save new sector table using the sectorKey.
+      sectorTable[sectorKey] = sector;
+    }
+
+    return sectorTable;
+  };
+
+  const runClient = async (lat, lng) => {
+    // Create a random public/private key pair for the Paillier cryptosystem
+    const { publicKey, privateKey } = await paillier.generateRandomKeys(3072);
+
+    // Convert latitude and longitude into inner and outeer box coordinates
+    const { sectorKey, row, col } = gps2box(
+      lat,
+      lng,
+      INNER_BOX_PRECISION,
+      OUTER_BOX_PRECISION
+    );
+
+    // Send just the sectorKey
+    console.log('SENDING THE SECTOR KEY', sectorKey);
+
+    // TODO: CHANGE ME HERE!!!
+    // We have a positive sector match!
+    const HAVE_POSITIVE_SECTOR_MATCH_CHANGE_ME = true;
+
+    if (HAVE_POSITIVE_SECTOR_MATCH_CHANGE_ME) {
+      // Convert box to grid
+      const gridTensor = makeLocationGrid(row, col);
+
+      // Encrypt the gridTensor
+      const encryptedGridTensor = publicKey.encrypt(gridTensor);
+
+      console.log(
+        'SENDING THE SECTOR KEY, ENCRYPTED GRID TENSOR, AND PUBLIC KEY',
+        sectorKey,
+        encryptedGridTensor,
+        publicKey
+      );
+
+      const FAKE_GRID_TENSOR_RESPONSE_CHANGE_ME = [];
+
+      const decryptedServerGridTensor = privateKey.decrypt(
+        FAKE_GRID_TENSOR_RESPONSE_CHANGE_ME
+      );
+
+      if (decryptedServerGridTensor.some(v => v >= 1)) {
+        console.log('THROW A PUSH NOTIFICATION TO GET OUT OF THE AREA');
       }
     }
-  }
-
-  // Step 3: Send result back to client
-  var message_to_client = result;
-
-  ////////////////////////////////////////////////////////////////////////
-  //////////////// END SERVER APP LOGIC ////////////////////////
-  ////////////////////////////////////////////////////////////////////////
-
-  ////////////////////////////////////////////////////////////////////////
-  //////////////// BEGIN CLIENT LOGIC ////////////////////////
-  ////////////////////////////////////////////////////////////////////////
-
-  if (message_to_client >= 1) {
-    console.log(
-      "\n\nYou are within 100 meters of a coronavirus patient's recept path. Please vacate the area.\n\n"
-    );
-  } else {
-    console.log(
-      "\n\nOur records do not indicate any coronavirus patients having been near this area recently.\n\n"
-    );
-  }
-
-  ////////////////////////////////////////////////////////////////////////
-  //////////////// END CLIENT LOGIC ////////////////////////
-  ////////////////////////////////////////////////////////////////////////
-
-  // result = input
-  var result = {
-    lat: lat,
-    lon: lon,
-    result: result
   };
-  // response.send(JSON.stringify({"request":request.query.text}))
-  response.send(JSON.stringify(result));
-  // response.send('ANDREW - FILL THIS IN', request);
+
+  const runServer = () => {
+    // Create fake data (we'll use real data input via a dashboard in the serverless endpoint)
+    const data = initFakeData();
+
+    // When the server receives a sectorKey
+    const onReceiveSectorKey = sectorKey => {
+      // If we have the sectorKey in our database
+      if (sectorKey in data) {
+        // Ask the user to send a grid tensor
+        console.log('REPLY WITH REQUEST FOR GRID TENSOR');
+      }
+    };
+
+    const onReceiveGridTensor = (sectorKey, gridTensor, publicKey) => {
+      // Get all patient locations in that sector
+      var patientLocations = data[sectorKey];
+
+      // An array for holding the resulting grid tensors of all multiplications on patientLocations, summed together
+      let eOverlapGridTensor;
+
+      // Multiply the grid tensor by all patient grid tensors
+      // Add the results of each multiplication to eOverlapGridTensor
+      for (let patient in patientLocations) {
+        // Convert the patient's lat and lng to a row and column
+        const { row, col } = gps2box(
+          patient.lat,
+          patient.lng,
+          INNER_BOX_PRECISION,
+          OUTER_BOX_PRECISION
+        );
+
+        // Make a grid tensor for the patient's location
+        const patientGridTensor = makeLocationGrid(row, col);
+
+        // Multiply that against the grid tensor from the user
+        const eMulVal = publicKey.multiply(gridTensor, patientGridTensor);
+
+        if (eOverlapGridTensor) {
+          // If eOverlapGridTensor already has a value, add it to the new eMulVal
+          eOverlapGridTensor = publicKey.addition(eOverlapGridTensor, eMulVal);
+        } else {
+          // If eOverlapGridTensor isn't set yet, set it to eMulVal
+          eOverlapGridTensor = eMulVal;
+        }
+      }
+
+      console.log('REPLY WITH OVERLAPPING GRID TENSOR', eOverlapGridTensor);
+    };
+  };
+
+  response.send(JSON.stringify({ success: true }));
 });
