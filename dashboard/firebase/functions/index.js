@@ -50,16 +50,23 @@ exports.performSectorMatch = functions.https.onRequest((req, res) => {
 
 exports.performGridTensorComputation = functions.https.onRequest(
   async (req, res) => {
-    // const { sectorKey, gridTensor, publicKey } = req.body;
+    const {
+      sectorKey,
+      gridTensor,
+      publicKey: { n, g }
+    } = req.body;
 
-    const sectorKey = 'hello';
-    const { publicKey, privateKey } = await paillier.generateRandomKeys(1024);
+    const publicKey = new paillier.PublicKey(n, g);
 
-    const weakGridTensor = gps2box(33.77380000000002, -84.2961);
+    console.log(publicKey);
 
-    const gridTensor = loopGridTensor(weakGridTensor.gridTensor, val =>
-      publicKey.encrypt(val)
-    );
+    // const { publicKey, privateKey } = await paillier.generateRandomKeys(1024);
+
+    // const weakGridTensor = gps2box(33.77380000000002, -84.2961);
+
+    // const gridTensor = loopGridTensor(weakGridTensor.gridTensor, val =>
+    //   publicKey.encrypt(val)
+    // );
 
     db.collectionGroup('locations')
       .where('sector_key', '==', sectorKey)
@@ -94,11 +101,11 @@ exports.performGridTensorComputation = functions.https.onRequest(
             }
           });
 
-          let finalDecryptedArray = loopGridTensor(eOverlapGridTensor, val =>
-            privateKey.decrypt(val)
-          );
+          // let finalDecryptedArray = loopGridTensor(eOverlapGridTensor, val =>
+          //   privateKey.decrypt(val)
+          // );
 
-          console.log('FINAL', finalDecryptedArray);
+          // console.log('FINAL', finalDecryptedArray);
 
           // Send the resulting tensor
           return res.send(JSON.stringify({ result: eOverlapGridTensor }));
