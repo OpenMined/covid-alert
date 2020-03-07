@@ -2958,10 +2958,27 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
+big-integer@^1.6.36:
+  version "1.6.48"
+  resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.48.tgz#8fd88bd1632cba4a1c8c3e3d7159f08bb95b4b9e"
+  integrity sha512-j51egjPa7/i+RdiRuJbPdJ2FIUYYPhvYLjzoYbcMMm62ooO6F94fETG4MTs46zPAF9Brs04OajboA/qTGuz78w==
+
 big.js@^5.2.2:
   version "5.2.2"
   resolved "https://registry.yarnpkg.com/big.js/-/big.js-5.2.2.tgz#65f0af382f578bcdc742bd9c281e9cb2d7768328"
   integrity sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==
+
+bigint-crypto-utils@^2.4.2:
+  version "2.4.7"
+  resolved "https://registry.yarnpkg.com/bigint-crypto-utils/-/bigint-crypto-utils-2.4.7.tgz#42440aec8b9ef2ff17f1b322656e751cd172de78"
+  integrity sha512-xncjGjacUIBKvUTPssNlXujY3kSyu9tM5g3j1sTG8lnj6E6iPnMG8sctB7F4WKhGyTdPD1KqYD5V8RH1c49pwA==
+
+bigint-polyfill@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/bigint-polyfill/-/bigint-polyfill-0.1.0.tgz#3b99c5966f122cce2339f75504600a89a53bf432"
+  integrity sha512-Rk66dtfZzdBUcFZC4xjysOr/o1nvxVrxSVWCtXjLBFeGMH9xi+60myTQNhc3IazCTD0LQE+4awxQYawSvtYc6g==
+  dependencies:
+    big-integer "^1.6.36"
 
 binary-extensions@^1.0.0:
   version "1.13.1"
@@ -5692,6 +5709,11 @@ got@^8.3.2:
     timed-out "^4.0.1"
     url-parse-lax "^3.0.0"
     url-to-options "^1.0.1"
+
+gps-sector-grid@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/gps-sector-grid/-/gps-sector-grid-0.3.2.tgz#dfc93f2259247815150cbae6adbb0aee8c1c776e"
+  integrity sha512-s7f4PbqWkml8bsZD18F81Ume1+c+/NKTnrIRfPIZRjcTJAhv5CgFqfunCqrxKdBV1fSkXWwWGAgrURT+UjVJyw==
 
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.2:
   version "4.2.3"
@@ -8581,6 +8603,13 @@ p-try@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/p-try/-/p-try-2.2.0.tgz#cb2868540e313d61de58fafbe35ce9004d5540e6"
   integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
+
+paillier-bigint@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/paillier-bigint/-/paillier-bigint-2.0.0.tgz#6b95abd4523b16346dc4b178c857e532201246cf"
+  integrity sha512-i3Uzb4FVDhYFz1J+Hyl5dem0c30buQ2DW7C7i/i4+8ANhtcgZYT9Zv0aeobgGudp+aYa0ZzLizDyrib1OZT4aA==
+  dependencies:
+    bigint-crypto-utils "^2.4.2"
 
 pako@~1.0.5:
   version "1.0.11"

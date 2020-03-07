@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useToast, Box } from '@chakra-ui/core';
 
 import { login, logout, useCurrentUser } from './firebase';
@@ -6,6 +6,8 @@ import Loader from './components/Loader';
 import Header from './components/Header';
 import Login from './pages/Login';
 import Main from './pages/Main';
+
+import runTest from './TESTING';
 
 export default () => {
   const toast = useToast();
@@ -60,6 +62,10 @@ export default () => {
   };
 
   const { isLoading, user } = useCurrentUser();
+
+  useEffect(() => {
+    runTest();
+  }, []);
 
   return (
     <>

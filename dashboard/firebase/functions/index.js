@@ -1,3 +1,5 @@
+const express = require('express');
+const cors = require('cors');
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const paillier = require('paillier-bigint');
@@ -28,8 +30,23 @@ const loopGridTensor = (grid, func) => {
   return newGrid;
 };
 
-exports.performSectorMatch = functions.https.onRequest((req, res) => {
-  const { sectorKey } = req.body;
+const stringifyWithBigInt = value =>
+  // eslint-disable-next-line valid-typeof
+  JSON.stringify(value, (_, v) => (typeof v === 'bigint' ? `${v}n` : v));
+
+const parseBigInt = text =>
+  JSON.parse(text, (_, value) => {
+    if (typeof value === 'string') {
+      const m = value.match(/(-?\d+)n/);
+      if (m && m[0] === value) {
+        value = BigInt(m[1]);
+      }
+    }
+    return value;
+  });
+
+const sectorMatch = (req, res) => {
+  const { sectorKey } = JSON.parse(req.body);
 
   db.collectionGroup('locations')
     .where('sector_key', '==', sectorKey)
@@ -46,77 +63,85 @@ exports.performSectorMatch = functions.https.onRequest((req, res) => {
 
       return res.send(JSON.stringify({ matches: false }));
     });
-});
+};
 
-exports.performGridTensorComputation = functions.https.onRequest(
-  async (req, res) => {
-    const {
-      sectorKey,
-      gridTensor,
-      publicKey: { n, g }
-    } = req.body;
+const gridTensorComputation = async (req, res) => {
+  let {
+    sectorKey,
+    gridTensor,
+    publicKey: { n, g }
+  } = JSON.parse(req.body);
 
-    const publicKey = new paillier.PublicKey(n, g);
+  gridTensor = parseBigInt(gridTensor);
 
-    console.log(publicKey);
+  const publicKey = new paillier.PublicKey(n, g);
 
-    // const { publicKey, privateKey } = await paillier.generateRandomKeys(1024);
+  console.log(publicKey);
 
-    // const weakGridTensor = gps2box(33.77380000000002, -84.2961);
+  db.collectionGroup('locations')
+    .where('sector_key', '==', sectorKey)
+    .get()
+    .then(snapshot => {
+      if (snapshot.size >= 1) {
+        // An array for holding the resulting grid tensors of all multiplications on patientLocations, summed together
+        let eOverlapGridTensor;
 
-    // const gridTensor = loopGridTensor(weakGridTensor.gridTensor, val =>
-    //   publicKey.encrypt(val)
-    // );
+        // For each confirmed location in this sector
+        snapshot.forEach(doc => {
+          // Get the data for that location
+          const location = doc.data();
 
-    db.collectionGroup('locations')
-      .where('sector_key', '==', sectorKey)
-      .get()
-      .then(snapshot => {
-        if (snapshot.size >= 1) {
-          // An array for holding the resulting grid tensors of all multiplications on patientLocations, summed together
-          let eOverlapGridTensor;
+          // Convert the patient's lat and lng to a gridTensor
+          const convertedLocation = gps2box(location.lat, location.lng);
+          const patientGridTensor = convertedLocation.gridTensor;
 
-          // For each confirmed location in this sector
-          snapshot.forEach(doc => {
-            // Get the data for that location
-            const location = doc.data();
+          // Multiply that against the grid tensor from the user
+          let eMulVal = [];
 
-            // Convert the patient's lat and lng to a gridTensor
-            const convertedLocation = gps2box(location.lat, location.lng);
-            const patientGridTensor = convertedLocation.gridTensor;
-
-            // Multiply that against the grid tensor from the user
-            let eMulVal = loopGridTensor(gridTensor, (v, i, j) =>
-              publicKey.multiply(gridTensor[i][j], patientGridTensor[i][j])
+          for (let i = 0; i < gridTensor.length; i++) {
+            eMulVal.push(
+              publicKey.multiply(gridTensor[i], patientGridTensor[i])
             );
+          }
 
-            if (eOverlapGridTensor) {
-              // If eOverlapGridTensor already has a value, add it to the new eMulVal
-              eOverlapGridTensor = loopGridTensor(gridTensor, (v, i, j) =>
-                publicKey.addition(eOverlapGridTensor[i][j], eMulVal[i][j])
+          if (eOverlapGridTensor) {
+            // If eOverlapGridTensor already has a value, add it to the new eMulVal
+            const tempEOverlapGridTensor = [];
+
+            for (let i = 0; i < gridTensor.length; i++) {
+              tempEOverlapGridTensor.push(
+                publicKey.addition(eOverlapGridTensor[i], eMulVal[i])
               );
-            } else {
-              // If eOverlapGridTensor isn't set yet, set it to eMulVal
-              eOverlapGridTensor = eMulVal;
             }
-          });
 
-          // let finalDecryptedArray = loopGridTensor(eOverlapGridTensor, val =>
-          //   privateKey.decrypt(val)
-          // );
+            eOverlapGridTensor = tempEOverlapGridTensor;
+          } else {
+            // If eOverlapGridTensor isn't set yet, set it to eMulVal
+            eOverlapGridTensor = eMulVal;
+          }
+        });
 
-          // console.log('FINAL', finalDecryptedArray);
+        // Send the resulting tensor
+        return res.send(stringifyWithBigInt(eOverlapGridTensor));
+      }
 
-          // Send the resulting tensor
-          return res.send(JSON.stringify({ result: eOverlapGridTensor }));
-        }
+      return res.send(JSON.stringify({ matches: false }));
+    })
+    .catch(error => {
+      console.log(`Could not perform lookup on sector ${sectorKey}`, error);
 
-        return res.send(JSON.stringify({ matches: false }));
-      })
-      .catch(error => {
-        console.log(`Could not perform lookup on sector ${sectorKey}`, error);
+      return res.send(JSON.stringify({ matches: false }));
+    });
+};
 
-        return res.send(JSON.stringify({ matches: false }));
-      });
-  }
-);
+const app = express();
+
+// Automatically allow cross-origin requests
+app.use(cors({ origin: true }));
+
+// Build our routes
+app.post('/sector-match', sectorMatch);
+app.post('/grid-tensor-computation', gridTensorComputation);
+
+// Expose Express API as a single Cloud Function:
+exports.api = functions.https.onRequest(app);
