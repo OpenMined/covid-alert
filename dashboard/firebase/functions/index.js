@@ -4,6 +4,7 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const paillier = require('paillier-bigint');
 const gps2box = require('gps-sector-grid');
+const JSONBig = require('json-bigint');
 
 const serviceAccount = require('./coronavirus-mapper-firebase-adminsdk-i6ree-699f4198bb.json');
 
@@ -14,23 +15,7 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-const loopGridTensor = (grid, func) => {
-  const newGrid = [];
-
-  for (let i = 0; i < grid.length; i++) {
-    const newGridRow = [];
-
-    for (let j = 0; j < grid[i].length; j++) {
-      newGridRow.push(func(grid[i][j], i, j));
-    }
-
-    newGrid.push(newGridRow);
-  }
-
-  return newGrid;
-};
-
-const stringifyWithBigInt = value =>
+const stringifyBigInt = value =>
   // eslint-disable-next-line valid-typeof
   JSON.stringify(value, (_, v) => (typeof v === 'bigint' ? `${v}n` : v));
 
@@ -66,17 +51,9 @@ const sectorMatch = (req, res) => {
 };
 
 const gridTensorComputation = async (req, res) => {
-  let {
-    sectorKey,
-    gridTensor,
-    publicKey: { n, g }
-  } = JSON.parse(req.body);
+  let { sectorKey, gridTensor, publicKey } = parseBigInt(req.body);
 
-  gridTensor = parseBigInt(gridTensor);
-
-  const publicKey = new paillier.PublicKey(n, g);
-
-  console.log(publicKey);
+  publicKey = new paillier.PublicKey(publicKey.n, publicKey.g);
 
   db.collectionGroup('locations')
     .where('sector_key', '==', sectorKey)
@@ -122,7 +99,7 @@ const gridTensorComputation = async (req, res) => {
         });
 
         // Send the resulting tensor
-        return res.send(stringifyWithBigInt(eOverlapGridTensor));
+        return res.send(stringifyBigInt(eOverlapGridTensor));
       }
 
       return res.send(JSON.stringify({ matches: false }));

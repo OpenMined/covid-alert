@@ -27,7 +27,6 @@
     "@chakra-ui/core": "^0.6.1",
     "@emotion/core": "^10.0.28",
     "@emotion/styled": "^10.0.27",
-    "bigint-polyfill": "^0.1.0",
     "dayjs": "^1.8.21",
     "emotion-theming": "^10.0.27",
     "firebase": "^7.9.3",
