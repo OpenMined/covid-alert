@@ -68,9 +68,15 @@ const gridTensorComputation = async (req, res) => {
           // Get the data for that location
           const location = doc.data();
 
+          console.log('LOCATION', location);
+
           // Convert the patient's lat and lng to a gridTensor
           const convertedLocation = gps2box(location.lat, location.lng);
           const patientGridTensor = convertedLocation.gridTensor;
+
+          console.log('PATIENT GRID TENSOR', patientGridTensor);
+
+          // TODO: PATRICK, THE ERROR IS SOMEWHERE AROUND HERE...
 
           // Multiply that against the grid tensor from the user
           let eMulVal = [];
