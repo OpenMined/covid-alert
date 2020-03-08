@@ -36,9 +36,6 @@ const gridTensorComputation = async (req, res) => {
           const convertedLocation = gps2box(location.lat, location.lng);
           const patientGridTensor = [].concat(...convertedLocation.gridTensor);
 
-          console.log('PATIENT GRID TENSOR', patientGridTensor);
-          console.log('FLATTENED PATIENT GRID TENSOR', patientGridTensor);
-
           // Multiply that against the grid tensor from the user
           let eMulVal = [];
 
