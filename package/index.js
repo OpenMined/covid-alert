@@ -29,7 +29,7 @@ const makeLocationGrid = (r, c) => {
   return grid;
 };
 
-const gps2box = (lat, lng) => {
+export const gps2box = (lat, lng) => {
   const splitLat = lat.toString().split('.');
   const splitLng = lng.toString().split('.');
 
@@ -70,4 +70,17 @@ const gps2box = (lat, lng) => {
   return { sectorKey, gridTensor };
 };
 
-export default gps2box;
+export const stringifyBigInt = value =>
+  // eslint-disable-next-line valid-typeof
+  JSON.stringify(value, (_, v) => (typeof v === 'bigint' ? `${v}n` : v));
+
+export const parseBigInt = text =>
+  JSON.parse(text, (_, value) => {
+    if (typeof value === 'string') {
+      const m = value.match(/(-?\d+)n/);
+      if (m && m[0] === value) {
+        value = BigInt(m[1]);
+      }
+    }
+    return value;
+  });

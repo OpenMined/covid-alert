@@ -3,8 +3,7 @@ const cors = require('cors');
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const paillier = require('paillier-bigint');
-const gps2box = require('gps-sector-grid');
-const JSONBig = require('json-bigint');
+const { gps2box, stringifyBigInt, parseBigInt } = require('gps-sector-grid');
 
 const serviceAccount = require('./coronavirus-mapper-firebase-adminsdk-i6ree-699f4198bb.json');
 
@@ -14,41 +13,6 @@ admin.initializeApp({
 });
 
 const db = admin.firestore();
-
-const stringifyBigInt = value =>
-  // eslint-disable-next-line valid-typeof
-  JSON.stringify(value, (_, v) => (typeof v === 'bigint' ? `${v}n` : v));
-
-const parseBigInt = text =>
-  JSON.parse(text, (_, value) => {
-    if (typeof value === 'string') {
-      const m = value.match(/(-?\d+)n/);
-      if (m && m[0] === value) {
-        value = BigInt(m[1]);
-      }
-    }
-    return value;
-  });
-
-const sectorMatch = (req, res) => {
-  const { sectorKey } = JSON.parse(req.body);
-
-  db.collectionGroup('locations')
-    .where('sector_key', '==', sectorKey)
-    .get()
-    .then(snapshot => {
-      if (snapshot.size >= 1) {
-        return res.send(JSON.stringify({ matches: true }));
-      }
-
-      return res.send(JSON.stringify({ matches: false }));
-    })
-    .catch(error => {
-      console.log(`Could not perform lookup on sector ${sectorKey}`, error);
-
-      return res.send(JSON.stringify({ matches: false }));
-    });
-};
 
 const gridTensorComputation = async (req, res) => {
   let { sectorKey, gridTensor, publicKey } = parseBigInt(req.body);
@@ -68,15 +32,12 @@ const gridTensorComputation = async (req, res) => {
           // Get the data for that location
           const location = doc.data();
 
-          console.log('LOCATION', location);
-
-          // Convert the patient's lat and lng to a gridTensor
+          // Convert the patient's lat and lng to a flattened gridTensor
           const convertedLocation = gps2box(location.lat, location.lng);
-          const patientGridTensor = convertedLocation.gridTensor;
+          const patientGridTensor = [].concat(...convertedLocation.gridTensor);
 
           console.log('PATIENT GRID TENSOR', patientGridTensor);
-
-          // TODO: PATRICK, THE ERROR IS SOMEWHERE AROUND HERE...
+          console.log('FLATTENED PATIENT GRID TENSOR', patientGridTensor);
 
           // Multiply that against the grid tensor from the user
           let eMulVal = [];
@@ -105,7 +66,7 @@ const gridTensorComputation = async (req, res) => {
         });
 
         // Send the resulting tensor
-        return res.send(stringifyBigInt(eOverlapGridTensor));
+        return res.send({ result: stringifyBigInt(eOverlapGridTensor) });
       }
 
       return res.send(JSON.stringify({ matches: false }));
