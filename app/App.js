@@ -71,6 +71,7 @@ class BgTracking extends Component {
       console.log('[LOCATION]', location);
 
       // TODO: Thiago, everything happens here
+      // TODO: Thiago, make sure we're refreshing location and calling checkCoords AT LEAST every 30 seconds
       const results = checkCoords(location.latitude, location.longitude);
 
       // TODO: Handle the result here: false means you're safe, true means you're in danger
