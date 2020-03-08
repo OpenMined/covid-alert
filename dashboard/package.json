@@ -30,7 +30,7 @@
     "dayjs": "^1.8.21",
     "emotion-theming": "^10.0.27",
     "firebase": "^7.9.3",
-    "gps-sector-grid": "^0.3.2",
+    "gps-sector-grid": "^0.4.0",
     "paillier-bigint": "^2.0.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
