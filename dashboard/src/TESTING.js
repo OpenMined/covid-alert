@@ -1,5 +1,3 @@
-/* global BigInt */
-
 import * as paillier from 'paillier-bigint';
 import { gps2box, stringifyBigInt, parseBigInt } from 'gps-sector-grid';
 
