@@ -84,7 +84,6 @@ const app = express();
 app.use(cors({ origin: true }));
 
 // Build our routes
-app.post('/sector-match', sectorMatch);
 app.post('/grid-tensor-computation', gridTensorComputation);
 
 // Expose Express API as a single Cloud Function:
