@@ -1133,10 +1133,10 @@ google-p12-pem@^2.0.0:
   dependencies:
     node-forge "^0.9.0"
 
-gps-sector-grid@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/gps-sector-grid/-/gps-sector-grid-0.4.0.tgz#80318b19eebdb59406d8405239c116b8779a41d0"
-  integrity sha512-VI1u7NgvE5uURMMN8VupF62PB3ofgD2K0J0LxDi7zAfRlR/z4ONHdArzsAJ8l6G4mZJKr4gJRfSmtIL0Yjpq3Q==
+gps-sector-grid@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/gps-sector-grid/-/gps-sector-grid-0.4.1.tgz#a3f9f19c89ebd228a16aedb094a713f1d0b2d58d"
+  integrity sha512-o6P/4eztc+TuQAo1MhzI7kdKZVP03qvLHAHi+mznqxEo0H51AO/mubES5/AtirXTTiIymSg8mRxuDBG2QX83XA==
 
 graceful-fs@^4.1.2:
   version "4.2.3"

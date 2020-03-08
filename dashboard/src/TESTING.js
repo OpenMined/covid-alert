@@ -7,7 +7,10 @@ export default async () => {
   const URL = 'https://us-central1-coronavirus-mapper.cloudfunctions.net/api';
   const { publicKey, privateKey } = await paillier.generateRandomKeys(1024);
 
-  let { sectorKey, gridTensor } = gps2box(33.77380000000002, -84.2961);
+  let { sectorKey, gridTensor } = gps2box(
+    36.12874800000003,
+    -86.67545819444331
+  );
 
   gridTensor = gridTensor.flat();
 

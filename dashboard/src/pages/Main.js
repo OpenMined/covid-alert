@@ -94,7 +94,7 @@ export default ({ user, toast, toastProps }) => {
 
   const reportCoordinates = values => {
     const { sectorKey } = gps2box(values.lat, values.lng);
-    values.sectorKey = sectorKey;
+    values['sector_key'] = sectorKey;
 
     createSubDocument(
       'patients',
