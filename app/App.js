@@ -2,69 +2,52 @@ import React, {Component} from 'react';
 import {Alert, View, Text} from 'react-native';
 import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
 
-const innerPrecision = 2;
-const outerPrecision = 4;
-const size = 10 ** (outerPrecision - innerPrecision);
+import * as paillier from 'paillier-bigint';
+import {gps2box, stringifyBigInt, parseBigInt} from 'gps-sector-grid';
 
-const blankArray = buildBlankArray(size);
+const checkCoords = async (lat, lng) => {
+  const URL = 'https://us-central1-coronavirus-mapper.cloudfunctions.net/api';
 
-function buildBlankArray() {
-  const array = [];
-  let i, j;
+  const {publicKey, privateKey} = await paillier.generateRandomKeys(1024);
+  let {sectorKey, gridTensor} = gps2box(lat, lng);
 
-  for (i = 0; i < size; i++) {
-    array[i] = [];
-    for (j = 0; j < size; j++) {
-      array[i].push(0);
+  gridTensor = gridTensor.flat();
+
+  for (let i = 0; i < gridTensor.length; i++) {
+    gridTensor[i] = publicKey.encrypt(gridTensor[i]);
+  }
+
+  const computation = await fetch(`${URL}/grid-tensor-computation`, {
+    method: 'POST',
+    body: stringifyBigInt({
+      sectorKey,
+      gridTensor,
+      publicKey: {n: publicKey.n, g: publicKey.g},
+    }),
+  }).then(r => r.json());
+
+  if (computation.hasOwnProperty('matches') && !computation.matches) {
+    // Sector doesn't match
+    return false;
+  } else {
+    // Sector matches
+    let parsedResult = parseBigInt(computation.result);
+
+    for (let i = 0; i < parsedResult.length; i++) {
+      parsedResult[i] = privateKey.decrypt(parsedResult[i]);
+    }
+
+    const iAmSafe = parsedResult.every(v => v < 1);
+
+    if (iAmSafe) {
+      // Grid doesn't match
+      return false;
+    } else {
+      // Grid matches
+      return true;
     }
   }
-
-  return array;
-}
-
-function generateGridTensor(lat, long) {
-  const splitLat = lat.toString().split('.');
-  const splitLong = long.toString().split('.');
-
-  if (splitLat[1].length < outerPrecision + innerPrecision) {
-    splitLat[1] = splitLat[1].padEnd(outerPrecision + innerPrecision, '0');
-  }
-
-  if (splitLong[1].length < outerPrecision + innerPrecision) {
-    splitLong[1] = splitLong[1].padEnd(outerPrecision + innerPrecision, '0');
-  }
-
-  const outerBoxLat = parseFloat(
-    `${splitLat[0]}.${splitLat[1].substring(0, outerPrecision)}`,
-  );
-  const outerBoxLong = parseFloat(
-    `${splitLong[0]}.${splitLong[1].substring(0, outerPrecision)}`,
-  );
-
-  const row = parseInt(
-    splitLat[1].substring(outerPrecision, outerPrecision + innerPrecision),
-    10,
-  );
-  const col = parseInt(
-    splitLong[1].substring(outerPrecision, outerPrecision + innerPrecision),
-    10,
-  );
-
-  const key = `${outerBoxLat}:${outerBoxLong}`;
-
-  const tensor = [].concat(blankArray);
-
-  tensor[row][col] = 1;
-
-  console.log(tensor[row][col]);
-
-  return {
-    key,
-    row,
-    col,
-    tensor,
-  };
-}
+};
 
 class BgTracking extends Component {
   componentDidMount() {
@@ -86,7 +69,13 @@ class BgTracking extends Component {
 
     BackgroundGeolocation.on('location', location => {
       console.log('[LOCATION]', location);
-      console.log(generateGridTensor(location.latitude, location.longitude));
+
+      // TODO: Thiago, everything happens here
+      const results = checkCoords(location.latitude, location.longitude);
+
+      // TODO: Handle the result here: false means you're safe, true means you're in danger
+      console.log(results);
+
       // handle your locations here
       // to perform long running operation on iOS
       // you need to create background task

@@ -7,8 +7,6 @@ import Header from './components/Header';
 import Login from './pages/Login';
 import Main from './pages/Main';
 
-import runTest from './TESTING';
-
 export default () => {
   const toast = useToast();
   const toastProps = {
@@ -62,10 +60,6 @@ export default () => {
   };
 
   const { isLoading, user } = useCurrentUser();
-
-  useEffect(() => {
-    runTest();
-  }, []);
 
   return (
     <>
