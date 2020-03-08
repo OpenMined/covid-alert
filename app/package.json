@@ -12,6 +12,7 @@
   "dependencies": {
     "@mauron85/react-native-background-geolocation": "^0.6.3",
     "@react-native-community/geolocation": "^2.0.2",
+    "gps-sector-grid": "^0.4.1",
     "paillier-bigint": "^2.0.0",
     "react": "16.9.0",
     "react-native": "0.61.5",
