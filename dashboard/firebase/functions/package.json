@@ -13,8 +13,11 @@
     "node": "10"
   },
   "dependencies": {
-    "firebase-admin": "^8.6.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "firebase-admin": "^8.9.2",
     "firebase-functions": "^3.3.0",
+    "gps-sector-grid": "^0.4.1",
     "paillier-bigint": "^2.0.0"
   },
   "devDependencies": {

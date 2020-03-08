@@ -13,6 +13,8 @@ import {
   ModalCloseButton,
   ModalBody
 } from '@chakra-ui/core';
+import { gps2box } from 'gps-sector-grid';
+
 import CreatePatientForm from '../components/CreatePatientForm';
 import Map from '../components/Map';
 import Patient from '../components/Patient';
@@ -91,6 +93,9 @@ export default ({ user, toast, toastProps }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const reportCoordinates = values => {
+    const { sectorKey } = gps2box(values.lat, values.lng);
+    values['sector_key'] = sectorKey;
+
     createSubDocument(
       'patients',
       currentPatient.id,
