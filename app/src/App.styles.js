@@ -7,7 +7,7 @@ const getImageScaled = (height, width, percent) => ({
 
 export default StyleSheet.create({
   background: {
-    backgroundColor: "#333",
+    backgroundColor: "#eee",
     display: "flex",
     flexDirection: "column",
     flex: 1,
@@ -15,7 +15,7 @@ export default StyleSheet.create({
   },
   title: {
     fontFamily: "Rubik-Medium",
-    color: "#eee",
+    color: "#333",
     marginTop: 40,
     fontSize: 30,
     textAlign: "center",
@@ -40,11 +40,15 @@ export default StyleSheet.create({
   },
   body: {
     fontFamily: "Rubik-Regular",
-    color: "#eee",
+    color: "#333",
     fontSize: 18,
     lineHeight: 36,
     marginTop: 20,
     letterSpacing: 0.5
+  },
+  bold: {
+    fontFamily: "Rubik-Medium",
+    color: "#000"
   },
   link: {
     fontFamily: "Rubik-Medium",
@@ -62,7 +66,7 @@ export default StyleSheet.create({
   },
   footerText: {
     fontFamily: "Rubik-Regular",
-    color: "#ccc",
+    color: "#666",
     fontSize: 18,
     letterSpacing: 0.5
   },

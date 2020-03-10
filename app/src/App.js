@@ -11,11 +11,7 @@ import BackgroundGeolocation from "@mauron85/react-native-background-geolocation
 import styles from "./App.styles";
 // import checkCoords from './check-coords';
 
-const B = props => (
-  <Text style={{ fontFamily: "Rubik-Medium", color: "#fff" }}>
-    {props.children}
-  </Text>
-);
+const B = props => <Text style={styles.bold}>{props.children}</Text>;
 
 export default class extends Component {
   constructor(props) {
@@ -175,6 +171,7 @@ export default class extends Component {
             )}
           </View>
         )}
+        {/* TODO: This needs to be a real link */}
         {isSetup && (
           <View>
             <Text
@@ -185,7 +182,9 @@ export default class extends Component {
             </Text>
             <Text
               style={styles.link}
-              onPress={() => this.openInBrowser("https://google.com")}
+              onPress={() =>
+                this.openInBrowser("https://opencollective.com/openmined")
+              }
             >
               How can I support this app?
             </Text>
