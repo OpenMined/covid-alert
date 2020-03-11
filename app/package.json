@@ -16,7 +16,9 @@
     "paillier-bigint": "^2.0.0",
     "react": "16.9.0",
     "react-native": "0.61.5",
-    "react-native-geolocation-service": "^4.0.0"
+    "react-native-geolocation-service": "^4.0.0",
+    "react-native-permissions": "^2.0.9",
+    "react-native-push-notification": "^3.1.9"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
