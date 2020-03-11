@@ -21,11 +21,11 @@ export default class extends Component {
 
     this.state = {
       hasLocation: false,
-      hasPush: false
+      hasPush: false,
+      requestedPushPerms: null
     };
 
     this.enableLocationSharing = this.enableLocationSharing.bind(this);
-    this.enablePushNotifications = this.enablePushNotifications.bind(this);
   }
 
   componentDidMount() {
@@ -46,6 +46,23 @@ export default class extends Component {
       stopTimeout: 1
     });
 
+    PushNotification.configure({
+      // Required: called when a remote or local notification is opened or received
+      onNotification: notification => {
+        console.log("NOTIFICATION:", notification);
+
+        // required on iOS only (see fetchCompletionHandler docs: https://github.com/react-native-community/react-native-push-notification-ios)
+        notification.finish(PushNotificationIOS.FetchResult.NoData);
+      },
+      permissions: {
+        alert: true,
+        badge: true,
+        sound: true
+      },
+      popInitialNotification: true,
+      requestPermissions: true
+    });
+
     BackgroundGeolocation.on("location", location => {
       console.log("[LOCATION]", location);
 
@@ -54,7 +71,7 @@ export default class extends Component {
           // const results = checkCoords(location.latitude, location.longitude);
           // console.log(results);
 
-          const result = false;
+          const results = false;
 
           if (results) {
             PushNotification.localNotification({
@@ -136,22 +153,6 @@ export default class extends Component {
         this.enableLocationSharing();
       }
     });
-
-    PushNotification.configure({
-      // Required: called when a remote or local notification is opened or received
-      onNotification: notification => {
-        console.log("NOTIFICATION:", notification);
-
-        // required on iOS only (see fetchCompletionHandler docs: https://github.com/react-native-community/react-native-push-notification-ios)
-        notification.finish(PushNotificationIOS.FetchResult.NoData);
-      },
-      permissions: {
-        alert: true,
-        badge: true,
-        sound: true
-      },
-      requestPermissions: false
-    });
   }
 
   checkLocationRunning(cb) {
@@ -173,12 +174,6 @@ export default class extends Component {
       if (!this.state.hasLocation && isRunning) {
         this.setState({ hasLocation: true });
       }
-    });
-  }
-
-  enablePushNotifications() {
-    PushNotifications.requestPermissions().then(() => {
-      this.setState({ hasPush: true });
     });
   }
 
