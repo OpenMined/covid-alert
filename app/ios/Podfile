@@ -2,6 +2,8 @@ platform :ios, '9.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 target 'coronavirusmapper' do
+  permissions_path = '../node_modules/react-native-permissions/ios'
+
   # Pods for coronavirusmapper
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
@@ -33,6 +35,11 @@ target 'coronavirusmapper' do
   pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
+
+  pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways.podspec"
+  pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse.podspec"
+
+
 
   target 'coronavirusmapperTests' do
     inherit! :search_paths
