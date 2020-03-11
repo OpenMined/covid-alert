@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { request, openSettings, PERMISSIONS } from "react-native-permissions";
 import BackgroundGeolocation from "@mauron85/react-native-background-geolocation";
+import PushNotification from "react-native-push-notification";
 import styles from "./App.styles";
 // import checkCoords from './check-coords';
 
