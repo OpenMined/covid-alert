@@ -8,7 +8,15 @@ import {
   TouchableOpacity,
   Platform
 } from "react-native";
-import { request, openSettings, PERMISSIONS } from "react-native-permissions";
+import {
+  check,
+  request,
+  checkNotifications,
+  requestNotifications,
+  openSettings,
+  PERMISSIONS,
+  RESULTS
+} from "react-native-permissions";
 import BackgroundGeolocation from "@mauron85/react-native-background-geolocation";
 import PushNotification from "react-native-push-notification";
 import styles from "./App.styles";
@@ -22,14 +30,98 @@ export default class extends Component {
 
     this.state = {
       hasLocation: false,
-      hasPush: false,
-      requestedPushPerms: null
+      hasPush: false
     };
 
-    this.enableLocationSharing = this.enableLocationSharing.bind(this);
+    this.requestLocation = this.requestLocation.bind(this);
+    this.requestPush = this.requestPush.bind(this);
+    this.startLocation = this.startLocation.bind(this);
+    this.startPush = this.startPush.bind(this);
   }
 
   componentDidMount() {
+    Promise.all([
+      check(
+        Platform.select({
+          android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+          ios: PERMISSIONS.IOS.LOCATION_ALWAYS
+        })
+      ),
+      checkNotifications()
+    ]).then(([locationStatus, pushStatus]) => {
+      console.log("location", locationStatus);
+      console.log("push", pushStatus);
+
+      if (locationStatus === RESULTS.GRANTED && !this.state.hasLocation) {
+        console.log("Location permission granted");
+
+        this.setState({ hasLocation: true });
+        this.startLocation();
+      } else {
+        console.log("Location permission denied");
+
+        this.requestLocation();
+      }
+
+      if (
+        pushStatus.settings.alert &&
+        pushStatus.status === RESULTS.GRANTED &&
+        !this.state.hasPush
+      ) {
+        console.log("Push permission granted");
+
+        this.setState({ hasPush: true });
+        this.startPush();
+      } else {
+        console.log("Push permission denied");
+
+        this.requestPush();
+      }
+    });
+  }
+
+  requestLocation() {
+    console.log("Requesting location permission");
+
+    return request(
+      Platform.select({
+        android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+        ios: PERMISSIONS.IOS.LOCATION_ALWAYS
+      })
+    )
+      .then(res => {
+        if (res === RESULTS.GRANTED && !this.state.hasLocation) {
+          this.setState({ hasLocation: true });
+          this.startLocation();
+        } else {
+          openSettings();
+        }
+      })
+      .catch(err => console.log(err));
+  }
+
+  requestPush() {
+    console.log("Requesting push permission");
+
+    return requestNotifications(["alert", "sound"]).then(
+      ({ settings, status }) => {
+        if (
+          settings.alert &&
+          status === RESULTS.GRANTED &&
+          !this.state.hasPush
+        ) {
+          this.setState({ hasPush: true });
+          this.startPush();
+        } else {
+          openSettings();
+        }
+      }
+    );
+  }
+
+  startLocation() {
+    console.log("Starting location");
+
     BackgroundGeolocation.configure({
       desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
       stationaryRadius: 50,
@@ -45,23 +137,6 @@ export default class extends Component {
       activitiesInterval: 10000,
       stopOnStillActivity: false,
       stopTimeout: 1
-    });
-
-    PushNotification.configure({
-      // Required: called when a remote or local notification is opened or received
-      onNotification: notification => {
-        console.log("NOTIFICATION:", notification);
-
-        // required on iOS only (see fetchCompletionHandler docs: https://github.com/react-native-community/react-native-push-notification-ios)
-        notification.finish(PushNotificationIOS.FetchResult.NoData);
-      },
-      permissions: {
-        alert: true,
-        badge: true,
-        sound: true
-      },
-      popInitialNotification: true,
-      requestPermissions: true
     });
 
     BackgroundGeolocation.on("location", location => {
@@ -127,54 +202,35 @@ export default class extends Component {
       console.log("Location service has been stopped");
     });
 
-    BackgroundGeolocation.on("authorization", status => {
-      console.log("Location authorization status: " + status);
-
-      if (status !== BackgroundGeolocation.AUTHORIZED) {
-        setTimeout(
-          () =>
-            Alert.alert(
-              "App requires location tracking permission",
-              "Would you like to open app settings?",
-              [
-                {
-                  text: "Yes",
-                  onPress: BackgroundGeolocation.showAppSettings
-                },
-                {
-                  text: "No",
-                  onPress: () => console.log("No Pressed"),
-                  style: "cancel"
-                }
-              ]
-            ),
-          1000
-        );
-      } else {
-        this.enableLocationSharing();
-      }
-    });
-  }
-
-  checkLocationRunning(cb) {
     BackgroundGeolocation.checkStatus(status => {
       console.log("Location service is running", status.isRunning);
       console.log("Location services enabled", status.locationServicesEnabled);
       console.log("Location auth status: " + status.authorization);
 
-      cb(status);
+      if (!status.isRunning) {
+        BackgroundGeolocation.start();
+      }
     });
   }
 
-  enableLocationSharing() {
-    this.checkLocationRunning(({ isRunning }) => {
-      if (!isRunning) {
-        BackgroundGeolocation.start();
-      }
+  startPush() {
+    console.log("Starting push");
 
-      if (!this.state.hasLocation && isRunning) {
-        this.setState({ hasLocation: true });
-      }
+    PushNotification.configure({
+      // Required: called when a remote or local notification is opened or received
+      onNotification: notification => {
+        console.log("NOTIFICATION:", notification);
+
+        // required on iOS only (see fetchCompletionHandler docs: https://github.com/react-native-community/react-native-push-notification-ios)
+        notification.finish(PushNotificationIOS.FetchResult.NoData);
+      },
+      permissions: {
+        alert: true,
+        badge: true,
+        sound: true
+      },
+      popInitialNotification: false,
+      requestPermissions: false
     });
   }
 
@@ -212,28 +268,12 @@ export default class extends Component {
           <View>
             <Text style={styles.body}>To get started please:</Text>
             {!this.state.hasLocation && (
-              <Text
-                style={styles.link}
-                onPress={() => {
-                  request(
-                    Platform.select({
-                      android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-                      ios: PERMISSIONS.IOS.LOCATION_ALWAYS
-                    })
-                  )
-                    .then(res => {
-                      console.log(res);
-                      if (res === "blocked") openSettings();
-                      if (res === "granted") this.enableLocationSharing();
-                    })
-                    .catch(err => console.log(err));
-                }}
-              >
+              <Text style={styles.link} onPress={this.requestLocation}>
                 Enable location sharing (always)
               </Text>
             )}
             {!this.state.hasPush && (
-              <Text style={styles.link} onPress={this.enablePushNotifications}>
+              <Text style={styles.link} onPress={this.requestPush}>
                 Enable push notifications
               </Text>
             )}
