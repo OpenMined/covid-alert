@@ -19,13 +19,13 @@ The dashboard and package directories mostly speak for themselves. To get the ap
 
 Many people have worked on this application within the OpenMined community, many of which do not show up in the commit history. Here's a brief list (in alphabetical order):
 
-- Amel Sellami
-- Andrew Trask
-- Bennett Farkas
-- Héricles Emanuel
-- Jose Corbacho
-- Maddie Shang
-- Patrick Cason
-- Théo Ryffel
-- Thiago Costa Porto
-- Vova Manannikov
+- [Amel Sellami](https://github.com/samelsamel)
+- [Andrew Trask](https://github.com/iamtrask)
+- [Bennett Farkas](https://github.com/bennettfarkas)
+- [Héricles Emanuel](https://github.com/hericlesme)
+- [Jose Corbacho](https://github.com/mccorby)
+- [Maddie Shang](https://github.com/prtfw)
+- [Patrick Cason](https://github.com/cereallarceny)
+- [Théo Ryffel](https://github.com/LaRiffle)
+- [Thiago Costa Porto](https://github.com/tcp)
+- [Vova Manannikov](https://github.com/vvmnnnkv)
