@@ -1,31 +1,18 @@
 "use strict";
 
-const crypto = require("crypto");
-const BigInt = require("big-integer");
+import crypto from "crypto";
+import BigInt from "big-integer";
 
 const _ZERO = BigInt(0);
 const _ONE = BigInt(1);
 const _TWO = BigInt(2);
 
-/**
- * Absolute value. abs(a)==a if a>=0. abs(a)==-a if a<0
- *
- * @param {number|bigint} a
- *
- * @returns {bigint} the absolute value of a
- */
-function abs(a) {
+export const abs = a => {
   a = BigInt(a);
   return a.geq(_ZERO) ? a : -a;
-}
+};
 
-/**
- * Returns the bitlength of a number
- *
- * @param {number|bigint} a
- * @returns {number} - the bit length
- */
-function bitLength(a) {
+export const bitLength = a => {
   a = BigInt(a);
   if (a.eq(_ONE)) return 1;
   let bits = 1;
@@ -33,24 +20,9 @@ function bitLength(a) {
     bits++;
   } while ((a = BigInt(a).shiftRight(_ONE)) > _ONE);
   return bits;
-}
+};
 
-/**
- * @typedef {Object} egcdReturn A triple (g, x, y), such that ax + by = g = gcd(a, b).
- * @property {bigint} g
- * @property {bigint} x
- * @property {bigint} y
- */
-/**
- * An iterative implementation of the extended euclidean algorithm or extended greatest common divisor algorithm.
- * Take positive integers a, b as input, and return a triple (g, x, y), such that ax + by = g = gcd(a, b).
- *
- * @param {number|bigint} a
- * @param {number|bigint} b
- *
- * @returns {egcdReturn} A triple (g, x, y), such that ax + by = g = gcd(a, b).
- */
-function eGcd(a, b) {
+export const eGcd = (a, b) => {
   a = BigInt(a);
   b = BigInt(b);
   if (a.leq(_ZERO) | b.leq(_ZERO)) return NaN; // a and b MUST be positive
@@ -77,17 +49,9 @@ function eGcd(a, b) {
     x: x,
     y: y
   };
-}
+};
 
-/**
- * Greatest-common divisor of two integers based on the iterative binary algorithm.
- *
- * @param {number|bigint} a
- * @param {number|bigint} b
- *
- * @returns {bigint} The greatest common divisor of a and b
- */
-function gcd(a, b) {
+export const gcd = (a, b) => {
   a = abs(a);
   b = abs(b);
   if (a === _ZERO) return b;
@@ -111,18 +75,9 @@ function gcd(a, b) {
   } while (b);
   // rescale
   return a.shiftLeft(shift);
-}
+};
 
-/**
- * The test first tries if any of the first 250 small primes are a factor of the input number and then passes several
- * iterations of Miller-Rabin Probabilistic Primality Test (FIPS 186-4 C.3.1)
- *
- * @param {number|bigint} w An integer to be tested for primality
- * @param {number} [iterations = 16] The number of iterations for the primality test. The value shall be consistent with Table C.1, C.2 or C.3
- *
- * @return {Promise} A promise that resolves to a boolean that is either true (a probably prime number) or false (definitely composite)
- */
-async function isProbablyPrime(w, iterations = 16) {
+export const isProbablyPrime = async (w, iterations = 16) => {
   if (typeof w === "number") {
     w = BigInt(w);
   }
@@ -132,59 +87,28 @@ async function isProbablyPrime(w, iterations = 16) {
       resolve(_isProbablyPrime(w, iterations));
     });
   }
-}
+};
 
-/**
- * The least common multiple computed as abs(a*b)/gcd(a,b)
- * @param {number|bigint} a
- * @param {number|bigint} b
- *
- * @returns {bigint} The least common multiple of a and b
- */
-function lcm(a, b) {
+export const lcm = (a, b) => {
   a = BigInt(a);
   b = BigInt(b);
   if (a === _ZERO && b === _ZERO) return _ZERO;
   return abs(a * b) / gcd(a, b);
-}
+};
 
-/**
- * Maximum. max(a,b)==a if a>=b. max(a,b)==b if a<=b
- *
- * @param {number|bigint} a
- * @param {number|bigint} b
- *
- * @returns {bigint} maximum of numbers a and b
- */
-function max(a, b) {
+export const max = (a, b) => {
   a = BigInt(a);
   b = BigInt(b);
   return a.geq(b) ? a : b;
-}
+};
 
-/**
- * Minimum. min(a,b)==b if a>=b. min(a,b)==a if a<=b
- *
- * @param {number|bigint} a
- * @param {number|bigint} b
- *
- * @returns {bigint} minimum of numbers a and b
- */
-function min(a, b) {
+export const min = (a, b) => {
   a = BigInt(a);
   b = BigInt(b);
   return a.geq(b) ? b : a;
-}
+};
 
-/**
- * Modular inverse.
- *
- * @param {number|bigint} a The number to find an inverse for
- * @param {number|bigint} n The modulo
- *
- * @returns {bigint} the inverse modulo n or NaN if it does not exist
- */
-function modInv(a, n) {
+export const modInv = (a, n) => {
   if (a.eq(_ZERO) | n.leq(_ZERO)) return NaN;
 
   let egcd = eGcd(toZn(a, n), n);
@@ -193,18 +117,9 @@ function modInv(a, n) {
   } else {
     return toZn(egcd.x, n);
   }
-}
+};
 
-/**
- * Modular exponentiation b**e mod n. Currently using the right-to-left binary method
- *
- * @param {number|bigint} b base
- * @param {number|bigint} e exponent
- * @param {number|bigint} n modulo
- *
- * @returns {bigint} b**e mod n
- */
-function modPow(b, e, n) {
+export const modPow = (b, e, n) => {
   n = BigInt(n);
 
   if (n === _ZERO) return NaN;
@@ -235,21 +150,9 @@ function modPow(b, e, n) {
       .mod(n);
   }
   return r;
-}
+};
 
-/**
- * A probably-prime (Miller-Rabin), cryptographically-secure, random-number generator.
- * The browser version uses web workers to parallelise prime look up. Therefore, it does not lock the UI
- * main process, and it can be much faster (if several cores or cpu are available).
- * The node version can also use worker_threads if they are available (enabled by default with Node 11 and
- * and can be enabled at runtime executing node --experimental-worker with node >=10.5.0).
- *
- * @param {number} bitLength The required bit length for the generated prime
- * @param {number} [iterations = 16] The number of iterations for the Miller-Rabin Probabilistic Primality Test
- *
- * @returns {Promise} A promise that resolves to a bigint probable prime of bitLength bits.
- */
-function prime(bitLength, iterations = 16) {
+export const prime = (bitLength, iterations = 16) => {
   if (bitLength < 1)
     throw new RangeError(`bitLength MUST be > 0 and it is ${bitLength}`);
 
@@ -300,18 +203,9 @@ function prime(bitLength, iterations = 16) {
       });
     }
   });
-}
+};
 
-/**
- * A probably-prime (Miller-Rabin), cryptographically-secure, random-number generator.
- * The sync version is NOT RECOMMENDED since it won't use workers and thus it'll be slower and may freeze thw window in browser's javascript. Please consider using prime() instead.
- *
- * @param {number} bitLength The required bit length for the generated prime
- * @param {number} [iterations = 16] The number of iterations for the Miller-Rabin Probabilistic Primality Test
- *
- * @returns {bigint} A bigint probable prime of bitLength bits.
- */
-function primeSync(bitLength, iterations = 16) {
+export const primeSync = (bitLength, iterations = 16) => {
   if (bitLength < 1)
     throw new RangeError(`bitLength MUST be > 0 and it is ${bitLength}`);
   let rnd = _ZERO;
@@ -319,16 +213,9 @@ function primeSync(bitLength, iterations = 16) {
     rnd = fromBuffer(randBytesSync(bitLength / 8, true));
   } while (!_isProbablyPrime(rnd, iterations));
   return rnd;
-}
+};
 
-/**
- * Returns a cryptographically secure random integer between [min,max]
- * @param {bigint} max Returned value will be <= max
- * @param {bigint} [min = BigInt(1)] Returned value will be >= min
- *
- * @returns {bigint} A cryptographically secure random bigint between [min,max]
- */
-function randBetween(max, min = _ONE) {
+export const randBetween = (max, min = _ONE) => {
   if (max.leq(min)) throw new Error("max must be > min");
   const interval = max - min;
   let bitLen = bitLength(interval);
@@ -339,17 +226,9 @@ function randBetween(max, min = _ONE) {
     rnd = fromBuffer(buf);
   } while (rnd.gt(interval));
   return rnd + min;
-}
+};
 
-/**
- * Secure random bits for both node and browsers. Node version uses crypto.randomFill() and browser one self.crypto.getRandomValues()
- *
- * @param {number} bitLength The desired number of random bits
- * @param {boolean} [forceLength = false] If we want to force the output to have a specific bit length. It basically forces the msb to be 1
- *
- * @returns {Buffer|Uint8Array} A Buffer/UInt8Array (Node.js/Browser) filled with cryptographically secure random bits
- */
-function randBits(bitLength, forceLength = false) {
+export const randBits = (bitLength, forceLength = false) => {
   if (bitLength < 1)
     throw new RangeError(`bitLength MUST be > 0 and it is ${bitLength}`);
 
@@ -362,17 +241,9 @@ function randBits(bitLength, forceLength = false) {
     rndBytes[0] = rndBytes[0] | mask;
   }
   return rndBytes;
-}
+};
 
-/**
- * Secure random bytes for both node and browsers. Node version uses crypto.randomFill() and browser one self.crypto.getRandomValues()
- *
- * @param {number} byteLength The desired number of random bytes
- * @param {boolean} [forceLength = false] If we want to force the output to have a bit length of 8*byteLength. It basically forces the msb to be 1
- *
- * @returns {Promise} A promise that resolves to a Buffer/UInt8Array (Node.js/Browser) filled with cryptographically secure random bytes
- */
-function randBytes(byteLength, forceLength = false) {
+export const randBytes = (byteLength, forceLength = false) => {
   if (byteLength < 1)
     throw new RangeError(`byteLength MUST be > 0 and it is ${byteLength}`);
 
@@ -387,17 +258,9 @@ function randBytes(byteLength, forceLength = false) {
       resolve(buf);
     });
   }
-}
+};
 
-/**
- * Secure random bytes for both node and browsers. Node version uses crypto.randomFill() and browser one self.crypto.getRandomValues()
- *
- * @param {number} byteLength The desired number of random bytes
- * @param {boolean} [forceLength = false] If we want to force the output to have a bit length of 8*byteLength. It basically forces the msb to be 1
- *
- * @returns {Buffer|Uint8Array} A Buffer/UInt8Array (Node.js/Browser) filled with cryptographically secure random bytes
- */
-function randBytesSync(byteLength, forceLength = false) {
+export const randBytesSync = (byteLength, forceLength = false) => {
   if (byteLength < 1)
     throw new RangeError(`byteLength MUST be > 0 and it is ${byteLength}`);
 
@@ -411,22 +274,15 @@ function randBytesSync(byteLength, forceLength = false) {
   if (forceLength) buf[0] = buf[0] | 128;
 
   return buf;
-}
+};
 
-/**
- * Finds the smallest positive element that is congruent to a in modulo n
- * @param {number|bigint} a An integer
- * @param {number|bigint} n The modulo
- *
- * @returns {bigint} The smallest positive representation of a in modulo n
- */
-function toZn(a, n) {
+export const toZn = (a, n) => {
   n = BigInt(n);
   if (n.leq(0)) return NaN;
 
   a = BigInt(a).mod(n);
   return a.lt(0) ? a + n : a;
-}
+};
 
 /* HELPER FUNCTIONS */
 
@@ -763,21 +619,3 @@ function _isProbablyPrime(w, iterations = 16) {
 }
 
 let _useWorkers = false; // The following is just to check whether Node.js can use workers
-
-exports.abs = abs;
-exports.bitLength = bitLength;
-exports.eGcd = eGcd;
-exports.gcd = gcd;
-exports.isProbablyPrime = isProbablyPrime;
-exports.lcm = lcm;
-exports.max = max;
-exports.min = min;
-exports.modInv = modInv;
-exports.modPow = modPow;
-exports.prime = prime;
-exports.primeSync = primeSync;
-exports.randBetween = randBetween;
-exports.randBits = randBits;
-exports.randBytes = randBytes;
-exports.randBytesSync = randBytesSync;
-exports.toZn = toZn;

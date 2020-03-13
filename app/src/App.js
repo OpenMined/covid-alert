@@ -47,7 +47,7 @@ export default class extends Component {
     this.startPush = this.startPush.bind(this);
     this.t = this.t.bind(this);
 
-    console.log(paillier.generateRandomKeys);
+    console.log("HELLO", paillier.generateRandomKeys(128));
 
     // const { publicKey, privateKey } = paillier.generateRandomKeys(128);
     // console.log(publicKey, privateKey);
