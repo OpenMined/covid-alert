@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cereallarceny/coronavirus-mapper.git"
+    "url": "git+https://github.com/cereallarceny/covid-alert.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/cereallarceny/coronavirus-mapper/issues"
+    "url": "https://github.com/cereallarceny/covid-alert/issues"
   },
-  "homepage": "https://github.com/cereallarceny/coronavirus-mapper#readme",
+  "homepage": "https://github.com/cereallarceny/covid-alert#readme",
   "devDependencies": {
     "rollup": "^2.0.0"
   }

@@ -167,7 +167,7 @@ export default class extends Component {
             // This will ensure that people in a large crowd don't receive a notification at the same time and cause a panic
             const timeoutAmount = Math.floor(Math.random() * 300000) + 1;
 
-            // The message that's sent to someone who has entered a coronavirus grid
+            // The message that's sent to someone who has entered a COVID grid
             const message = this.t("message");
 
             setTimeout(() => {
@@ -176,7 +176,7 @@ export default class extends Component {
                 autoCancel: false,
 
                 /* iOS and Android properties */
-                title: "Coronavirus Warning System",
+                title: "COVID Alert",
                 message
               });
             }, timeoutAmount);
@@ -235,13 +235,13 @@ export default class extends Component {
       en: {
         message:
           "Patient(s) with reported COVID-19 cases have been within 100m of your current location in the past 72 hours. We suggest that you if you choose to leave, please do so calmly and quietly.",
-        title: "Coronavirus Mapper",
+        title: "COVID-19 Alert",
         scanning: "Actively Scanning",
         body: (
           <>
             This app will <B>anonymously</B> track your location in the
             background and send a notification to your phone when you’re close
-            to known previous locations of Coronavirus victims.{" "}
+            to known previous locations of COVID-19 victims.{" "}
             <B>In order to work, please keep this app open on your phone.</B>
           </>
         ),

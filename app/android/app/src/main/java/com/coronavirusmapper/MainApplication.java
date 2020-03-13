@@ -1,4 +1,4 @@
-package com.coronavirusmapper;
+package com.covidalert;
 
 import android.app.Application;
 import android.content.Context;

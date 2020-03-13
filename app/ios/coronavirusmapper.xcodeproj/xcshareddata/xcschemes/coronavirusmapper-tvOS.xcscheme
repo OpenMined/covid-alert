@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-               BuildableName = "coronavirusmapper-tvOS.app"
-               BlueprintName = "coronavirusmapper-tvOS"
-               ReferencedContainer = "container:coronavirusmapper.xcodeproj">
+               BuildableName = "covidalert-tvOS.app"
+               BlueprintName = "covidalert-tvOS"
+               ReferencedContainer = "container:covidalert.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "coronavirusmapper-tvOSTests.xctest"
-               BlueprintName = "coronavirusmapper-tvOSTests"
-               ReferencedContainer = "container:coronavirusmapper.xcodeproj">
+               BuildableName = "covidalert-tvOSTests.xctest"
+               BlueprintName = "covidalert-tvOSTests"
+               ReferencedContainer = "container:covidalert.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -61,9 +61,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "coronavirusmapper-tvOSTests.xctest"
-               BlueprintName = "coronavirusmapper-tvOSTests"
-               ReferencedContainer = "container:coronavirusmapper.xcodeproj">
+               BuildableName = "covidalert-tvOSTests.xctest"
+               BlueprintName = "covidalert-tvOSTests"
+               ReferencedContainer = "container:covidalert.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -71,9 +71,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "coronavirusmapper-tvOS.app"
-            BlueprintName = "coronavirusmapper-tvOS"
-            ReferencedContainer = "container:coronavirusmapper.xcodeproj">
+            BuildableName = "covidalert-tvOS.app"
+            BlueprintName = "covidalert-tvOS"
+            ReferencedContainer = "container:covidalert.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -94,9 +94,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "coronavirusmapper-tvOS.app"
-            BlueprintName = "coronavirusmapper-tvOS"
-            ReferencedContainer = "container:coronavirusmapper.xcodeproj">
+            BuildableName = "covidalert-tvOS.app"
+            BlueprintName = "covidalert-tvOS"
+            ReferencedContainer = "container:covidalert.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -113,9 +113,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "coronavirusmapper-tvOS.app"
-            BlueprintName = "coronavirusmapper-tvOS"
-            ReferencedContainer = "container:coronavirusmapper.xcodeproj">
+            BuildableName = "covidalert-tvOS.app"
+            BlueprintName = "covidalert-tvOS"
+            ReferencedContainer = "container:covidalert.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

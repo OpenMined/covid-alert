@@ -1,10 +1,10 @@
 platform :ios, '9.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-target 'coronavirusmapper' do
+target 'covidalert' do
   permissions_path = '../node_modules/react-native-permissions/ios'
 
-  # Pods for coronavirusmapper
+  # Pods for covidalert
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -44,7 +44,7 @@ target 'coronavirusmapper' do
 
   pod 'RNLocalize', :path => '../node_modules/react-native-localize'
 
-  target 'coronavirusmapperTests' do
+  target 'covidalertTests' do
     inherit! :search_paths
     # Pods for testing
   end
@@ -52,10 +52,10 @@ target 'coronavirusmapper' do
   use_native_modules!
 end
 
-target 'coronavirusmapper-tvOS' do
-  # Pods for coronavirusmapper-tvOS
+target 'covidalert-tvOS' do
+  # Pods for covidalert-tvOS
 
-  target 'coronavirusmapper-tvOSTests' do
+  target 'covidalert-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end
