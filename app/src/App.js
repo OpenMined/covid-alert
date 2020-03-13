@@ -239,9 +239,9 @@ export default class extends Component {
         scanning: "Actively Scanning",
         body: (
           <>
-            This app will <B>anonymously</B> track your location in the
-            background and send a notification to your phone when you’re close
-            to known previous locations of COVID-19 victims.{" "}
+            This app will <B>anonymously</B> log your location in the background
+            and send a notification to your phone when you’re close to known
+            previous locations of COVID-19 victims.{" "}
             <B>In order to work, please keep this app open on your phone.</B>
           </>
         ),

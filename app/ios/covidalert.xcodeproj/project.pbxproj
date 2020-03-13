@@ -22,6 +22,8 @@
 		F413C519F61D1C5DF316AD56 /* libPods-covidalert-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 548EF6FC9BABCFE7594DD33A /* libPods-covidalert-tvOSTests.a */; };
 		2FDA15AFC58247E78ECD53FF /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2FD177B7D1404149ABA58F6A /* Rubik-Medium.ttf */; };
 		207824A656E04A09934AC846 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5951994437054B569932F3C0 /* Rubik-Regular.ttf */; };
+		ECB0BAC3941E420B997F1E69 /* openmined-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 80D09919DE794D2FA89018E4 /* openmined-logo.png */; };
+		1E53AA5085094943AE39530D /* radar.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F9DF5819E5C44E5BBFC7868 /* radar.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +73,8 @@
 		F55B430E93C7990F81C2E053 /* Pods-covidalert-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-covidalert-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-covidalert-tvOSTests/Pods-covidalert-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		2FD177B7D1404149ABA58F6A /* Rubik-Medium.ttf */ = {isa = PBXFileReference; name = "Rubik-Medium.ttf"; path = "../assets/fonts/Rubik-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		5951994437054B569932F3C0 /* Rubik-Regular.ttf */ = {isa = PBXFileReference; name = "Rubik-Regular.ttf"; path = "../assets/fonts/Rubik-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		80D09919DE794D2FA89018E4 /* openmined-logo.png */ = {isa = PBXFileReference; name = "openmined-logo.png"; path = "../assets/images/openmined-logo.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		3F9DF5819E5C44E5BBFC7868 /* radar.png */ = {isa = PBXFileReference; name = "radar.png"; path = "../assets/images/radar.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -208,6 +212,8 @@
 			children = (
 				2FD177B7D1404149ABA58F6A /* Rubik-Medium.ttf */,
 				5951994437054B569932F3C0 /* Rubik-Regular.ttf */,
+				80D09919DE794D2FA89018E4 /* openmined-logo.png */,
+				3F9DF5819E5C44E5BBFC7868 /* radar.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -355,6 +361,8 @@
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				2FDA15AFC58247E78ECD53FF /* Rubik-Medium.ttf in Resources */,
 				207824A656E04A09934AC846 /* Rubik-Regular.ttf in Resources */,
+				ECB0BAC3941E420B997F1E69 /* openmined-logo.png in Resources */,
+				1E53AA5085094943AE39530D /* radar.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
