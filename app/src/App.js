@@ -250,6 +250,8 @@ export default class extends Component {
 
   render() {
     const isSetup = this.state.hasLocation && this.state.hasPush;
+    const rtl = this.state.languageRTL;
+    const d = s => (rtl ? [s, styles.rtl] : s);
 
     return (
       <View style={styles.background}>
@@ -265,17 +267,17 @@ export default class extends Component {
             <Text style={styles.radarText}>{this.t("scanning")}</Text>
           </View>
         )}
-        <Text style={styles.body}>{this.t("body")}</Text>
+        <Text style={d(styles.body)}>{this.t("body")}</Text>
         {!isSetup && (
           <View>
-            <Text style={styles.body}>{this.t("getStarted")}</Text>
+            <Text style={d(styles.body)}>{this.t("getStarted")}</Text>
             {!this.state.hasLocation && (
-              <Text style={styles.link} onPress={this.requestLocation}>
+              <Text style={d(styles.link)} onPress={this.requestLocation}>
                 {this.t("locationSharing")}
               </Text>
             )}
             {!this.state.hasPush && (
-              <Text style={styles.link} onPress={this.requestPush}>
+              <Text style={d(styles.link)} onPress={this.requestPush}>
                 {this.t("pushNotifications")}
               </Text>
             )}
@@ -285,13 +287,13 @@ export default class extends Component {
         {isSetup && (
           <View>
             <Text
-              style={styles.link}
+              style={d(styles.link)}
               onPress={() => this.openInBrowser("https://google.com")}
             >
               {this.t("privacy")}
             </Text>
             <Text
-              style={styles.link}
+              style={d(styles.link)}
               onPress={() =>
                 this.openInBrowser("https://opencollective.com/openmined")
               }
@@ -301,7 +303,7 @@ export default class extends Component {
           </View>
         )}
         <TouchableOpacity
-          style={styles.footer}
+          style={d(styles.footer)}
           onPress={() => this.openInBrowser("https://openmined.org")}
         >
           <Text style={styles.footerText}>{this.t("volunteers")}</Text>

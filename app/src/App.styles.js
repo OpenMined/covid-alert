@@ -73,5 +73,9 @@ export default StyleSheet.create({
   openMinedLogo: {
     ...getImageScaled(200, 766, 0.15),
     marginLeft: 10
+  },
+  rtl: {
+    direction: "rtl",
+    textAlign: "right"
   }
 });
