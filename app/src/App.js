@@ -29,15 +29,20 @@ export default class extends Component {
   constructor(props) {
     super(props);
 
-    const { languageCode } = getLocales()[0];
+    // const { languageCode } = getLocales()[0];
+    const languageCode = "ar";
     const supportedLanguages = ["en", "es", "pt", "fr", "ru", "ar", "zh"];
+    const finalLanguageCode =
+      supportedLanguages.includes(languageCode) &&
+      copy.hasOwnProperty(languageCode)
+        ? languageCode
+        : "en";
 
     this.state = {
       hasLocation: false,
       hasPush: false,
-      languageCode: supportedLanguages.includes(languageCode)
-        ? languageCode
-        : "en"
+      languageCode: finalLanguageCode,
+      languageRTL: finalLanguageCode === "ar"
     };
 
     this.requestLocation = this.requestLocation.bind(this);

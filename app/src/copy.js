@@ -50,10 +50,11 @@ export default {
     scanning: "Analisando",
     body: (
       <>
-        Este aplicativo vai registrar <B>anonimamente</B> sua localização em
-        segundo plano e enviará uma notificação para o seu telefone quando você
-        estiver perto de locais anteriores conhecidos das vítimas do COVID-19.{" "}
-        <B>Para funcionar, mantenha o aplicativo aberto no seu telefone.</B>
+        Este aplicativo irá registrar <B>anonimamente</B> sua localização
+        enquanto estiver com o app em segundo plano e enviará uma notificação
+        para o seu telefone quando você estiver próximo a locais que foram
+        frequentados por vítimas do COVID-19.{" "}
+        <B>Para funcionar, é só deixar o app aberto no seu telefone.</B>
       </>
     ),
     getStarted: "Para começar, por favor:",
@@ -105,6 +106,40 @@ export default {
     support: "Как я могу помочь этому проекту?",
     volunteers: "Сделано волонтерами"
   },
-  ar: {},
-  zh: {}
+  ar: {
+    message: ` اذا كان المريض (المرضى) المصابون بحالات COVID-19 المبلغ عنها في نطاق 100 متر من موقعك الحالي خلال الـ 72
+      ساعة الماضية. نقترح أنه إذا اخترت المغادرة ، يرجى القيام بذلك بهدوء.`,
+    scanning: "المسح بنشاط",
+    body: (
+      <>
+        هذا التطبيق سوف يسجيل موقعك في الخلفية بسرية ودون معرفة هوية المستعمل وا
+        رسال إشعارًا إلى هاتفك عندما تكون قريبًا من المعرفة المواقع السابقة
+        لضحايا COVID-19
+      </>
+    ),
+    getStarted: "للبدء ، يرجى",
+    locationSharing: "تمكين مشاركة الموقع (دائمًا)",
+    pushNotifications: "تمكين دفع الإشعارات",
+    privacy: "كيف نحمي خصوصيتك؟",
+    support: "كيف يمكنني دعم هذا التطبيق؟",
+    volunteers: "بناها المتطوعون في"
+  },
+  zh: {
+    message:
+      "在过去72小时内, 有COVID-19患者在您当前位置的100m之内. 如果您选择离开高险区, 请您冷静/安静地离开.",
+    scanning: "正在主动监控疫情数据",
+    body: (
+      <>
+        此应用将在后端<B>匿名</B>记录您的位置. 在您接近COVID-19患者 或
+        患者最近经过区域时, 此应用会向您的手机发送通知.{" "}
+        <B>请您在手机上将此应用保持打开状态,才能到通知。</B>
+      </>
+    ),
+    getStarted: "开始使用, 请您:",
+    locationSharing: "始终启用位置共享",
+    pushNotifications: "启用推送通知",
+    privacy: "我们如何保护您的隐私?",
+    support: "我如何支持此应用?",
+    volunteers: "由多名志愿者开发@"
+  }
 };
