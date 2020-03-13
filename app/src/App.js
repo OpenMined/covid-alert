@@ -104,6 +104,8 @@ export default class extends Component {
     )
       .then(res => {
         if (res === RESULTS.GRANTED && !this.state.hasLocation) {
+          console.log("Granted location permission");
+
           this.setState({ hasLocation: true });
           this.startLocation();
         } else {
@@ -123,6 +125,8 @@ export default class extends Component {
           status === RESULTS.GRANTED &&
           !this.state.hasPush
         ) {
+          console.log("Granted push permission");
+
           this.setState({ hasPush: true });
           this.startPush();
         } else {
@@ -139,15 +143,13 @@ export default class extends Component {
       desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
       stationaryRadius: 50,
       distanceFilter: 50,
-      notificationTitle: "Background tracking",
-      notificationText: "enabled",
       debug: false,
       startOnBoot: false,
       stopOnTerminate: false,
       locationProvider: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER,
-      interval: 10000,
+      interval: 30000,
       fastestInterval: 5000,
-      activitiesInterval: 10000,
+      activitiesInterval: 30000,
       stopOnStillActivity: false,
       stopTimeout: 1
     });
