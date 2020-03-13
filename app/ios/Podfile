@@ -42,6 +42,8 @@ target 'coronavirusmapper' do
 
   pod 'react-native-randombytes', :path => '../node_modules/react-native-randombytes'
 
+  pod 'RNLocalize', :path => '../node_modules/react-native-localize'
+
   target 'coronavirusmapperTests' do
     inherit! :search_paths
     # Pods for testing

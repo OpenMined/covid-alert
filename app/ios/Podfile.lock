@@ -190,6 +190,10 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
+  - react-native-randombytes (3.5.3):
+    - React
+  - react-native-udp (2.7.0):
+    - React
   - React-RCTActionSheet (0.61.5):
     - React-Core/RCTActionSheetHeaders (= 0.61.5)
   - React-RCTAnimation (0.61.5):
@@ -227,7 +231,13 @@ PODS:
     - ReactCommon/jscallinvoker (= 0.61.5)
   - RNCPushNotificationIOS (1.0.7):
     - React
+  - RNLocalize (1.3.3):
+    - React
+  - RNOS (1.2.6):
+    - React
   - RNPermissions (2.0.9):
+    - React
+  - TcpSockets (3.3.2):
     - React
   - Yoga (1.14.0)
 
@@ -252,6 +262,8 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - react-native-randombytes (from `../node_modules/react-native-randombytes`)
+  - react-native-udp (from `../node_modules/react-native-udp`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -264,7 +276,10 @@ DEPENDENCIES:
   - ReactCommon/jscallinvoker (from `../node_modules/react-native/ReactCommon`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCPushNotificationIOS (from `../node_modules/@react-native-community/push-notification-ios`)"
+  - RNLocalize (from `../node_modules/react-native-localize`)
+  - RNOS (from `../node_modules/react-native-os`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
+  - TcpSockets (from `../node_modules/react-native-tcp`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -308,6 +323,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-randombytes:
+    :path: "../node_modules/react-native-randombytes"
+  react-native-udp:
+    :path: "../node_modules/react-native-udp"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -330,8 +349,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNCPushNotificationIOS:
     :path: "../node_modules/@react-native-community/push-notification-ios"
+  RNLocalize:
+    :path: "../node_modules/react-native-localize"
+  RNOS:
+    :path: "../node_modules/react-native-os"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
+  TcpSockets:
+    :path: "../node_modules/react-native-tcp"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -355,6 +380,8 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
+  react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
+  react-native-udp: ff9d13e523f2b58e6bc5d4d32321ac60671b5dc9
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
   React-RCTBlob: d89293cc0236d9cb0933d85e430b0bbe81ad1d72
@@ -366,9 +393,12 @@ SPEC CHECKSUMS:
   React-RCTVibration: a49a1f42bf8f5acf1c3e297097517c6b3af377ad
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
   RNCPushNotificationIOS: eea954fa69537d4a8db898fe1b1a06e2b7e15841
+  RNLocalize: a734b53c45e77acd3ffb78b92e63bb4d6cd13257
+  RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNPermissions: 2f74237e97b08beda01e914301e12524ddddf5b8
+  TcpSockets: 14306fb79f9750ea7d2ddd02d8bed182abb01797
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: 77a8885238373e53a52e102e55b07dbd004802ef
+PODFILE CHECKSUM: c8ad0e35ce53276b8a43d3116498d9a42de88778
 
 COCOAPODS: 1.9.1
