@@ -21,17 +21,17 @@ import PushNotification from "react-native-push-notification";
 import { getLocales } from "react-native-localize";
 
 import styles from "./App.styles";
+import copy from "./copy";
 import * as paillier from "./paillier";
 // import checkCoords from './check-coords';
-
-const B = props => <Text style={styles.bold}>{props.children}</Text>;
 
 export default class extends Component {
   constructor(props) {
     super(props);
 
     const { languageCode } = getLocales()[0];
-    const supportedLanguages = ["en", "es", "pt", "fr", "ru", "ar"];
+    // const languageCode = 'cn';
+    const supportedLanguages = ["en", "es", "pt", "fr", "ru", "ar", "zh"];
 
     this.state = {
       hasLocation: false,
@@ -233,29 +233,6 @@ export default class extends Component {
   }
 
   t(key) {
-    const copy = {
-      en: {
-        message:
-          "Patient(s) with reported COVID-19 cases have been within 100m of your current location in the past 72 hours. We suggest that you if you choose to leave, please do so calmly and quietly.",
-        title: "COVID-19 Alert",
-        scanning: "Actively Scanning",
-        body: (
-          <>
-            This app will <B>anonymously</B> log your location in the background
-            and send a notification to your phone when you’re close to known
-            previous locations of COVID-19 victims.{" "}
-            <B>In order to work, please keep this app open on your phone.</B>
-          </>
-        ),
-        getStarted: "To get started please:",
-        locationSharing: "Enable location sharing (always)",
-        pushNotifications: "Enable push notifications",
-        privacy: "How do we protect your privacy?",
-        support: "How can I support this app?",
-        volunteers: "Built by volunteers at"
-      }
-    };
-
     return copy[this.state.languageCode][key];
   }
 
@@ -272,7 +249,8 @@ export default class extends Component {
 
     return (
       <View style={styles.background}>
-        <Text style={styles.title}>{this.t("title")}</Text>
+        {/* NOTE: The title of the app should not be translated */}
+        <Text style={styles.title}>COVID-19 Alert</Text>
         {isSetup && (
           <View style={styles.radarContainer}>
             <Image
