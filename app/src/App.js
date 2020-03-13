@@ -251,7 +251,8 @@ export default class extends Component {
   render() {
     const isSetup = this.state.hasLocation && this.state.hasPush;
     const rtl = this.state.languageRTL;
-    const d = s => (rtl ? [s, styles.rtl] : s);
+    const d = (s, rightAlign = false) =>
+      rtl ? [s, styles.rtl, rightAlign ? styles.rightAlign : {}] : s;
 
     return (
       <View style={styles.background}>
@@ -264,20 +265,20 @@ export default class extends Component {
               source={require("../assets/images/radar.png")}
               resizeMode="contain"
             />
-            <Text style={styles.radarText}>{this.t("scanning")}</Text>
+            <Text style={d(styles.radarText)}>{this.t("scanning")}</Text>
           </View>
         )}
-        <Text style={d(styles.body)}>{this.t("body")}</Text>
+        <Text style={d(styles.body, true)}>{this.t("body")}</Text>
         {!isSetup && (
           <View>
-            <Text style={d(styles.body)}>{this.t("getStarted")}</Text>
+            <Text style={d(styles.body, true)}>{this.t("getStarted")}</Text>
             {!this.state.hasLocation && (
               <Text style={d(styles.link)} onPress={this.requestLocation}>
                 {this.t("locationSharing")}
               </Text>
             )}
             {!this.state.hasPush && (
-              <Text style={d(styles.link)} onPress={this.requestPush}>
+              <Text style={d(styles.link, true)} onPress={this.requestPush}>
                 {this.t("pushNotifications")}
               </Text>
             )}
@@ -287,13 +288,13 @@ export default class extends Component {
         {isSetup && (
           <View>
             <Text
-              style={d(styles.link)}
+              style={d(styles.link, true)}
               onPress={() => this.openInBrowser("https://google.com")}
             >
               {this.t("privacy")}
             </Text>
             <Text
-              style={d(styles.link)}
+              style={d(styles.link, true)}
               onPress={() =>
                 this.openInBrowser("https://opencollective.com/openmined")
               }

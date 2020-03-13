@@ -75,7 +75,10 @@ export default StyleSheet.create({
     marginLeft: 10
   },
   rtl: {
-    direction: "rtl",
+    direction: "rtl"
+  },
+  rightAlign: {
+    alignSelf: "flex-end",
     textAlign: "right"
   }
 });
