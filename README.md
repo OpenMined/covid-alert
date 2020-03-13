@@ -5,6 +5,20 @@
 - `/designs` - All the related design files
 - `/package` - A small NPM package with two functions. One is for turning GPS coordinates into a sector, row, and column. The other is for turning a row and column into a 0/1 tensor.
 
+## Languages
+
+We have support for the following languages:
+
+- English
+- Spanish
+- Portuguese (Brazilian)
+- French
+- Russian
+- Chinese (Mandarin)
+- Arabic
+
+We are open to any pull requests to add support for other languages!
+
 ## Getting `app` to work
 
 The dashboard and package directories mostly speak for themselves. To get the app to run, run the following lines:
