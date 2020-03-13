@@ -30,7 +30,6 @@ export default class extends Component {
     super(props);
 
     const { languageCode } = getLocales()[0];
-    // const languageCode = 'cn';
     const supportedLanguages = ["en", "es", "pt", "fr", "ru", "ar", "zh"];
 
     this.state = {

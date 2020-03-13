@@ -11,7 +11,7 @@ The dashboard and package directories mostly speak for themselves. To get the ap
 
 1. `yarn install`
 2. `react-native link`
-3. `node_modules/.bin/rn-nodeify —hack —install` <-- The hack, here's an issue for whoever wants to fix this
+3. `node_modules/.bin/rn-nodeify —hack —install` <-- The hack, [here's an issue for whoever wants to fix this](https://github.com/cereallarceny/covid-alert/issues/1)
 4. If you want to install ios, run `cd ios && pod install && cd ../`
 5. iOS: `yarn ios` / Android: `yarn android`
 
