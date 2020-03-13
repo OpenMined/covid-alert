@@ -20,6 +20,8 @@ import {
 import BackgroundGeolocation from "@mauron85/react-native-background-geolocation";
 import PushNotification from "react-native-push-notification";
 import styles from "./App.styles";
+import * as paillier from "./paillier";
+var BigInt = require("big-integer");
 // import checkCoords from './check-coords';
 
 const B = props => <Text style={styles.bold}>{props.children}</Text>;
@@ -37,6 +39,9 @@ export default class extends Component {
     this.requestPush = this.requestPush.bind(this);
     this.startLocation = this.startLocation.bind(this);
     this.startPush = this.startPush.bind(this);
+
+    // const { publicKey, privateKey } = paillier.generateRandomKeysSync(128);
+    // console.log(publicKey, privateKey);
   }
 
   componentDidMount() {
