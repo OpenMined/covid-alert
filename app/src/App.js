@@ -21,8 +21,7 @@ import PushNotification from "react-native-push-notification";
 import { getLocales } from "react-native-localize";
 
 import styles from "./App.styles";
-// import * as paillier from './paillier';
-// const BigInt = require('big-integer');
+import * as paillier from "./paillier";
 // import checkCoords from './check-coords';
 
 const B = props => <Text style={styles.bold}>{props.children}</Text>;
@@ -48,7 +47,9 @@ export default class extends Component {
     this.startPush = this.startPush.bind(this);
     this.t = this.t.bind(this);
 
-    // const { publicKey, privateKey } = paillier.generateRandomKeysSync(128);
+    console.log(paillier.generateRandomKeys);
+
+    // const { publicKey, privateKey } = paillier.generateRandomKeys(128);
     // console.log(publicKey, privateKey);
   }
 

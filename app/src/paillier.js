@@ -1,12 +1,7 @@
 "use strict";
 
-import crypto from "crypto";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-
-var bcu = require("./bigint-crypto-utils");
-
-var BigInt = require("big-integer");
+const bcu = require("./bigint-crypto-utils");
+const BigInt = require("big-integer");
 
 const _ONE = BigInt(1);
 
