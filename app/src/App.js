@@ -30,7 +30,7 @@ export default class extends Component {
   constructor(props) {
     super(props);
 
-    const { languageCode } = getLocales();
+    const { languageCode } = getLocales()[0];
     const supportedLanguages = ["en", "es", "pt", "fr", "ru", "ar"];
 
     this.state = {
@@ -46,14 +46,13 @@ export default class extends Component {
     this.startLocation = this.startLocation.bind(this);
     this.startPush = this.startPush.bind(this);
     this.t = this.t.bind(this);
-
-    console.log("HELLO", paillier.generateRandomKeys(128));
-
-    // const { publicKey, privateKey } = paillier.generateRandomKeys(128);
-    // console.log(publicKey, privateKey);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    // const hello = await paillier.generateRandomKeys(128);
+
+    // console.log('HELLO', hello);
+
     Promise.all([
       check(
         Platform.select({

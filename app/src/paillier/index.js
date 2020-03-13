@@ -1,5 +1,3 @@
-"use strict";
-
 import * as bcu from "./bigint-crypto-utils";
 import BigInt from "big-integer";
 
