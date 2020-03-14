@@ -19,15 +19,24 @@ We have support for the following languages:
 
 We are open to any pull requests to add support for other languages!
 
-## Getting `app` to work
+## Development environment
+
+1. Please install [nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+2. then install Node 12 with `nvm install 12`, or some other recent version of Node, ideally an LTS.
+3. `nvm use 12` (or your preferred, recent version)
+4. `npm -g install yarn react-native-cli`
+
+### Android prep
+
+1. Open the `app/android` folder in Android Studio 3.6+. It should prompt you to install the NDK. This is required for `nodejs-nodemobile`, which is itself required for `paillier-bigint`.
+
+## Building/running the app
 
 The dashboard and package directories mostly speak for themselves. To get the app to run, run the following lines:
 
 1. `yarn install`
-2. `react-native link`
-3. `node_modules/.bin/rn-nodeify —hack —install` <-- The hack, [here's an issue for whoever wants to fix this](https://github.com/cereallarceny/covid-alert/issues/1)
-4. If you want to install ios, run `cd ios && pod install && cd ../`
-5. iOS: `yarn ios` / Android: `yarn android`
+2. If you want to install ios, run `cd ios && pod install && cd ../`
+3. To start the app -- iOS: `yarn ios` / Android: `yarn android`
 
 ## Acknowledgements
 
