@@ -1,15 +1,15 @@
-const express = require('express');
-const cors = require('cors');
-const functions = require('firebase-functions');
-const admin = require('firebase-admin');
-const paillier = require('paillier-bigint');
-const { gps2box, stringifyBigInt, parseBigInt } = require('gps-sector-grid');
+const express = require("express");
+const cors = require("cors");
+const functions = require("firebase-functions");
+const admin = require("firebase-admin");
+const paillier = require("paillier-bigint");
+const { gps2box, stringifyBigInt, parseBigInt } = require("gps-sector-grid");
 
-const serviceAccount = require('./coronavirus-mapper-firebase-adminsdk-i6ree-699f4198bb.json');
+const serviceAccount = require("./coronavirus-mapper-firebase-adminsdk-i6ree-699f4198bb.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://coronavirus-mapper.firebaseio.com'
+  databaseURL: "https://coronavirus-mapper.firebaseio.com"
 });
 
 const db = admin.firestore();
@@ -19,8 +19,13 @@ const gridTensorComputation = async (req, res) => {
 
   publicKey = new paillier.PublicKey(publicKey.n, publicKey.g);
 
-  db.collectionGroup('locations')
-    .where('sector_key', '==', sectorKey)
+  // Only work with locations of patients in the last 72 hours
+  const locationRecency = Date.now() - 259200000; // 259200000ms === 72 hours
+  const locationRecencyObject = new Date(locationRecency);
+
+  db.collectionGroup("locations")
+    .where("sector_key", "==", sectorKey)
+    .where("last_time", ">=", locationRecencyObject)
     .get()
     .then(snapshot => {
       if (snapshot.size >= 1) {
@@ -81,7 +86,7 @@ const app = express();
 app.use(cors({ origin: true }));
 
 // Build our routes
-app.post('/grid-tensor-computation', gridTensorComputation);
+app.post("/grid-tensor-computation", gridTensorComputation);
 
 // Expose Express API as a single Cloud Function:
 exports.api = functions.https.onRequest(app);
