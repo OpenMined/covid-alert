@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, Heading, Flex, Text, Button } from '@chakra-ui/core';
+import React from "react";
+import { Box, Heading, Flex, Text, Button } from "@chakra-ui/core";
 
 const MenuItem = ({ children }) => (
   <Text mt={[4, 0]} mr={6} display="block">
@@ -24,11 +24,11 @@ export default ({ user, doLogout, ...props }) => {
     >
       <Flex align="center" mr={5}>
         <Heading as="h1" size="lg">
-          Mapper Admin
+          COVID-19 Alert
         </Heading>
       </Flex>
 
-      <Box display={['block', 'none']} onClick={() => setShow(!show)}>
+      <Box display={["block", "none"]} onClick={() => setShow(!show)}>
         <svg
           fill="white"
           width="12px"
@@ -40,15 +40,15 @@ export default ({ user, doLogout, ...props }) => {
         </svg>
       </Box>
       <Box
-        display={[show ? 'block' : 'none', 'flex']}
-        width={['full', 'auto']}
+        display={[show ? "block" : "none", "flex"]}
+        width={["full", "auto"]}
         alignItems="center"
         flexGrow={1}
       >
         <MenuItem>{user.email}</MenuItem>
       </Box>
 
-      <Box display={[show ? 'block' : 'none', 'flex']} mt={[4, 0]}>
+      <Box display={[show ? "block" : "none", "flex"]} mt={[4, 0]}>
         <Button bg="transparent" border="1px" onClick={doLogout}>
           Logout
         </Button>
