@@ -20,12 +20,12 @@ const gridTensorComputation = async (req, res) => {
   publicKey = new paillier.PublicKey(publicKey.n, publicKey.g);
 
   // Only work with locations of patients in the last 72 hours
-  const locationRecency = Date.now() - 259200000; // 259200000ms === 72 hours
-  const locationRecencyObject = new Date(locationRecency);
+  const recency = Date.now() - 259200000; // 259200000ms === 72 hours
+  const recencyDate = admin.firestore.Timestamp.fromDate(new Date(recency));
 
   db.collectionGroup("locations")
     .where("sector_key", "==", sectorKey)
-    .where("last_time", ">=", locationRecencyObject)
+    .where("last_time", ">=", recencyDate)
     .get()
     .then(snapshot => {
       if (snapshot.size >= 1) {
