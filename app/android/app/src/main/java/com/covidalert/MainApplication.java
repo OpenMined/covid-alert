@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.janeasystems.rn_nodejs_mobile.RNNodeJsMobilePackage;
 import com.reactcommunity.rnlocalize.RNLocalizePackage;
 import com.bitgo.randombytes.RandomBytesPackage;
 import com.facebook.react.ReactNativeHost;

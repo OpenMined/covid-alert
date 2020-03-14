@@ -1,0 +1,15 @@
+{
+  "//": [
+    "Rename this sample file to package.json to use on your project.",
+    "The sample-package.json file will be overwritten in updates/reinstalls."
+  ],
+  "name": "covid-alert-rn-node",
+  "version": "0.0.1",
+  "description": "node part of the project",
+  "main": "main.js",
+  "author": "Peter Gaultney",
+  "license": "",
+  "dependencies": {
+    "paillier-bigint": "^2.0.0"
+  }
+}

@@ -179,6 +179,7 @@ android {
 }
 
 dependencies {
+    implementation project(':nodejs-mobile-react-native')
     implementation project(':react-native-localize')
     implementation project(':react-native-randombytes')
     implementation project(':react-native-push-notification')

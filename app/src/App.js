@@ -5,7 +5,8 @@ import {
   Image,
   Linking,
   TouchableOpacity,
-  Platform
+  Platform,
+  Button
 } from "react-native";
 import {
   check,
@@ -19,10 +20,10 @@ import {
 import BackgroundGeolocation from "@mauron85/react-native-background-geolocation";
 import PushNotification from "react-native-push-notification";
 import { getLocales } from "react-native-localize";
+import nodejs from "nodejs-mobile-react-native";
 
 import styles from "./App.styles";
 import copy from "./copy";
-import * as paillier from "./paillier";
 // import checkCoords from './check-coords';
 
 export default class extends Component {
@@ -52,9 +53,24 @@ export default class extends Component {
   }
 
   async componentDidMount() {
-    // const hello = await paillier.generateRandomKeys(128);
-
     // console.log('HELLO', hello);
+    nodejs.start("main.js");
+    nodejs.channel.addListener(
+      "message",
+      msg => {
+        try {
+          const key = JSON.parse(msg);
+          if (key.publicKeyN) {
+            alert("Public key N: " + key.publicKeyN);
+          }
+        } catch (err) {
+          console.log(err);
+          console.log(msg);
+          alert("From node: " + msg);
+        }
+      },
+      this
+    );
 
     Promise.all([
       check(
@@ -88,9 +104,8 @@ export default class extends Component {
 
         this.setState({ hasPush: true });
         this.startPush();
-      } else {
-        console.log("Push permission denied");
-
+      } else if (!this.state.hasPush) {
+        console.log("Push permission denied", { pushStatus });
         this.requestPush();
       }
     });
@@ -133,7 +148,7 @@ export default class extends Component {
           this.setState({ hasPush: true });
           this.startPush();
         } else {
-          openSettings();
+          // openSettings();
         }
       }
     );
@@ -313,6 +328,10 @@ export default class extends Component {
             resizeMode="contain"
           />
         </TouchableOpacity>
+        <Button
+          title="Message Node"
+          onPress={() => nodejs.channel.send("generateRandomKeys")}
+        />
       </View>
     );
   }

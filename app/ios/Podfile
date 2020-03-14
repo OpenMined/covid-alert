@@ -44,6 +44,8 @@ target 'covidalert' do
 
   pod 'RNLocalize', :path => '../node_modules/react-native-localize'
 
+  pod 'nodejs-mobile-react-native', :path => '../node_modules/nodejs-mobile-react-native'
+
   target 'covidalertTests' do
     inherit! :search_paths
     # Pods for testing
