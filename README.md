@@ -40,6 +40,7 @@ Many people have worked on this application within the OpenMined community, many
 - [Jose Corbacho](https://github.com/mccorby)
 - [Maddie Shang](https://github.com/prtfw)
 - [Patrick Cason](https://github.com/cereallarceny)
+- [Peter Gaultney](https://github.com/petergaultney)
 - [Théo Ryffel](https://github.com/LaRiffle)
 - [Thiago Costa Porto](https://github.com/tcp)
 - [Vova Manannikov](https://github.com/vvmnnnkv)
