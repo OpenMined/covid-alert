@@ -183,7 +183,7 @@ export function prime(bitLength: number, iterations = 16): JSBI {
  * Returns a cryptographically secure random integer between [min,max]
  */
 export function randBetween(max: JSBI, min: JSBI = _ONE): JSBI {
-  if (max <= min) throw new Error("max must be > min");
+  if (JSBI.LE(max, min)) throw new Error("max must be > min");
   const interval = JSBI.subtract(max, min);
   let bitLen = bitLength(interval);
   let rnd: JSBI;
