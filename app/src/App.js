@@ -23,7 +23,6 @@ import { getLocales } from "react-native-localize";
 import styles from "./App.styles";
 import copy from "./copy";
 import { generateRandomKeys } from "./paillier";
-// import * as paillier from "./paillier";
 // import checkCoords from './check-coords';
 
 export default class extends Component {
