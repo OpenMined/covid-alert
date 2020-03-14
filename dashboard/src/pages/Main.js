@@ -19,7 +19,7 @@ import CreatePatientForm from "../components/CreatePatientForm";
 import Map from "../components/Map";
 import Patient from "../components/Patient";
 import LocationsList from "../components/LocationsList";
-import {
+import firebase, {
   createDocument,
   getCollection,
   createSubDocument,
@@ -96,35 +96,46 @@ export default ({ user, toast, toastProps }) => {
     const { sectorKey } = gps2box(values.lat, values.lng);
     values["sector_key"] = sectorKey;
 
-    console.log("SUBMITTING", values);
+    const splitDate = values.date.split("/");
+    const splitTime = values.time.split(":");
+    values["last_time"] = firebase.firestore.Timestamp.fromDate(
+      new Date(
+        splitDate[2],
+        splitDate[1] - 1,
+        splitDate[0],
+        splitTime[0],
+        splitTime[1],
+        0
+      )
+    );
 
-    // TODO: Convert date and time values to be a single "last_time" value (using dayjs and Firestore timestamps)
-    // TODO: Submit and show this information in the location table below
+    delete values.date;
+    delete values.time;
 
-    // createSubDocument(
-    //   'patients',
-    //   currentPatient.id,
-    //   'locations',
-    //   values,
-    //   () => {
-    //     toast({
-    //       title: 'Success',
-    //       description: `Added a location for ${currentPatient.first_name} ${currentPatient.last_name} successfully`,
-    //       status: 'success',
-    //       ...toastProps
-    //     });
+    createSubDocument(
+      "patients",
+      currentPatient.id,
+      "locations",
+      values,
+      () => {
+        toast({
+          title: "Success",
+          description: `Added a location for ${currentPatient.first_name} ${currentPatient.last_name} successfully`,
+          status: "success",
+          ...toastProps
+        });
 
-    //     getLocations();
-    //   },
-    //   error => {
-    //     toast({
-    //       title: 'Error with creating a location for that patient',
-    //       description: error.message,
-    //       status: 'error',
-    //       ...toastProps
-    //     });
-    //   }
-    // );
+        getLocations();
+      },
+      error => {
+        toast({
+          title: "Error with creating a location for that patient",
+          description: error.message,
+          status: "error",
+          ...toastProps
+        });
+      }
+    );
   };
 
   const setPatientById = id =>

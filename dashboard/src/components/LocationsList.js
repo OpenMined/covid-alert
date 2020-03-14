@@ -1,29 +1,49 @@
-import React from 'react';
-import { Heading, List, ListItem, Box, Text } from '@chakra-ui/core';
+import React from "react";
+import { Heading, List, ListItem, Box, Text } from "@chakra-ui/core";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
-export default ({ locations, ...props }) => (
-  <Box {...props}>
-    <Heading as="h3" size="lg">
-      Locations
-    </Heading>
-    {locations.length >= 1 && (
-      <List spacing={2} mt={2}>
-        {locations.map(({ lng, lat }) => {
-          return (
-            <ListItem key={`location-${lng},${lat}`}>
-              <Text>
-                <strong>Longitude:</strong> {lng}
-              </Text>
-              <Text>
-                <strong>Latitude:</strong> {lat}
-              </Text>
-            </ListItem>
-          );
-        })}
-      </List>
-    )}
-    {locations.length === 0 && (
-      <Text mt={2}>We don't have any locations for this patient yet.</Text>
-    )}
-  </Box>
-);
+dayjs.extend(relativeTime);
+
+export default ({ locations, ...props }) => {
+  const orderedLocations = locations.sort((a, b) =>
+    dayjs(a.last_time.toDate()).isBefore(dayjs(b.last_time.toDate())) ? 1 : -1
+  );
+
+  return (
+    <Box {...props}>
+      <Heading as="h3" size="lg">
+        Locations
+      </Heading>
+      {orderedLocations.length >= 1 && (
+        <List spacing={2} mt={2}>
+          {locations.map(({ lng, lat, last_time }) => {
+            const date = dayjs(last_time.toDate());
+            const hoursAgo = dayjs().diff(date, "h");
+
+            let finalTime =
+              hoursAgo === 1 ? "1 hour ago" : `${hoursAgo} hours ago`;
+
+            if (hoursAgo > 72) {
+              finalTime = date.fromNow();
+            }
+
+            return (
+              <ListItem key={`location-${lng},${lat}`}>
+                <Text>
+                  <strong>Time:</strong> {finalTime}
+                </Text>
+                <Text>
+                  <strong>Location:</strong> {lat.toFixed(5)}, {lng.toFixed(5)}
+                </Text>
+              </ListItem>
+            );
+          })}
+        </List>
+      )}
+      {locations.length === 0 && (
+        <Text mt={2}>We don't have any locations for this patient yet.</Text>
+      )}
+    </Box>
+  );
+};

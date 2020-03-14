@@ -29,7 +29,14 @@ const AddLocationModal = ({ isOpen, onClose, lat, lng, onSubmit }) => (
       <ModalHeader>Add Location</ModalHeader>
       <ModalCloseButton />
       <ModalBody mb={4}>
-        <AddLocationForm lat={lat} lng={lng} doLocationAdd={onSubmit} />
+        <AddLocationForm
+          lat={lat}
+          lng={lng}
+          doLocationAdd={values => {
+            onSubmit(values);
+            onClose();
+          }}
+        />
       </ModalBody>
     </ModalContent>
   </Modal>
@@ -59,33 +66,19 @@ const Crosshair = () => {
       position="absolute"
       top="50%"
       left="50%"
-      width={`${size}px`}
-      height={`${size}px`}
-      marginTop={`-${size / 2}px`}
-      marginLeft={`-${size / 2}px`}
+      w={`${size}px`}
+      h={`${size}px`}
+      mt={`-${size / 2}px`}
+      ml={`-${size / 2}px`}
     >
       {/* Top */}
-      <Box {...line} width="2px" height="40%" left="50%" marginLeft="-1px" />
+      <Box {...line} w="2px" h="40%" left="50%" ml="-1px" />
       {/* Right */}
-      <Box
-        {...line}
-        width="40%"
-        height="2px"
-        top="50%"
-        right="0px"
-        marginTop="-1px"
-      />
+      <Box {...line} w="40%" h="2px" top="50%" right="0px" mt="-1px" />
       {/* Bottom */}
-      <Box
-        {...line}
-        width="2px"
-        height="40%"
-        bottom="0px"
-        left="50%"
-        marginLeft="-1px"
-      />
+      <Box {...line} w="2px" h="40%" bottom="0px" left="50%" ml="-1px" />
       {/* Left */}
-      <Box {...line} width="40%" height="2px" top="50%" marginTop="-1px" />
+      <Box {...line} w="40%" h="2px" top="50%" mt="-1px" />
     </Box>
   );
 };

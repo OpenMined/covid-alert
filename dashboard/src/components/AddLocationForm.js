@@ -57,7 +57,7 @@ export default ({ lat, lng, doLocationAdd }) => {
             ref={register({
               required: "Time is required",
               pattern: {
-                value: /^(\d{2})\:(\d{2})$/,
+                value: /^(\d{2}):(\d{2})$/,
                 message: "Invalid time"
               }
             })}
