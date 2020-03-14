@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import ReactMapGL, { Marker } from "react-map-gl";
 import Geocoder from "react-map-gl-geocoder";
-import { Box, theme, Button } from "@chakra-ui/core";
+import { Box, Text, theme, Button } from "@chakra-ui/core";
 
 import "mapbox-gl/dist/mapbox-gl.css";
 import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
@@ -93,6 +93,11 @@ export default ({ locations, reportCoordinates, ...props }) => {
           <Location lng={lng} lat={lat} key={`marker-${lng},${lat}`} />
         ))}
         <Crosshair />
+        <Box position="absolute" right="10px" bottom="85px">
+          <Text color="white" fontWeight="bold">
+            {viewport.latitude.toFixed(5)}, {viewport.longitude.toFixed(5)}
+          </Text>
+        </Box>
         <Box position="absolute" right="10px" bottom="30px">
           <Button
             variantColor="blue"
