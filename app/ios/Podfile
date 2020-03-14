@@ -40,8 +40,6 @@ target 'covidalert' do
   pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse.podspec"
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications.podspec"
 
-  pod 'react-native-randombytes', :path => '../node_modules/react-native-randombytes'
-
   pod 'RNLocalize', :path => '../node_modules/react-native-localize'
 
   target 'covidalertTests' do

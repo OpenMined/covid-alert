@@ -22,7 +22,8 @@ import { getLocales } from "react-native-localize";
 
 import styles from "./App.styles";
 import copy from "./copy";
-import * as paillier from "./paillier";
+import { generateRandomKeys } from "./paillier";
+// import * as paillier from "./paillier";
 // import checkCoords from './check-coords';
 
 export default class extends Component {
@@ -52,9 +53,9 @@ export default class extends Component {
   }
 
   async componentDidMount() {
-    // const hello = await paillier.generateRandomKeys(128);
+    const { publicKey, privateKey } = await generateRandomKeys(1024);
 
-    // console.log('HELLO', hello);
+    console.log(publicKey, privateKey);
 
     Promise.all([
       check(

@@ -1,4 +1,4 @@
-import * as paillier from "paillier-bigint";
+import * as paillier from "./paillier";
 import { gps2box, stringifyBigInt, parseBigInt } from "gps-sector-grid";
 
 export default async (lat, lng) => {
