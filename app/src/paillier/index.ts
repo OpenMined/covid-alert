@@ -68,8 +68,7 @@ export class PublicKey {
    * Paillier public-key encryption
    */
   encrypt(m: JSBI) {
-    let r: JSBI;
-    r = bcu.randBetween(this.n);
+    let r: JSBI = bcu.randBetween(this.n);
     return JSBI.remainder(
       JSBI.multiply(
         bcu.modPow(this.g, m, this._n2),

@@ -19,6 +19,7 @@ import {
 import BackgroundGeolocation from "@mauron85/react-native-background-geolocation";
 import PushNotification from "react-native-push-notification";
 import { getLocales } from "react-native-localize";
+import JSBI from "jsbi";
 
 import styles from "./App.styles";
 import copy from "./copy";
@@ -52,12 +53,28 @@ export default class extends Component {
   }
 
   async componentDidMount() {
-    const { publicKey, privateKey } = await generateRandomKeys(128);
+    const { publicKey, privateKey } = await generateRandomKeys(1024);
 
-    const a = publicKey.encrypt(7);
-    const b = publicKey.multiply(a, 3);
+    console.log(publicKey, privateKey);
 
-    console.log("Is it 21?", privateKey.decrypt(b));
+    const a = publicKey.encrypt(JSBI.BigInt(7));
+    console.log(a);
+    console.log("Decrypted a", privateKey.decrypt(a));
+
+    const b = publicKey.encrypt(JSBI.BigInt(3));
+    console.log(b);
+    console.log("Decrypted b", privateKey.decrypt(b));
+
+    const sum = publicKey.addition(a, b);
+
+    console.log("...");
+    console.log("is it 10?", privateKey.decrypt(sum));
+
+    const product = publicKey.multiply(a, JSBI.BigInt(3));
+    console.log(product);
+
+    console.log("...");
+    console.log("is it 21?", privateKey.decrypt(product));
 
     Promise.all([
       check(
