@@ -38,6 +38,7 @@ Many people have worked on this application within the OpenMined community, many
 - [Bennett Farkas](https://github.com/bennettfarkas)
 - [Héricles Emanuel](https://github.com/hericlesme)
 - [Jose Corbacho](https://github.com/mccorby)
+- [Kevin Wang](https://github.com/Kevmo314)
 - [Maddie Shang](https://github.com/prtfw)
 - [Patrick Cason](https://github.com/cereallarceny)
 - [Peter Gaultney](https://github.com/petergaultney)
