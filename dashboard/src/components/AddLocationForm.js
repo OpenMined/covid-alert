@@ -38,7 +38,11 @@ export default ({ lat, lng, doLocationAdd }) => {
             name="date"
             placeholder="DD/MM/YYYY"
             ref={register({
-              required: "Date is required"
+              required: "Date is required",
+              pattern: {
+                value: /^(\d{2})\/(\d{2})\/(\d{4})$/,
+                message: "Invalid date"
+              }
             })}
           />
           <FormErrorMessage>
@@ -51,7 +55,11 @@ export default ({ lat, lng, doLocationAdd }) => {
             name="time"
             placeholder="HH:MM"
             ref={register({
-              required: "Time is required"
+              required: "Time is required",
+              pattern: {
+                value: /^(\d{2})\:(\d{2})$/,
+                message: "Invalid time"
+              }
             })}
           />
           <FormErrorMessage>
