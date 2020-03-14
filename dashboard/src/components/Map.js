@@ -1,12 +1,39 @@
 import React, { useState, useRef } from "react";
 import ReactMapGL, { Marker } from "react-map-gl";
 import Geocoder from "react-map-gl-geocoder";
-import { Box, Text, theme, Button } from "@chakra-ui/core";
+import {
+  useDisclosure,
+  Box,
+  Text,
+  Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  theme
+} from "@chakra-ui/core";
+
+import AddLocationForm from "./AddLocationForm";
 
 import "mapbox-gl/dist/mapbox-gl.css";
 import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
 
 const MARKER_SIZE = 12;
+
+const AddLocationModal = ({ isOpen, onClose, lat, lng, onSubmit }) => (
+  <Modal isOpen={isOpen} onClose={onClose}>
+    <ModalOverlay />
+    <ModalContent>
+      <ModalHeader>Add Location</ModalHeader>
+      <ModalCloseButton />
+      <ModalBody mb={4}>
+        <AddLocationForm lat={lat} lng={lng} doLocationAdd={onSubmit} />
+      </ModalBody>
+    </ModalContent>
+  </Modal>
+);
 
 const Location = ({ lng, lat }) => (
   <Marker longitude={lng} latitude={lat}>
@@ -73,6 +100,8 @@ export default ({ locations, reportCoordinates, ...props }) => {
   });
   const mapRef = useRef(null);
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <Box position="relative" mt={4} {...props}>
       <ReactMapGL
@@ -99,17 +128,16 @@ export default ({ locations, reportCoordinates, ...props }) => {
           </Text>
         </Box>
         <Box position="absolute" right="10px" bottom="30px">
-          <Button
-            variantColor="blue"
-            onClick={() =>
-              reportCoordinates({
-                lat: viewport.latitude,
-                lng: viewport.longitude
-              })
-            }
-          >
+          <Button variantColor="blue" onClick={onOpen}>
             Add Location
           </Button>
+          <AddLocationModal
+            isOpen={isOpen}
+            onClose={onClose}
+            lat={viewport.latitude}
+            lng={viewport.longitude}
+            onSubmit={reportCoordinates}
+          />
         </Box>
       </ReactMapGL>
     </Box>
