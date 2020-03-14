@@ -20,7 +20,7 @@ export function generateRandomKeys(bitLength = 3072, simpleVariant = false) {
     p = bcu.prime(Math.floor(bitLength / 2) + 1);
     q = bcu.prime(Math.floor(bitLength / 2));
     n = JSBI.multiply(p, q);
-  } while (JSBI.equal(q, p) || bcu.bitLength(n) != bitLength);
+  } while (JSBI.equal(q, p) || bcu.bitLength(n) !== bitLength);
 
   phi = JSBI.multiply(JSBI.subtract(p, _ONE), JSBI.subtract(q, _ONE));
 
@@ -36,7 +36,7 @@ export function generateRandomKeys(bitLength = 3072, simpleVariant = false) {
   } else {
     g = getGenerator(n, n2);
     lambda = bcu.lcm(JSBI.subtract(p, _ONE), JSBI.subtract(q, _ONE));
-    mu = bcu.modInv((bcu.modPow(g, lambda, n2), n), n);
+    mu = bcu.modInv(L(bcu.modPow(g, lambda, n2), n), n);
   }
 
   const publicKey = new PublicKey(n, g);

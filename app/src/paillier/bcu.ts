@@ -26,7 +26,7 @@ export function bitLength(a: JSBI): number {
 }
 
 interface EGcdReturn {
-  g: JSBI;
+  b: JSBI;
   x: JSBI;
   y: JSBI;
 }
@@ -45,7 +45,7 @@ export function eGcd(a: JSBI, b: JSBI): EGcdReturn {
   let u = _ONE;
   let v = _ZERO;
 
-  while (a !== _ZERO) {
+  while (JSBI.NE(a, _ZERO)) {
     let q = JSBI.divide(b, a);
     let r = JSBI.remainder(b, a);
     let m = JSBI.subtract(x, JSBI.multiply(u, q));
@@ -58,7 +58,7 @@ export function eGcd(a: JSBI, b: JSBI): EGcdReturn {
     v = n;
   }
   return {
-    g: b,
+    b: b,
     x: x,
     y: y
   };
@@ -129,7 +129,7 @@ export function modInv(a: JSBI, n: JSBI): JSBI {
   }
 
   let egcd = eGcd(toZn(a, n), n);
-  if (JSBI.NE(egcd.g, _ONE)) {
+  if (JSBI.NE(egcd.b, _ONE)) {
     throw new Error("modInv does not exist");
   } else {
     return toZn(egcd.x, n);

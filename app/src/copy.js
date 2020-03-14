@@ -83,9 +83,9 @@ export default {
     getStarted: "Avant de commencer, merci de bien vouloir:",
     locationSharing: "Autoriser le partage de localisation (toujours)",
     pushNotifications: "Autoriser les notifications push",
-    privacy: "Comment protégeons-nous votre vie privée?",
-    support: "Comment puis-je soutenir cette application?",
-    volunteers: "Construit par la communauté"
+    privacy: "Nous protégeons votre vie privée",
+    support: "Soutenez-nous!",
+    volunteers: "Proposé par"
   },
   ru: {
     message:

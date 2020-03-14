@@ -52,9 +52,12 @@ export default class extends Component {
   }
 
   async componentDidMount() {
-    const { publicKey, privateKey } = await generateRandomKeys(1024);
+    const { publicKey, privateKey } = await generateRandomKeys(128);
 
-    console.log(publicKey, privateKey);
+    const a = publicKey.encrypt(7);
+    const b = publicKey.multiply(a, 3);
+
+    console.log("Is it 21?", privateKey.decrypt(b));
 
     Promise.all([
       check(
