@@ -90,3 +90,16 @@ app.post("/grid-tensor-computation", gridTensorComputation);
 
 // Expose Express API as a single Cloud Function:
 exports.api = functions.https.onRequest(app);
+
+// Create a patient record on creation of a non-admin user
+exports.createPatient = functions.auth.user().onCreate(user => {
+  const isAdminUser = /^[\w.+-]+@(un\.org|who\.int)$/.test(user.email);
+
+  if (!isAdminUser) {
+    db.collection("patients")
+      .doc(user.uid)
+      .set({
+        created_at: admin.firestore.FieldValue.serverTimestamp()
+      });
+  }
+});

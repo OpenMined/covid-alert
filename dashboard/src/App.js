@@ -5,7 +5,8 @@ import { login, logout, useCurrentUser } from "./firebase";
 import Loader from "./components/Loader";
 import Header from "./components/Header";
 import Login from "./pages/Login";
-import Main from "./pages/Main";
+import Patient from "./pages/Patient";
+import Admin from "./pages/Admin";
 
 export default () => {
   const toast = useToast();
@@ -60,6 +61,7 @@ export default () => {
   };
 
   const { isLoading, user } = useCurrentUser();
+  const isUserAdmin = user && /^[\w.+-]+@(un\.org|who\.int)$/.test(user.email);
 
   return (
     <>
@@ -71,9 +73,10 @@ export default () => {
             <Login doLogin={doLogin} />
           </Box>
         )}
-        {user && !isLoading && (
-          <Main user={user} toast={toast} toastProps={toastProps} />
+        {user && !isUserAdmin && !isLoading && (
+          <Patient user={user} toast={toast} toastProps={toastProps} />
         )}
+        {user && isUserAdmin && !isLoading && <Admin />}
       </Box>
     </>
   );

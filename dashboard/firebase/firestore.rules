@@ -6,15 +6,14 @@ service cloud.firestore {
     }
 
     match /patients/{patientId} {
-      allow read: if isSignedIn() && resource.data.rep_id == request.auth.uid
-      allow create: if isSignedIn();
+      allow read, update: if isSignedIn() && resource.id == request.auth.uid
 
       function getPatientData() {
-        return get(/databases/$(database)/documents/patients/$(patientId)).data
+        return get(/databases/$(database)/documents/patients/$(patientId))
       }
 
       match /locations/{locationId} {
-        allow read, create: if isSignedIn() && getPatientData().rep_id == request.auth.uid
+        allow read, create: if isSignedIn() && getPatientData().id == request.auth.uid
       }
     }
   }

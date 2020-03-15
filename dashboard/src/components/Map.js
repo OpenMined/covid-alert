@@ -49,7 +49,9 @@ const Location = ({ lng, lat }) => (
       viewBox={`0 0 ${MARKER_SIZE} ${MARKER_SIZE}`}
       style={{
         fill: theme.colors.red["500"],
-        stroke: "none"
+        stroke: "none",
+        marginLeft: -MARKER_SIZE / 2,
+        marginTop: -MARKER_SIZE / 2
       }}
     >
       <circle cx={MARKER_SIZE / 2} cy={MARKER_SIZE / 2} r={MARKER_SIZE / 2} />
