@@ -76,7 +76,9 @@ export default () => {
         {user && !isUserAdmin && !isLoading && (
           <Patient user={user} toast={toast} toastProps={toastProps} />
         )}
-        {user && isUserAdmin && !isLoading && <Admin />}
+        {user && isUserAdmin && !isLoading && (
+          <Admin user={user} toast={toast} toastProps={toastProps} />
+        )}
       </Box>
     </>
   );

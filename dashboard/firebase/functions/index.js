@@ -99,7 +99,8 @@ exports.createPatient = functions.auth.user().onCreate(user => {
     db.collection("patients")
       .doc(user.uid)
       .set({
-        created_at: admin.firestore.FieldValue.serverTimestamp()
+        created_at: admin.firestore.FieldValue.serverTimestamp(),
+        verified: false
       });
   }
 });

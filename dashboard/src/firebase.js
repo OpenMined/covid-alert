@@ -160,3 +160,24 @@ export const getSubCollection = (
       onSuccess(docs);
     })
     .catch(error => onError(error));
+
+export const getLiveCollection = (collection, where, onSuccess, onError) =>
+  firebase
+    .firestore()
+    .collection(collection)
+    .where(...where)
+    .onSnapshot(
+      snapshot => {
+        const docs = [];
+
+        snapshot.forEach(doc => {
+          docs.push({
+            id: doc.id,
+            ...doc.data()
+          });
+        });
+
+        onSuccess(docs);
+      },
+      error => onError(error)
+    );

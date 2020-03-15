@@ -5,8 +5,13 @@ service cloud.firestore {
       return request.auth.uid != null;
     }
 
+    function isAdminUser() {
+      return request.auth.token.email.matches('.*@(un[.]org|who[.]int)');
+    }
+
     match /patients/{patientId} {
-      allow read, update: if isSignedIn() && resource.id == request.auth.uid
+      // TODO: Patient should not be able to verify themselves
+      allow read, update: if isSignedIn() && (resource.id == request.auth.uid || isAdminUser())
 
       function getPatientData() {
         return get(/databases/$(database)/documents/patients/$(patientId))
