@@ -9,9 +9,17 @@ service cloud.firestore {
       return request.auth.token.email.matches('.*@(un[.]org|who[.]int)');
     }
 
+    function notUpdating(field) {
+      return !(field in request.resource.data) || resource.data[field] == request.resource.data[field];
+    }
+
     match /patients/{patientId} {
-      // TODO: Patient should not be able to verify themselves
-      allow read, update: if isSignedIn() && (resource.id == request.auth.uid || isAdminUser())
+      function isSamePatient() {
+        return isSignedIn() && resource.id == request.auth.uid
+      }
+
+      allow read: if isAdminUser() || isSamePatient()
+      allow update: if isAdminUser() || (isSamePatient() && notUpdating('verified'))
 
       function getPatientData() {
         return get(/databases/$(database)/documents/patients/$(patientId))

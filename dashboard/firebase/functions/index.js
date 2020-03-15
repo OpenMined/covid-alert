@@ -26,6 +26,7 @@ const gridTensorComputation = async (req, res) => {
   db.collectionGroup("locations")
     .where("sector_key", "==", sectorKey)
     .where("last_time", ">=", recencyDate)
+    // TODO: Add a where for only locations of verified patients
     .get()
     .then(snapshot => {
       if (snapshot.size >= 1) {
