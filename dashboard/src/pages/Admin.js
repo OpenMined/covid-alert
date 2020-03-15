@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { Heading, Box, Text, Button, Flex } from "@chakra-ui/core";
 import { getLiveCollection, updateDocument } from "../firebase";
 
-export default ({ user, toast, toastProps }) => {
+export default ({ toast, toastProps }) => {
   const [patients, setPatients] = useState([]);
 
   const getPatients = () =>

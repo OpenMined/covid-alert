@@ -1,12 +1,12 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function isSignedIn() {
-      return request.auth.uid != null;
+    function isSignedInAndVerified() {
+      return request.auth.uid != null && request.auth.token.email_verified;
     }
 
     function isAdminUser() {
-      return request.auth.token.email.matches('.*@(un[.]org|who[.]int)');
+      return request.auth.token.email.matches('.*@(un[.]org|who[.]int)') && request.auth.token.email_verified;
     }
 
     function notUpdating(field) {
@@ -15,7 +15,7 @@ service cloud.firestore {
 
     match /patients/{patientId} {
       function isSamePatient() {
-        return isSignedIn() && resource.id == request.auth.uid
+        return isSignedInAndVerified() && resource.id == request.auth.uid
       }
 
       allow read: if isAdminUser() || isSamePatient()
@@ -26,7 +26,7 @@ service cloud.firestore {
       }
 
       match /locations/{locationId} {
-        allow read, create: if isSignedIn() && getPatientData().id == request.auth.uid
+        allow read, create: if isSignedInAndVerified() && getPatientData().id == request.auth.uid
       }
     }
   }

@@ -1,5 +1,5 @@
-import React from "react";
-import { useToast, Box } from "@chakra-ui/core";
+import React, { useEffect } from "react";
+import { useToast, Box, Text } from "@chakra-ui/core";
 
 import { login, logout, useCurrentUser } from "./firebase";
 import Loader from "./components/Loader";
@@ -63,21 +63,59 @@ export default () => {
   const { isLoading, user } = useCurrentUser();
   const isUserAdmin = user && /^[\w.+-]+@(un\.org|who\.int)$/.test(user.email);
 
+  useEffect(() => {
+    if (user && !user.emailVerified) {
+      user
+        .sendEmailVerification()
+        .then(() => {
+          toast({
+            title: "Success",
+            description: "Verification email sent, please check your email",
+            status: "success",
+            ...toastProps
+          });
+        })
+        .catch(error => {
+          toast({
+            title: "Error with sending verification email",
+            description: error.message,
+            status: "error",
+            ...toastProps
+          });
+        });
+    }
+  }, [user]);
+
   return (
     <>
       {user && !isLoading && <Header user={user} doLogout={doLogout} />}
       <Box mx="auto" width={["100%", null, 720, 960, 1200]} px={3} pb={6}>
         {isLoading && <Loader />}
-        {!user && !isLoading && (
-          <Box pt={[3, null, 8]} width={[null, null, "75%", "50%"]} mx="auto">
-            <Login doLogin={doLogin} />
-          </Box>
-        )}
-        {user && !isUserAdmin && !isLoading && (
-          <Patient user={user} toast={toast} toastProps={toastProps} />
-        )}
-        {user && isUserAdmin && !isLoading && (
-          <Admin user={user} toast={toast} toastProps={toastProps} />
+        {!isLoading && (
+          <>
+            {!user && (
+              <Box
+                pt={[3, null, 8]}
+                width={[null, null, "75%", "50%"]}
+                mx="auto"
+              >
+                <Login doLogin={doLogin} />
+              </Box>
+            )}
+            {user && (
+              <>
+                {!user.emailVerified && (
+                  <Text>Please check your email for a verification email.</Text>
+                )}
+                {!isUserAdmin && user.emailVerified && (
+                  <Patient user={user} toast={toast} toastProps={toastProps} />
+                )}
+                {isUserAdmin && user.emailVerified && (
+                  <Admin toast={toast} toastProps={toastProps} />
+                )}
+              </>
+            )}
+          </>
         )}
       </Box>
     </>
