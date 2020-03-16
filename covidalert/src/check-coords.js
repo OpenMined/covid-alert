@@ -1,4 +1,3 @@
-import {generateRandomKeys} from 'paillier-pure';
 import {gps2box, stringifyBigInt, parseBigInt} from 'gps-sector-grid';
 
 export default async (publicKey, lat, lng) => {
