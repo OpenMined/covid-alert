@@ -38,6 +38,7 @@ Many people have worked on this application within the OpenMined community, many
 - [Andrew Trask](https://github.com/iamtrask)
 - [Bennett Farkas](https://github.com/bennettfarkas)
 - [Héricles Emanuel](https://github.com/hericlesme)
+- [Jonathan Mondragon](https://www.linkedin.com/in/jonathan-acevedo-mondragon)
 - [Jose Corbacho](https://github.com/mccorby)
 - [Kevin Wang](https://github.com/Kevmo314)
 - [Maddie Shang](https://github.com/prtfw)

@@ -44,6 +44,27 @@ export default {
     support: '¿Cómo puedo apoyar esta app?',
     volunteers: 'Hecho por voluntarios de',
   },
+  it: {
+    message:
+      'Paziente(i) diagnosticati di COVID-19 sono stati tra i 100mila nella tua attuale posizione nelle scorse 72 ore. Ti raccomandiamo che se scegli di uscire, tu lo faccia con calme e piano.',
+    scanning: 'Scannerizzando',
+    body: (
+      <>
+        Questa app registra <B>anonimamente</B> la tua posizione sullo sfondo ed
+        invia una notifica al tuo telefono quando ti trovi vicino a luoghi dove
+        si sono trovate vittime del COVID-19.{' '}
+        <B>
+          Per garantire il funzionamento dell’App mantienila aperta per favore.
+        </B>
+      </>
+    ),
+    getStarted: 'Inizio:',
+    locationSharing: 'Condividi la tua posizione (Sempre)',
+    pushNotifications: 'Attiva le notifiche',
+    privacy: 'Come proteggiamo la tua Privacy?',
+    support: 'Come posso sotenere l’App?',
+    volunteers: 'Realizzata da Volontari da',
+  },
   pt: {
     message:
       'Paciente(s) com casos relatados de COVID-19 estiveram dentro de 100m da sua localização atual nas últimas 72 horas. Sugerimos que, se optar por sair, faça-o com calma e silêncio.',
@@ -83,7 +104,7 @@ export default {
     getStarted: 'Avant de commencer, merci de bien vouloir:',
     locationSharing: 'Autoriser le partage de localisation (toujours)',
     pushNotifications: 'Autoriser les notifications push',
-    privacy: 'Nous protégeons votre vie privée',
+    privacy: 'Nous protégeons votre vie privée?',
     support: 'Soutenez-nous!',
     volunteers: 'Proposé par',
   },
