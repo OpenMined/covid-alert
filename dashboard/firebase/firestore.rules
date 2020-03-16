@@ -1,20 +1,32 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function isSignedIn() {
-      return request.auth.uid != null;
+    function isSignedInAndVerified() {
+      return request.auth.uid != null && request.auth.token.email_verified;
+    }
+
+    function isAdminUser() {
+      return request.auth.token.email.matches('.*@(un[.]org|who[.]int)') && request.auth.token.email_verified;
+    }
+
+    function notUpdating(field) {
+      return !(field in request.resource.data) || resource.data[field] == request.resource.data[field];
     }
 
     match /patients/{patientId} {
-      allow read: if isSignedIn() && resource.data.rep_id == request.auth.uid
-      allow create: if isSignedIn();
+      function isSamePatient() {
+        return isSignedInAndVerified() && resource.id == request.auth.uid
+      }
+
+      allow read: if isAdminUser() || isSamePatient()
+      allow update: if isAdminUser() || (isSamePatient() && notUpdating('verified'))
 
       function getPatientData() {
-        return get(/databases/$(database)/documents/patients/$(patientId)).data
+        return get(/databases/$(database)/documents/patients/$(patientId))
       }
 
       match /locations/{locationId} {
-        allow read, create: if isSignedIn() && getPatientData().rep_id == request.auth.uid
+        allow read, create: if isSignedInAndVerified() && getPatientData().id == request.auth.uid
       }
     }
   }
