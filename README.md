@@ -1,9 +1,9 @@
 # COVID Alert
 
-- `/app` - Expo React Native App for end-users
+- `/covidalert` - React Native App for end-users
 - `/dashboard` - Create React App with Firebase cloud functions for an API and admin dashboard
 - `/designs` - All the related design files
-- `/package` - A small NPM package with two functions. One is for turning GPS coordinates into a sector, row, and column. The other is for turning a row and column into a 0/1 tensor.
+- `/package` - A small NPM package with three functions. One is for turning GPS coordinates into a sectorKey and gridTensor, and two others for allowing us to stringify and parse BitInts in JSON.
 
 ## Languages
 
@@ -11,6 +11,7 @@ We have support for the following languages:
 
 - English
 - Spanish
+- Italian
 - Portuguese (Brazilian)
 - French
 - Russian
@@ -23,10 +24,11 @@ We are open to any pull requests to add support for other languages!
 
 The dashboard and package directories mostly speak for themselves. To get the app to run, run the following lines:
 
-1. `yarn install`
-2. `react-native link`
+1. `yarn install` to install dependencies
+2. `react-native link` to add assets (fonts and images) to packages
 3. If you want to install ios, run `cd ios && pod install && cd ../`
-4. iOS: `yarn ios` / Android: `yarn android`
+4. `yarn start` for hot reloading
+5. iOS: `yarn ios` / Android: `yarn android`
 
 ## Acknowledgements
 

@@ -20,6 +20,10 @@
 		5CCDFA7C096911D4ED3C46B3 /* libPods-covidalert-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7AC54160761A63414B8284D /* libPods-covidalert-tvOS.a */; };
 		6C4EDBBE983022E76F8899BD /* libPods-covidalert.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1979778F026BE20519752660 /* libPods-covidalert.a */; };
 		94FBE4C50C32D8ED2B08EECD /* libPods-covidalert-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E4FE273F1C7009542E6E5A6 /* libPods-covidalert-tvOSTests.a */; };
+		33F0FFFE40A746D3B75CBA22 /* openmined-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 258074E180A949619AB30DAE /* openmined-logo.png */; };
+		D384E37D52A143B18A80D281 /* radar.png in Resources */ = {isa = PBXBuildFile; fileRef = 4706EB11E23644B4B1522735 /* radar.png */; };
+		1722100B228C43789EE42AEC /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D9925F23E4EB4F40A07F84A0 /* Rubik-Medium.ttf */; };
+		960C8B34EC76476F8E954932 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 85D1C13ABCE145AD817ECDA0 /* Rubik-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +72,10 @@
 		E7AC54160761A63414B8284D /* libPods-covidalert-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-covidalert-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
+		258074E180A949619AB30DAE /* openmined-logo.png */ = {isa = PBXFileReference; name = "openmined-logo.png"; path = "../assets/images/openmined-logo.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		4706EB11E23644B4B1522735 /* radar.png */ = {isa = PBXFileReference; name = "radar.png"; path = "../assets/images/radar.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D9925F23E4EB4F40A07F84A0 /* Rubik-Medium.ttf */ = {isa = PBXFileReference; name = "Rubik-Medium.ttf"; path = "../assets/fonts/Rubik-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		85D1C13ABCE145AD817ECDA0 /* Rubik-Regular.ttf */ = {isa = PBXFileReference; name = "Rubik-Regular.ttf"; path = "../assets/fonts/Rubik-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +175,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				9E3BF32B148502B4EEF3EDC3 /* Pods */,
+				1E4FBC41E0EB488286593B01 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -198,6 +207,18 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		1E4FBC41E0EB488286593B01 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				258074E180A949619AB30DAE /* openmined-logo.png */,
+				4706EB11E23644B4B1522735 /* radar.png */,
+				D9925F23E4EB4F40A07F84A0 /* Rubik-Medium.ttf */,
+				85D1C13ABCE145AD817ECDA0 /* Rubik-Regular.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -286,7 +307,7 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 940;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
@@ -343,6 +364,10 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				33F0FFFE40A746D3B75CBA22 /* openmined-logo.png in Resources */,
+				D384E37D52A143B18A80D281 /* radar.png in Resources */,
+				1722100B228C43789EE42AEC /* Rubik-Medium.ttf in Resources */,
+				960C8B34EC76476F8E954932 /* Rubik-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
