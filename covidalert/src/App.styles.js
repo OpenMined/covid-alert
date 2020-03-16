@@ -11,7 +11,7 @@ export default StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
-    padding: 20,
+    padding: 40,
   },
   title: {
     fontFamily: 'Rubik-Medium',
@@ -61,7 +61,8 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 20,
+    marginTop: 'auto',
+    marginBottom: 20,
   },
   footerText: {
     fontFamily: 'Rubik-Regular',

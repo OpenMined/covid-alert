@@ -21,7 +21,6 @@ import BackgroundGeolocation from '@mauron85/react-native-background-geolocation
 import PushNotification from 'react-native-push-notification';
 import {PushNotificationIOS} from '@react-native-community/push-notification-ios';
 import {getLocales} from 'react-native-localize';
-import JSBI from 'jsbi';
 
 import styles from './App.styles';
 import copy from './copy';
@@ -32,7 +31,7 @@ export default class extends Component {
   constructor(props) {
     super(props);
 
-    const {publicKey, privateKey} = generateRandomKeys(128);
+    const {publicKey, privateKey} = generateRandomKeys(1024);
 
     const {languageCode} = getLocales()[0];
     const supportedLanguages = ['en', 'es', 'pt', 'fr', 'ru', 'ar', 'zh'];
@@ -166,7 +165,7 @@ export default class extends Component {
             location.latitude,
             location.longitude,
           );
-          console.log(results);
+          console.log('Results', results);
 
           if (results) {
             // Send the notification on a random timeout between 1ms and 300000ms (5 minutes)
@@ -256,63 +255,61 @@ export default class extends Component {
 
     return (
       <View style={styles.background}>
-        <ScrollView>
-          {/* NOTE: The title of the app should not be translated */}
-          <Text style={styles.title}>COVID-19 Alert</Text>
-          {isSetup && (
-            <View style={styles.radarContainer}>
-              <Image
-                style={styles.radarLogo}
-                source={require('../assets/images/radar.png')}
-                resizeMode="contain"
-              />
-              <Text style={d(styles.radarText)}>{this.t('scanning')}</Text>
-            </View>
-          )}
-          <Text style={d(styles.body, true)}>{this.t('body')}</Text>
-          {!isSetup && (
-            <View>
-              <Text style={d(styles.body, true)}>{this.t('getStarted')}</Text>
-              {!this.state.hasLocation && (
-                <Text style={d(styles.link)} onPress={this.requestLocation}>
-                  {this.t('locationSharing')}
-                </Text>
-              )}
-              {!this.state.hasPush && (
-                <Text style={d(styles.link, true)} onPress={this.requestPush}>
-                  {this.t('pushNotifications')}
-                </Text>
-              )}
-            </View>
-          )}
-          {/* TODO: This needs to be a real link */}
-          {isSetup && (
-            <View>
-              <Text
-                style={d(styles.link, true)}
-                onPress={() => this.openInBrowser('https://google.com')}>
-                {this.t('privacy')}
-              </Text>
-              <Text
-                style={d(styles.link, true)}
-                onPress={() =>
-                  this.openInBrowser('https://opencollective.com/openmined')
-                }>
-                {this.t('support')}
-              </Text>
-            </View>
-          )}
-          <TouchableOpacity
-            style={d(styles.footer)}
-            onPress={() => this.openInBrowser('https://openmined.org')}>
-            <Text style={styles.footerText}>{this.t('volunteers')}</Text>
+        {/* NOTE: The title of the app should not be translated */}
+        <Text style={styles.title}>COVID-19 Alert</Text>
+        {isSetup && (
+          <View style={styles.radarContainer}>
             <Image
-              style={styles.openMinedLogo}
-              source={require('../assets/images/openmined-logo.png')}
+              style={styles.radarLogo}
+              source={require('../assets/images/radar.png')}
               resizeMode="contain"
             />
-          </TouchableOpacity>
-        </ScrollView>
+            <Text style={d(styles.radarText)}>{this.t('scanning')}</Text>
+          </View>
+        )}
+        <Text style={d(styles.body, true)}>{this.t('body')}</Text>
+        {!isSetup && (
+          <View>
+            <Text style={d(styles.body, true)}>{this.t('getStarted')}</Text>
+            {!this.state.hasLocation && (
+              <Text style={d(styles.link)} onPress={this.requestLocation}>
+                {this.t('locationSharing')}
+              </Text>
+            )}
+            {!this.state.hasPush && (
+              <Text style={d(styles.link, true)} onPress={this.requestPush}>
+                {this.t('pushNotifications')}
+              </Text>
+            )}
+          </View>
+        )}
+        {/* TODO: This needs to be a real link */}
+        {isSetup && (
+          <View>
+            <Text
+              style={d(styles.link, true)}
+              onPress={() => this.openInBrowser('https://google.com')}>
+              {this.t('privacy')}
+            </Text>
+            <Text
+              style={d(styles.link, true)}
+              onPress={() =>
+                this.openInBrowser('https://opencollective.com/openmined')
+              }>
+              {this.t('support')}
+            </Text>
+          </View>
+        )}
+        <TouchableOpacity
+          style={d(styles.footer)}
+          onPress={() => this.openInBrowser('https://openmined.org')}>
+          <Text style={styles.footerText}>{this.t('volunteers')}</Text>
+          <Image
+            style={styles.openMinedLogo}
+            source={require('../assets/images/openmined-logo.png')}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
       </View>
     );
   }
