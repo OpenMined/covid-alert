@@ -31,7 +31,7 @@ export default class extends Component {
   constructor(props) {
     super(props);
 
-    const {publicKey, privateKey} = generateRandomKeys(1024);
+    const {publicKey, privateKey} = generateRandomKeys(128);
 
     const {languageCode} = getLocales()[0];
     const supportedLanguages = ['en', 'es', 'it', 'pt', 'fr', 'ru', 'ar', 'zh'];
@@ -143,50 +143,34 @@ export default class extends Component {
     BackgroundGeolocation.configure({
       desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
       stationaryRadius: 50,
-      distanceFilter: 50,
-      debug: false,
-      startOnBoot: false,
+      distanceFilter: 500,
+      debug: true,
+      startOnBoot: true,
       stopOnTerminate: false,
       locationProvider: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER,
       interval: 30000,
-      fastestInterval: 5000,
-      activitiesInterval: 30000,
-      stopOnStillActivity: false,
-      stopTimeout: 1,
+      fastestInterval: 60000,
+      activitiesInterval: 10000,
+      stopOnStillActivity: true,
+      notificationsEnabled: true,
+      startForeground: true,
+    });
+
+    BackgroundGeolocation.getLocations(function(locations) {
+      console.log('these are locations', locations);
+    });
+
+    BackgroundGeolocation.on('stationary', location => {
+      console.log(['STATIONARY'], location);
+      this.handleLocation(location);
     });
 
     BackgroundGeolocation.on('location', location => {
       console.log('[LOCATION]', location);
+      this.handleLocation(location);
 
       BackgroundGeolocation.startTask(taskKey => {
-        requestAnimationFrame(() => {
-          const results = checkCoords(
-            this.state.publicKey,
-            location.latitude,
-            location.longitude,
-          );
-          console.log('Results', results);
-
-          if (results) {
-            // Send the notification on a random timeout between 1ms and 300000ms (5 minutes)
-            // This will ensure that people in a large crowd don't receive a notification at the same time and cause a panic
-            const timeoutAmount = Math.floor(Math.random() * 300000) + 1;
-
-            // The message that's sent to someone who has entered a COVID grid
-            const message = this.t('message');
-
-            setTimeout(() => {
-              PushNotification.localNotification({
-                /* Android Only Properties */
-                autoCancel: false,
-
-                /* iOS and Android properties */
-                title: 'COVID Alert',
-                message,
-              });
-            }, timeoutAmount);
-          }
-        });
+        this.handleLocation(location);
         BackgroundGeolocation.endTask(taskKey);
       });
     });
@@ -208,8 +192,39 @@ export default class extends Component {
       console.log('Location services enabled', status.locationServicesEnabled);
       console.log('Location auth status: ' + status.authorization);
 
-      if (!status.isRunning) {
-        BackgroundGeolocation.start();
+      BackgroundGeolocation.start();
+    });
+  }
+
+  handleLocation(location) {
+    requestAnimationFrame(async () => {
+      const results = await checkCoords(
+        this.state.publicKey,
+        this.state.privateKey,
+        location.latitude,
+        location.longitude,
+      );
+
+      console.log('Results', results);
+
+      if (results) {
+        // Send the notification on a random timeout between 1ms and 300000ms (5 minutes)
+        // This will ensure that people in a large crowd don't receive a notification at the same time and cause a panic
+        const timeoutAmount = Math.floor(Math.random() * 300000) + 1;
+
+        // The message that's sent to someone who has entered a COVID grid
+        const message = this.t('message');
+
+        setTimeout(() => {
+          PushNotification.localNotification({
+            /* Android Only Properties */
+            autoCancel: false,
+
+            /* iOS and Android properties */
+            title: 'COVID Alert',
+            message,
+          });
+        }, timeoutAmount);
       }
     });
   }
@@ -244,6 +259,7 @@ export default class extends Component {
   }
 
   componentWillUnmount() {
+    console.log('called');
     BackgroundGeolocation.removeAllListeners();
   }
 
