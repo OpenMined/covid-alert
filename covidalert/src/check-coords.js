@@ -17,7 +17,7 @@ export default async (publicKey, privateKey, lat, lng) => {
     .post(
       `${URL}/grid-tensor-computation`,
       stringifyBigInt({
-        sectorKey: '38.72:-9.21',
+        sectorKey,
         gridTensor,
         publicKey: {n: publicKey.n, g: publicKey.g},
       }),
@@ -27,32 +27,12 @@ export default async (publicKey, privateKey, lat, lng) => {
         },
       },
     )
+    // eslint-disable-next-line prettier/prettier
     .then(
-      r => console.log('results json', r) || r.data,
-      err => console.warn('error #2', JSON.stringify(err)),
+      r => r.data.result,
+      err => err,
     )
-    .catch(err => console.log('erro', err));
-  console.log('computation', computation);
-  if (computation.hasOwnProperty('matches') && !computation.matches) {
-    // Sector doesn't match
-    return false;
-  } else {
-    // Sector matches
-    let parsedResult = parseBigInt(computation.result);
-    console.log('before decrypt', parsedResult);
-    for (let i = 0; i < parsedResult.length; i++) {
-      console.log(typeof parsedResult[i], parsedResult === JSBI.BigInt(1));
-      parsedResult[i] = privateKey.decrypt(parsedResult[i]);
-    }
-    console.log('after decrypt', parsedResult);
-    const iAmSafe = parsedResult.every(v => v < 1);
+    .catch(e => console.log(e));
 
-    if (iAmSafe) {
-      // Grid doesn't match
-      return false;
-    } else {
-      // Grid matches
-      return true;
-    }
-  }
+  return privateKey.decrypt(computation).gt(0);
 };
