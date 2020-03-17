@@ -1795,10 +1795,10 @@ paillier-bigint@^2.0.0:
   dependencies:
     bigint-crypto-utils "^2.4.2"
 
-paillier-pure@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/paillier-pure/-/paillier-pure-1.0.2.tgz#cc00ffc4841345a433d58a0dbfda42bf6ab3dcd6"
-  integrity sha512-TPBbdbPpiRnrp7BPuhQUk+hvtfpMeIejUUF05sCbMyor8fKLlbMabeR4L3yZ3o1rkh9Se7Fi9GuYDY+BI2AF+A==
+paillier-pure@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/paillier-pure/-/paillier-pure-1.0.3.tgz#64f95d81ec151ac346e0542e3849b2729b40028d"
+  integrity sha512-lhqDzcGylgL3M/Yu3t01qETvrQzSnVEmKGdRuwXcQiT38rAqcMAvPxNiZgTITXL4uX1xifzz2DLds3I4R3JYqg==
   dependencies:
     big-integer "^1.6.48"
 

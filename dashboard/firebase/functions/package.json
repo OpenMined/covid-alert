@@ -19,7 +19,7 @@
     "firebase-functions": "^3.3.0",
     "gps-sector-grid": "^0.4.1",
     "paillier-bigint": "^2.0.0",
-    "paillier-pure": "^1.0.2"
+    "paillier-pure": "^1.0.3"
   },
   "devDependencies": {
     "eslint": "^5.12.0",
