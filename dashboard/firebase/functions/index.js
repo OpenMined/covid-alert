@@ -2,8 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-const paillier = require('paillier-bigint');
-// const paillier = require('paillier-pure');
+const paillier = require('paillier-pure');
+const BigInt = require('big-integer');
 const { gps2box, stringifyBigInt, parseBigInt } = require('gps-sector-grid');
 
 const serviceAccount = require('./coronavirus-mapper-firebase-adminsdk-i6ree-699f4198bb.json');
@@ -22,7 +22,7 @@ const gridTensorComputation = async (req, res) => {
   let { sectorKey, gridTensor, publicKey } = parseBigInt(req.body);
 
   // Generate a public key identical to that given to us by the user
-  publicKey = new paillier.PublicKey(publicKey.n, publicKey.g);
+  publicKey = new paillier.PublicKey(BigInt(publicKey.n), BigInt(publicKey.g));
 
   // This is a number which will hold the result of adding all the products computed below together
   // If there are not matching and patient verified location, we simply return this value unaltered
