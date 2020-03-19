@@ -44,6 +44,10 @@ export function setupBackgroundGeolocation(
     onStop();
   });
 
+  BackgroundGeolocation.on('stationary', location => {
+    console.log('[STATIONARY]', location);
+  });
+
   BackgroundGeolocation.on('location', location => {
     console.log('[LOCATION]', location);
 
