@@ -1,31 +1,25 @@
 import React, {Component} from 'react';
-import {
-  View,
-  Text,
-  Image,
-  Linking,
-  TouchableOpacity,
-  ScrollView,
-  Platform,
-} from 'react-native';
-import {
-  check,
-  request,
-  checkNotifications,
-  requestNotifications,
-  openSettings,
-  PERMISSIONS,
-  RESULTS,
-} from 'react-native-permissions';
-import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
-import PushNotification from 'react-native-push-notification';
-import {PushNotificationIOS} from '@react-native-community/push-notification-ios';
-import {getLocales} from 'react-native-localize';
+import {View, Text, Image, Linking, TouchableOpacity} from 'react-native';
 
+import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
+import {getLocales} from 'react-native-localize';
+import PushNotification from 'react-native-push-notification';
+import {openSettings} from 'react-native-permissions';
+
+import {setupBackgroundGeolocation, getLocationStatus} from './location';
+import {setupNotifications, getNotificationPermissions} from './notifications';
+import {
+  verifyLocationPermissions,
+  verifyNotificationPermissions,
+} from './requestPermissions';
 import styles from './App.styles';
 import copy from './copy';
 import {generateRandomKeys} from 'paillier-pure';
 import checkCoords from './check-coords';
+
+// Ensure that people in a large crowd don't receive a notification
+// at the same time and cause a panic
+const NO_PANIC_DELAY_MS = 5 * 60 * 1000;
 
 export default class extends Component {
   constructor(props) {
@@ -43,176 +37,75 @@ export default class extends Component {
 
     this.state = {
       hasLocation: false,
-      hasPush: false,
+      hasNotifications: false,
       languageCode: finalLanguageCode,
       languageRTL: finalLanguageCode === 'ar',
       publicKey,
       privateKey,
     };
-
-    this.requestLocation = this.requestLocation.bind(this);
-    this.requestPush = this.requestPush.bind(this);
-    this.startLocation = this.startLocation.bind(this);
-    this.startPush = this.startPush.bind(this);
-    this.t = this.t.bind(this);
   }
 
-  async componentDidMount() {
-    Promise.all([
-      check(
-        Platform.select({
-          android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-          ios: PERMISSIONS.IOS.LOCATION_ALWAYS,
-        }),
-      ),
-      checkNotifications(),
-    ]).then(([locationStatus, pushStatus]) => {
-      console.log('location', locationStatus);
-      console.log('push', pushStatus);
+  componentDidMount = async () => {
+    this.setupLocationHandlers();
+    setupNotifications();
+    await this.verify();
+  };
 
-      if (locationStatus === RESULTS.GRANTED && !this.state.hasLocation) {
-        console.log('Location permission granted');
+  componentDidUpdate = async () => {
+    await this.verify();
+  };
 
-        this.setState({hasLocation: true});
-        this.startLocation();
-      } else {
-        console.log('Location permission denied');
+  verify = async () => {
+    await this.verifyLocationStatus();
+    await this.verifyNotificationStatus();
+  };
 
-        this.requestLocation();
-      }
-
-      if (
-        pushStatus.settings.alert &&
-        pushStatus.status === RESULTS.GRANTED &&
-        !this.state.hasPush
-      ) {
-        console.log('Push permission granted');
-
-        this.setState({hasPush: true});
-        this.startPush();
-      } else {
-        console.log('Push permission denied');
-
-        this.requestPush();
-      }
-    });
-  }
-
-  requestLocation() {
-    console.log('Requesting location permission');
-
-    return request(
-      Platform.select({
-        android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-        ios: PERMISSIONS.IOS.LOCATION_ALWAYS,
-      }),
-    )
-      .then(res => {
-        if (res === RESULTS.GRANTED && !this.state.hasLocation) {
-          console.log('Granted location permission');
-
-          this.setState({hasLocation: true});
-          this.startLocation();
-        } else {
-          openSettings();
-        }
-      })
-      .catch(err => console.log(err));
-  }
-
-  requestPush() {
-    console.log('Requesting push permission');
-
-    return requestNotifications(['alert', 'sound']).then(
-      ({settings, status}) => {
-        if (status === RESULTS.GRANTED && !this.state.hasPush) {
-          console.log('Granted push permission');
-
-          this.setState({hasPush: true});
-          this.startPush();
-        } else {
-          openSettings();
-        }
-      },
-    );
-  }
-
-  startLocation() {
-    console.log('Starting location');
-
-    BackgroundGeolocation.configure({
-      desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
-      stationaryRadius: 50,
-      distanceFilter: 500,
-      debug: true,
-      startOnBoot: true,
-      stopOnTerminate: false,
-      locationProvider: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER,
-      interval: 30000,
-      fastestInterval: 60000,
-      activitiesInterval: 10000,
-      stopOnStillActivity: true,
-      notificationsEnabled: true,
-      startForeground: true,
-    });
-
-    BackgroundGeolocation.getLocations(function(locations) {
-      console.log('these are locations', locations);
-    });
-
-    BackgroundGeolocation.on('stationary', location => {
-      console.log(['STATIONARY'], location);
-      this.handleLocation(location);
-    });
-
-    BackgroundGeolocation.on('location', location => {
-      console.log('[LOCATION]', location);
-      this.handleLocation(location);
-
-      BackgroundGeolocation.startTask(taskKey => {
-        this.handleLocation(location);
-        BackgroundGeolocation.endTask(taskKey);
-      });
-    });
-
-    BackgroundGeolocation.on('error', error => {
-      console.log('Location error', error);
-    });
-
-    BackgroundGeolocation.on('start', () => {
-      console.log('Location service has been started');
-    });
-
-    BackgroundGeolocation.on('stop', () => {
-      console.log('Location service has been stopped');
-    });
-
-    BackgroundGeolocation.checkStatus(status => {
-      console.log('Location service is running', status.isRunning);
-      console.log('Location services enabled', status.locationServicesEnabled);
-      console.log('Location auth status: ' + status.authorization);
-
+  verifyLocationStatus = async () => {
+    const {hasLocation} = this.state;
+    const locationStatus = await getLocationStatus();
+    if (locationStatus.needsStart) {
+      console.log('Attempting to start background location service...');
       BackgroundGeolocation.start();
-    });
-  }
+    }
 
-  handleLocation(location) {
-    requestAnimationFrame(async () => {
-      const results = await checkCoords(
+    if (!hasLocation && !locationStatus.needsPermission) {
+      this.setState({hasLocation: true});
+    } else if (hasLocation && locationStatus.needsPermission) {
+      this.setState({hasLocation: false});
+    }
+  };
+
+  verifyNotificationStatus = async () => {
+    const {hasNotifications} = this.state;
+    const count = await getNotificationPermissions();
+    // having any notification permissions is good enough to work.
+    if (count > 0 && !hasNotifications) {
+      this.setState({hasNotifications: true});
+    } else if (count === 0 && hasNotifications) {
+      this.setState({hasNotifications: false});
+    }
+  };
+
+  setupLocationHandlers = () => {
+    console.log('Registering location handlers');
+
+    setupBackgroundGeolocation(async location => {
+      // TODO add debounce: if we've checked this same grid location
+      // in the last N minutes, don't do it all over again just
+      // because we got a location 'update'.
+      // This probably means pulling gps2box out of checkCoords.
+      const isCovidArea = await checkCoords(
         this.state.publicKey,
-        this.state.privateKey,
         location.latitude,
         location.longitude,
       );
+      console.log(`isCovidArea: ${isCovidArea}`);
 
-      console.log('Results', results);
-
-      if (results) {
-        // Send the notification on a random timeout between 1ms and 300000ms (5 minutes)
-        // This will ensure that people in a large crowd don't receive a notification at the same time and cause a panic
-        const timeoutAmount = Math.floor(Math.random() * 300000) + 1;
-
-        // The message that's sent to someone who has entered a COVID grid
+      if (isCovidArea) {
+        // Send the notification on a "safe" time delay
+        const timeoutMs = Math.floor(Math.random() * NO_PANIC_DELAY_MS) + 1;
+        console.log(`sending notification after ${timeoutMs}`);
+        // The message that's sent to someone who has entered an active COVID area
         const message = this.t('message');
 
         setTimeout(() => {
@@ -224,47 +117,36 @@ export default class extends Component {
             title: 'COVID Alert',
             message,
           });
-        }, timeoutAmount);
+        }, timeoutMs);
+      }
+    }, this.verifyLocationStatus);
+  };
+
+  makeSettingsBackedVerifier = verifier => () => {
+    verifier().then(verified => {
+      if (!verified) {
+        // it *seems* that openSettings may only succeed if called
+        // from within the context of a React Component. This makes almost
+        // zero sense to me, but just in case, I'm passing the warning along.
+        openSettings().catch(console.error);
       }
     });
-  }
+  };
 
-  startPush() {
-    console.log('Starting push');
-
-    PushNotification.configure({
-      // Required: called when a remote or local notification is opened or received
-      onNotification: notification => {
-        console.log('Push notification', notification);
-
-        // required on iOS only (see fetchCompletionHandler docs: https://github.com/react-native-community/react-native-push-notification-ios)
-        notification.finish(PushNotificationIOS.FetchResult.NoData);
-      },
-      permissions: {
-        alert: true,
-        badge: true,
-        sound: true,
-      },
-      popInitialNotification: false,
-      requestPermissions: false,
-    });
-  }
-
-  t(key) {
+  t = key => {
     return copy[this.state.languageCode][key];
-  }
+  };
 
   openInBrowser(url) {
     Linking.openURL(url).catch(err => console.error("Couldn't load page", err));
   }
 
-  componentWillUnmount() {
-    console.log('called');
+  componentWillUnmount = async () => {
     BackgroundGeolocation.removeAllListeners();
-  }
+  };
 
   render() {
-    const isSetup = this.state.hasLocation && this.state.hasPush;
+    const isSetup = this.state.hasLocation && this.state.hasNotifications;
     const rtl = this.state.languageRTL;
     const d = (s, rightAlign = false) =>
       rtl ? [s, styles.rtl, rightAlign ? styles.rightAlign : {}] : s;
@@ -288,12 +170,20 @@ export default class extends Component {
           <View>
             <Text style={d(styles.body, true)}>{this.t('getStarted')}</Text>
             {!this.state.hasLocation && (
-              <Text style={d(styles.link)} onPress={this.requestLocation}>
+              <Text
+                style={d(styles.link)}
+                onPress={this.makeSettingsBackedVerifier(
+                  verifyLocationPermissions,
+                )}>
                 {this.t('locationSharing')}
               </Text>
             )}
-            {!this.state.hasPush && (
-              <Text style={d(styles.link, true)} onPress={this.requestPush}>
+            {!this.state.hasNotifications && (
+              <Text
+                style={d(styles.link, true)}
+                onPress={this.makeSettingsBackedVerifier(
+                  verifyNotificationPermissions,
+                )}>
                 {this.t('pushNotifications')}
               </Text>
             )}
