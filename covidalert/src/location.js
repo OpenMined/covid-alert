@@ -51,11 +51,16 @@ export function setupBackgroundGeolocation(
   BackgroundGeolocation.on('location', location => {
     console.log('[LOCATION]', location);
 
-    BackgroundGeolocation.startTask(taskKey => {
-      requestAnimationFrame(() => {
-        onLocationTask(location);
+    if (Platform.OS === 'android') {
+      onLocationTask(location);
+    } else {
+      BackgroundGeolocation.startTask(taskKey => {
+        requestAnimationFrame(() => {
+          onLocationTask(location);
+          BackgroundGeolocation.endTask(taskKey);
+        });
       });
-    });
+    }
   });
 
   // fire one-time event since we might not be moving...
