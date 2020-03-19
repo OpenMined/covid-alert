@@ -1,6 +1,5 @@
-import {gps2box, stringifyBigInt, parseBigInt} from 'gps-sector-grid';
+import {gps2box, stringifyBigInt} from 'gps-sector-grid';
 import axios from 'axios';
-import JSBI from 'jsbi';
 
 export default async (publicKey, privateKey, lat, lng) => {
   const URL = 'https://us-central1-coronavirus-mapper.cloudfunctions.net/api';
