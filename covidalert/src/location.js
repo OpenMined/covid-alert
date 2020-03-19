@@ -63,8 +63,11 @@ export function setupBackgroundGeolocation(
     }
   });
 
-  // fire one-time event since we might not be moving...
-  BackgroundGeolocation.getCurrentLocation(onLocationTask, console.error);
+  // This is odd... maybe something to do with event listeners? Only way I got working was
+  // stopping and starting the service.
+  console.log('starting');
+  BackgroundGeolocation.stop();
+  BackgroundGeolocation.start();
 }
 
 // business logic translation layer.
