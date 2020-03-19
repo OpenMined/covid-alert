@@ -12,8 +12,6 @@ const BASE_CONFIG = {
   interval: 30000,
   fastestInterval: 5000,
   activitiesInterval: 30000,
-  stopOnStillActivity: true,
-  notificationsEnabled: true,
   startForeground: true,
 };
 
