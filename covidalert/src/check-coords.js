@@ -21,10 +21,10 @@ export default async (publicKey, lat, lng) => {
   }).then(r => r.json());
 
   if (computation.hasOwnProperty('matches') && !computation.matches) {
-    // Sector doesn't match
+    console.log('sector does not match');
     return false;
   } else {
-    // Sector matches
+    console.log('sector matches...');
     let parsedResult = parseBigInt(computation.result);
 
     for (let i = 0; i < parsedResult.length; i++) {
