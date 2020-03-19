@@ -1,18 +1,20 @@
 import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
+import {Platform} from 'react-native';
 
 const BASE_CONFIG = {
   desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
   stationaryRadius: 50,
   distanceFilter: 50,
   debug: false,
-  startOnBoot: false,
+  startOnBoot: true,
   stopOnTerminate: false,
   locationProvider: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER,
   interval: 30000,
   fastestInterval: 5000,
   activitiesInterval: 30000,
-  stopOnStillActivity: false,
-  stopTimeout: 1,
+  stopOnStillActivity: true,
+  notificationsEnabled: true,
+  startForeground: true,
 };
 
 export function setupBackgroundGeolocation(
