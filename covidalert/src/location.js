@@ -1,18 +1,18 @@
 import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
+import {Platform} from 'react-native';
 
 const BASE_CONFIG = {
   desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
   stationaryRadius: 50,
   distanceFilter: 50,
   debug: false,
-  startOnBoot: false,
+  startOnBoot: true,
   stopOnTerminate: false,
   locationProvider: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER,
   interval: 30000,
   fastestInterval: 5000,
   activitiesInterval: 30000,
-  stopOnStillActivity: false,
-  stopTimeout: 1,
+  startForeground: true,
 };
 
 export function setupBackgroundGeolocation(
@@ -42,18 +42,30 @@ export function setupBackgroundGeolocation(
     onStop();
   });
 
+  BackgroundGeolocation.on('stationary', location => {
+    console.log('[STATIONARY]', location);
+  });
+
   BackgroundGeolocation.on('location', location => {
     console.log('[LOCATION]', location);
 
-    BackgroundGeolocation.startTask(taskKey => {
-      requestAnimationFrame(() => {
-        onLocationTask(location);
+    if (Platform.OS === 'android') {
+      onLocationTask(location);
+    } else {
+      BackgroundGeolocation.startTask(taskKey => {
+        requestAnimationFrame(() => {
+          onLocationTask(location);
+          BackgroundGeolocation.endTask(taskKey);
+        });
       });
-    });
+    }
   });
 
-  // fire one-time event since we might not be moving...
-  BackgroundGeolocation.getCurrentLocation(onLocationTask, console.error);
+  // This is odd... maybe something to do with event listeners? Only way I got working was
+  // stopping and starting the service.
+  console.log('starting');
+  BackgroundGeolocation.stop();
+  BackgroundGeolocation.start();
 }
 
 // business logic translation layer.

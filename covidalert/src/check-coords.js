@@ -1,6 +1,7 @@
-import {gps2box, stringifyBigInt, parseBigInt} from 'gps-sector-grid';
+import {gps2box, stringifyBigInt} from 'gps-sector-grid';
+import axios from 'axios';
 
-export default async (publicKey, lat, lng) => {
+export default async (publicKey, privateKey, lat, lng) => {
   const URL = 'https://us-central1-coronavirus-mapper.cloudfunctions.net/api';
 
   let {sectorKey, gridTensor} = gps2box(lat, lng);
@@ -11,34 +12,26 @@ export default async (publicKey, lat, lng) => {
     gridTensor[i] = publicKey.encrypt(gridTensor[i]);
   }
 
-  const computation = await fetch(`${URL}/grid-tensor-computation`, {
-    method: 'POST',
-    body: stringifyBigInt({
-      sectorKey,
-      gridTensor,
-      publicKey: {n: publicKey.n, g: publicKey.g},
-    }),
-  }).then(r => r.json());
+  const computation = await axios
+    .post(
+      `${URL}/grid-tensor-computation`,
+      stringifyBigInt({
+        sectorKey,
+        gridTensor,
+        publicKey: {n: publicKey.n, g: publicKey.g},
+      }),
+      {
+        headers: {
+          'Content-Type': 'text/plain',
+        },
+      },
+    )
+    // eslint-disable-next-line prettier/prettier
+    .then(
+      r => r.data.result,
+      err => err,
+    )
+    .catch(e => console.log(e));
 
-  if (computation.hasOwnProperty('matches') && !computation.matches) {
-    console.log('sector does not match');
-    return false;
-  } else {
-    console.log('sector matches...');
-    let parsedResult = parseBigInt(computation.result);
-
-    for (let i = 0; i < parsedResult.length; i++) {
-      // parsedResult[i] = privateKey.decrypt(parsedResult[i]);
-    }
-
-    const iAmSafe = parsedResult.every(v => v < 1);
-
-    if (iAmSafe) {
-      // Grid doesn't match
-      return false;
-    } else {
-      // Grid matches
-      return true;
-    }
-  }
+  return privateKey.decrypt(computation).gt(0);
 };

@@ -96,6 +96,7 @@ export default class extends Component {
       // This probably means pulling gps2box out of checkCoords.
       const isCovidArea = await checkCoords(
         this.state.publicKey,
+        this.state.privateKey,
         location.latitude,
         location.longitude,
       );
