@@ -25,7 +25,7 @@ export default class extends Component {
   constructor(props) {
     super(props);
 
-    const {publicKey, privateKey} = generateRandomKeys(128);
+    const {publicKey, privateKey} = generateRandomKeys(1024);
 
     const {languageCode} = getLocales()[0];
     const supportedLanguages = ['en', 'es', 'it', 'pt', 'fr', 'ru', 'ar', 'zh'];
