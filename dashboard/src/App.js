@@ -1,19 +1,19 @@
-import React, { useEffect } from "react";
-import { useToast, Box, Text } from "@chakra-ui/core";
+import React, { useEffect } from 'react';
+import { useToast, Box, Text } from '@chakra-ui/core';
 
-import { login, logout, useCurrentUser } from "./firebase";
-import Loader from "./components/Loader";
-import Header from "./components/Header";
-import Login from "./pages/Login";
-import Patient from "./pages/Patient";
-import Admin from "./pages/Admin";
+import { login, logout, useCurrentUser } from './firebase';
+import Loader from './components/Loader';
+import Header from './components/Header';
+import Login from './pages/Login';
+import Patient from './pages/Patient';
+import Admin from './pages/Admin';
 
 export default () => {
   const toast = useToast();
   const toastProps = {
     duration: 10000,
     isClosable: true,
-    position: "bottom-left"
+    position: 'bottom-left'
   };
 
   const doLogin = (email, password) => {
@@ -22,17 +22,17 @@ export default () => {
       password,
       () => {
         toast({
-          title: "Success",
-          description: "Logged in successfully",
-          status: "success",
+          title: 'Success',
+          description: 'Logged in successfully',
+          status: 'success',
           ...toastProps
         });
       },
       error => {
         toast({
-          title: "Authentication error",
+          title: 'Authentication error',
           description: error.message,
-          status: "error",
+          status: 'error',
           ...toastProps
         });
       }
@@ -43,17 +43,17 @@ export default () => {
     logout(
       () => {
         toast({
-          title: "Success",
-          description: "Logged out successfully",
-          status: "success",
+          title: 'Success',
+          description: 'Logged out successfully',
+          status: 'success',
           ...toastProps
         });
       },
       error => {
         toast({
-          title: "Error with logging out",
+          title: 'Error with logging out',
           description: error.message,
-          status: "error",
+          status: 'error',
           ...toastProps
         });
       }
@@ -69,17 +69,17 @@ export default () => {
         .sendEmailVerification()
         .then(() => {
           toast({
-            title: "Success",
-            description: "Verification email sent, please check your email",
-            status: "success",
+            title: 'Success',
+            description: 'Verification email sent, please check your email',
+            status: 'success',
             ...toastProps
           });
         })
         .catch(error => {
           toast({
-            title: "Error with sending verification email",
+            title: 'Error with sending verification email',
             description: error.message,
-            status: "error",
+            status: 'error',
             ...toastProps
           });
         });
@@ -89,14 +89,14 @@ export default () => {
   return (
     <>
       {user && !isLoading && <Header user={user} doLogout={doLogout} />}
-      <Box mx="auto" width={["100%", null, 720, 960, 1200]} px={3} pb={6}>
+      <Box mx="auto" width={['100%', null, 720, 960, 1200]} px={3} pb={6}>
         {isLoading && <Loader />}
         {!isLoading && (
           <>
             {!user && (
               <Box
                 pt={[3, null, 8]}
-                width={[null, null, "75%", "50%"]}
+                width={[null, null, '75%', '50%']}
                 mx="auto"
               >
                 <Login doLogin={doLogin} />
@@ -105,7 +105,10 @@ export default () => {
             {user && (
               <>
                 {!user.emailVerified && (
-                  <Text>Please check your email for a verification email.</Text>
+                  <Text>
+                    Please check your email for a verification email - once
+                    you've verified, please log out and then log back in.
+                  </Text>
                 )}
                 {!isUserAdmin && user.emailVerified && (
                   <Patient user={user} toast={toast} toastProps={toastProps} />
