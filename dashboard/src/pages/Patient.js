@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
 import { Box, Flex } from "@chakra-ui/core";
 import { gps2box } from "gps-sector-grid";
-
+import React, { useEffect, useState } from "react";
+import LocationsList from "../components/LocationsList";
 import Map from "../components/Map";
 import Patient from "../components/Patient";
-import LocationsList from "../components/LocationsList";
 import firebase, {
-  createSubDocument,
-  getSubCollection,
+  createSubDocuments,
   getDocument,
+  getSubCollection,
   updateDocument
 } from "../firebase";
 
@@ -64,13 +63,13 @@ export default ({ user, toast, toastProps }) => {
       }
     );
 
-  const reportCoordinates = values => {
-    const { sectorKey } = gps2box(values.lat, values.lng);
-    values["sector_key"] = sectorKey;
+  const convertValue = value => {
+    const { sectorKey } = gps2box(value.lat, value.lng);
+    value["sector_key"] = sectorKey;
 
-    const splitDate = values.date.split("/");
-    const splitTime = values.time.split(":");
-    values["last_time"] = firebase.firestore.Timestamp.fromDate(
+    const splitDate = value.date.split("/");
+    const splitTime = value.time.split(":");
+    value["last_time"] = firebase.firestore.Timestamp.fromDate(
       new Date(
         splitDate[2],
         splitDate[1] - 1,
@@ -81,18 +80,30 @@ export default ({ user, toast, toastProps }) => {
       )
     );
 
-    delete values.date;
-    delete values.time;
+    delete value.date;
+    delete value.time;
 
-    createSubDocument(
+    return value;
+  };
+
+  const reportCoordinates = values => {
+    if (!Array.isArray(values)) {
+      reportCoordinates([values]);
+      return;
+    }
+    // Do a batch write.
+    createSubDocuments(
       "patients",
       user.uid,
       "locations",
-      values,
+      values.map(value => convertValue(value)),
       () => {
         toast({
           title: "Success",
-          description: `Added a location successfully`,
+          description:
+            values.length == 1
+              ? `Added a location successfully`
+              : "Added locations successfully",
           status: "success",
           ...toastProps
         });

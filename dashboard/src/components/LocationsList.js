@@ -1,7 +1,7 @@
-import React from "react";
-import { Heading, List, ListItem, Box, Text } from "@chakra-ui/core";
+import { Box, Heading, List, ListItem, Text } from "@chakra-ui/core";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import React from "react";
 
 dayjs.extend(relativeTime);
 
@@ -29,7 +29,9 @@ export default ({ locations, ...props }) => {
             }
 
             return (
-              <ListItem key={`location-${lng},${lat}`}>
+              <ListItem
+                key={`location-${lng},${lat}.${last_time.toDate().getTime()}`}
+              >
                 <Text>
                   <strong>Time:</strong> {finalTime}
                 </Text>
