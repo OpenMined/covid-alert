@@ -58,7 +58,6 @@ export default ({ lat, lng, doLocationAdd }) => {
   const handleTakeout = async files => {
     const locations = [];
     for (const file of files) {
-      // now - two weeks
       for await (const placeVisit of toPlaceVisits(file)) {
         const date = new Date(
           Number(placeVisit["duration"]["startTimestampMs"])
@@ -74,8 +73,6 @@ export default ({ lat, lng, doLocationAdd }) => {
 
         const lat = placeVisit["location"]["latitudeE7"] / 1e7;
         const lng = placeVisit["location"]["longitudeE7"] / 1e7;
-
-        // Skip already marked lat/lng pairs as the map will complain.
 
         locations.push({
           lat,
