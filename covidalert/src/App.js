@@ -19,7 +19,7 @@ import checkCoords from './check-coords';
 
 // Ensure that people in a large crowd don't receive a notification
 // at the same time and cause a panic
-const NO_PANIC_DELAY_MS = 5 * 60 * 1000;
+const NO_PANIC_DELAY_MS = 1 * 60 * 1000;
 
 export default class extends Component {
   constructor(props) {
@@ -195,7 +195,7 @@ export default class extends Component {
           <View>
             <Text
               style={d(styles.link, true)}
-              onPress={() => this.openInBrowser('https://google.com')}>
+              onPress={() => this.openInBrowser('https://blog.openmined.org/providing-opensource-privacy-for-covid19/')}>
               {this.t('privacy')}
             </Text>
             <Text
