@@ -27,8 +27,17 @@ The dashboard and package directories mostly speak for themselves. To get the ap
 1. `yarn install` to install dependencies
 2. `react-native link` to add assets (fonts and images) to packages
 3. If you want to install ios, run `cd ios && pod install && cd ../`
-4. `yarn start` for hot reloading
-5. iOS: `yarn ios` / Android: `yarn android`
+4. To run android locally
+   ```
+   export ANDROID_HOME=$HOME/Library/Android/sdk
+   export PATH=$PATH:$ANDROID_HOME/emulator
+   export PATH=$PATH:$ANDROID_HOME/tools
+   export PATH=$PATH:$ANDROID_HOME/tools/bin
+   export PATH=$PATH:$ANDROID_HOME/platform-tools
+   yes | sdkmanager --licenses
+   ```
+5. `yarn start` for hot reloading
+6. iOS: `yarn ios` / Android: `yarn android`
 
 ## Acknowledgements
 

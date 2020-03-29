@@ -16,6 +16,7 @@ import styles from './App.styles';
 import copy from './copy';
 import {generateRandomKeys} from 'paillier-pure';
 import checkCoords from './check-coords';
+import {storeItem, retrieveItem} from './localStorage';
 
 // Ensure that people in a large crowd don't receive a notification
 // at the same time and cause a panic
@@ -24,9 +25,6 @@ const NO_PANIC_DELAY_MS = 1 * 60 * 1000;
 export default class extends Component {
   constructor(props) {
     super(props);
-
-    const {publicKey, privateKey} = generateRandomKeys(1024);
-
     const {languageCode} = getLocales()[0];
     const supportedLanguages = ['en', 'es', 'it', 'pt', 'fr', 'ru', 'ar', 'zh'];
     const finalLanguageCode =
@@ -40,12 +38,11 @@ export default class extends Component {
       hasNotifications: false,
       languageCode: finalLanguageCode,
       languageRTL: finalLanguageCode === 'ar',
-      publicKey,
-      privateKey,
     };
   }
 
   componentDidMount = async () => {
+    await this.setUpKeyPair();
     this.setupLocationHandlers();
     setupNotifications();
     await this.verify();
@@ -53,6 +50,18 @@ export default class extends Component {
 
   componentDidUpdate = async () => {
     await this.verify();
+  };
+
+  setUpKeyPair = async () => {
+    let keyPair = await retrieveItem('keyPair');
+    if (keyPair) {
+      keyPair = JSON.parse(keyPair);
+    } else {
+      keyPair = generateRandomKeys(1024);
+      storeItem('keyPair', JSON.stringify(keyPair));
+    }
+    const {publicKey, privateKey} = keyPair;
+    this.setState({publicKey, privateKey});
   };
 
   verify = async () => {
@@ -195,7 +204,11 @@ export default class extends Component {
           <View>
             <Text
               style={d(styles.link, true)}
-              onPress={() => this.openInBrowser('https://blog.openmined.org/providing-opensource-privacy-for-covid19/')}>
+              onPress={() =>
+                this.openInBrowser(
+                  'https://blog.openmined.org/providing-opensource-privacy-for-covid19/',
+                )
+              }>
               {this.t('privacy')}
             </Text>
             <Text
