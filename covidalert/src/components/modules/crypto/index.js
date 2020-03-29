@@ -1,6 +1,6 @@
 import Seal from './seal';
-import Paillier from './paillier';
-import Homomorphic from './homomorphic';
+import {default as Paillier} from './paillier';
+import {default as Homomorphic} from './homomorphic';
 import {default as Constants} from '../constants';
 import {createModuleFactory} from '../../factory';
 import module from './module';

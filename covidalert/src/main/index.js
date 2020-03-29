@@ -5,7 +5,13 @@ import {getLocales} from 'react-native-localize';
 import PushNotification from 'react-native-push-notification';
 import {openSettings} from 'react-native-permissions';
 
-import {Location, Notification, Permissions, Coordinates, Paillier} from '../';
+import {
+  Location,
+  Notification,
+  Permissions,
+  Coordinates,
+  Crypto,
+} from '../components';
 
 import styles from './styles';
 import copy from './copy';
@@ -18,7 +24,7 @@ export default class extends Component {
   constructor(props) {
     super(props);
 
-    const {publicKey, privateKey} = Paillier.generateRandomKeys(1024);
+    Crypto.paillier.init(1024);
 
     const {languageCode} = getLocales()[0];
     const supportedLanguages = ['en', 'es', 'it', 'pt', 'fr', 'ru', 'ar', 'zh'];
@@ -33,8 +39,6 @@ export default class extends Component {
       hasNotifications: false,
       languageCode: finalLanguageCode,
       languageRTL: finalLanguageCode === 'ar',
-      publicKey,
-      privateKey,
     };
   }
 
@@ -88,8 +92,6 @@ export default class extends Component {
       // because we got a location 'update'.
       // This probably means pulling gps2box out of checkCoords.
       const isCovidArea = await Coordinates.check(
-        this.state.publicKey,
-        this.state.privateKey,
         location.latitude,
         location.longitude,
       );
@@ -153,7 +155,7 @@ export default class extends Component {
           <View style={styles.radarContainer}>
             <Image
               style={styles.radarLogo}
-              source={require('../assets/images/radar.png')}
+              source={require('../../assets/images/radar.png')}
               resizeMode="contain"
             />
             <Text style={d(styles.radarText)}>{this.t('scanning')}</Text>
@@ -206,7 +208,7 @@ export default class extends Component {
           <Text style={styles.footerText}>{this.t('volunteers')}</Text>
           <Image
             style={styles.openMinedLogo}
-            source={require('../assets/images/openmined-logo.png')}
+            source={require('../../assets/images/openmined-logo.png')}
             resizeMode="contain"
           />
         </TouchableOpacity>

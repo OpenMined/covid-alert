@@ -1,4 +1,4 @@
-export * as Composition from './composition';
+export * from './composition';
 export const promiseTimeout = (ms, promise, timeoutVal = undefined) => {
   // Create a promise that rejects in <ms> milliseconds
   const timeout = new Promise(resolve => {

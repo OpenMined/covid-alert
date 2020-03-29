@@ -1,11 +1,9 @@
 import * as Paillier from 'paillier-pure';
-import {default as Constants} from '../../constants';
-import {Composition} from '../../../../utils';
+import Base64 from 'base64-js';
 import {createModuleFactory} from '../../../factory';
 import module from './module';
 
 export default createModuleFactory({
   paillier: Paillier,
-  constants: Constants,
-  composition: Composition,
+  base64: Base64,
 })(module);

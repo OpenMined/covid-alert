@@ -1,5 +1,5 @@
 export default ({
-  homomophic,
+  homomorphic,
   createPaillier,
   createSeal,
   constants: {
@@ -18,12 +18,12 @@ export default ({
     galoisKeyName: 'galois_key',
   };
 
-  const paillier = homomophic.createProvider({
+  const paillier = homomorphic.createProvider({
     ...defaults,
     prefix: 'paillier',
   });
 
-  const seal = homomophic.createProvider({
+  const seal = homomorphic.createProvider({
     ...defaults,
     prefix: 'seal',
     constants: {
