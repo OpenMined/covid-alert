@@ -935,6 +935,11 @@
   dependencies:
     plist "^3.0.1"
 
+"@react-native-community/async-storage@^1.8.1":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@react-native-community/async-storage/-/async-storage-1.8.1.tgz#c93e69dcf948667b207e409b8039b7edf199159b"
+  integrity sha512-MA1fTp4SB7OOtDmNAwds6jIpiwwty1NIoFboWjEWkoyWW35zIuxlhHxD4joSy21aWEzUVwvv6JJ2hSsP/HTb7A==
+
 "@react-native-community/cli-debugger-ui@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@react-native-community/cli-debugger-ui/-/cli-debugger-ui-3.0.0.tgz#d01d08d1e5ddc1633d82c7d84d48fff07bd39416"
@@ -4898,6 +4903,11 @@ node-notifier@^6.0.0:
     semver "^6.3.0"
     shellwords "^0.1.1"
     which "^1.3.1"
+
+node-seal@^4.1.5:
+  version "4.1.5"
+  resolved "https://registry.yarnpkg.com/node-seal/-/node-seal-4.1.5.tgz#b58e7c1cdb92350f10ac1ceea55bb8aa29716c37"
+  integrity sha512-6MFOOg/6HsNtFi+SEke130Vk5biDf7VAc45L5sjrRhGEKBgtGEowi+smb5oI6MDIzOUdFaFFKTHQGL5fcDehCg==
 
 normalize-package-data@^2.3.2:
   version "2.5.0"

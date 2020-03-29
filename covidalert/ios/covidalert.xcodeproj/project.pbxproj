@@ -24,6 +24,9 @@
 		94FBE4C50C32D8ED2B08EECD /* libPods-covidalert-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E4FE273F1C7009542E6E5A6 /* libPods-covidalert-tvOSTests.a */; };
 		960C8B34EC76476F8E954932 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 85D1C13ABCE145AD817ECDA0 /* Rubik-Regular.ttf */; };
 		D384E37D52A143B18A80D281 /* radar.png in Resources */ = {isa = PBXBuildFile; fileRef = 4706EB11E23644B4B1522735 /* radar.png */; };
+		9C4675CF80414A27B7DEF1BA /* gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 14DAA36063924896B397AF68 /* gradient.png */; };
+		AAE4492E426547ADA48C05A3 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = D10A9B676253423FB16E3BD4 /* logo.png */; };
+		B34117170CB54EADAB291281 /* radar-setup.png in Resources */ = {isa = PBXBuildFile; fileRef = 46FCA05457FF45ABB4E9BBE5 /* radar-setup.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +79,9 @@
 		E7AC54160761A63414B8284D /* libPods-covidalert-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-covidalert-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
+		14DAA36063924896B397AF68 /* gradient.png */ = {isa = PBXFileReference; name = "gradient.png"; path = "../assets/images/gradient.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D10A9B676253423FB16E3BD4 /* logo.png */ = {isa = PBXFileReference; name = "logo.png"; path = "../assets/images/logo.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		46FCA05457FF45ABB4E9BBE5 /* radar-setup.png */ = {isa = PBXFileReference; name = "radar-setup.png"; path = "../assets/images/radar-setup.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +159,9 @@
 				4706EB11E23644B4B1522735 /* radar.png */,
 				D9925F23E4EB4F40A07F84A0 /* Rubik-Medium.ttf */,
 				85D1C13ABCE145AD817ECDA0 /* Rubik-Regular.ttf */,
+				14DAA36063924896B397AF68 /* gradient.png */,
+				D10A9B676253423FB16E3BD4 /* logo.png */,
+				46FCA05457FF45ABB4E9BBE5 /* radar-setup.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -366,6 +375,9 @@
 				D384E37D52A143B18A80D281 /* radar.png in Resources */,
 				1722100B228C43789EE42AEC /* Rubik-Medium.ttf in Resources */,
 				960C8B34EC76476F8E954932 /* Rubik-Regular.ttf in Resources */,
+				9C4675CF80414A27B7DEF1BA /* gradient.png in Resources */,
+				AAE4492E426547ADA48C05A3 /* logo.png in Resources */,
+				B34117170CB54EADAB291281 /* radar-setup.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
