@@ -1,41 +1,44 @@
-import React, {Component} from 'react';
-import {View, Text, Image, Linking, TouchableOpacity} from 'react-native';
+import React, { Component } from 'react';
+import { View, Text, Image, Linking, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 
 import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
-import {getLocales} from 'react-native-localize';
+import { getLocales } from 'react-native-localize';
 import PushNotification from 'react-native-push-notification';
-import {openSettings} from 'react-native-permissions';
+import { openSettings } from 'react-native-permissions';
 
-import {setupBackgroundGeolocation, getLocationStatus} from './location';
-import {setupNotifications, getNotificationPermissions} from './notifications';
+import { setupBackgroundGeolocation, getLocationStatus } from './location';
+import { setupNotifications, getNotificationPermissions } from './notifications';
 import {
   verifyLocationPermissions,
   verifyNotificationPermissions,
 } from './requestPermissions';
 import styles from './App.styles';
 import copy from './copy';
-import {generateRandomKeys} from 'paillier-pure';
+import { generateRandomKeys } from 'paillier-pure';
 import checkCoords from './check-coords';
 
 // Ensure that people in a large crowd don't receive a notification
 // at the same time and cause a panic
 const NO_PANIC_DELAY_MS = 1 * 60 * 1000;
 
+const { height } = Dimensions.get('window')
+
 export default class extends Component {
   constructor(props) {
     super(props);
 
-    const {publicKey, privateKey} = generateRandomKeys(1024);
+    const { publicKey, privateKey } = generateRandomKeys(1024);
 
-    const {languageCode} = getLocales()[0];
+    const { languageCode } = getLocales()[0];
     const supportedLanguages = ['en', 'es', 'it', 'pt', 'fr', 'ru', 'ar', 'zh'];
     const finalLanguageCode =
       supportedLanguages.includes(languageCode) &&
-      copy.hasOwnProperty(languageCode)
+        copy.hasOwnProperty(languageCode)
         ? languageCode
         : 'en';
 
     this.state = {
+      screenHeight: 0,
       hasLocation: false,
       hasNotifications: false,
       languageCode: finalLanguageCode,
@@ -61,7 +64,7 @@ export default class extends Component {
   };
 
   verifyLocationStatus = async () => {
-    const {hasLocation} = this.state;
+    const { hasLocation } = this.state;
     const locationStatus = await getLocationStatus();
     if (locationStatus.needsStart) {
       console.log('Attempting to start background location service...');
@@ -69,20 +72,20 @@ export default class extends Component {
     }
 
     if (!hasLocation && !locationStatus.needsPermission) {
-      this.setState({hasLocation: true});
+      this.setState({ hasLocation: true });
     } else if (hasLocation && locationStatus.needsPermission) {
-      this.setState({hasLocation: false});
+      this.setState({ hasLocation: false });
     }
   };
 
   verifyNotificationStatus = async () => {
-    const {hasNotifications} = this.state;
+    const { hasNotifications } = this.state;
     const count = await getNotificationPermissions();
     // having any notification permissions is good enough to work.
     if (count > 0 && !hasNotifications) {
-      this.setState({hasNotifications: true});
+      this.setState({ hasNotifications: true });
     } else if (count === 0 && hasNotifications) {
-      this.setState({hasNotifications: false});
+      this.setState({ hasNotifications: false });
     }
   };
 
@@ -146,67 +149,73 @@ export default class extends Component {
     BackgroundGeolocation.removeAllListeners();
   };
 
+  onContentSizeChange = (contentWitdth, contentHeight) => {
+    this.setState({ screenHeight: contentHeight })
+  }
+
   render() {
     const isSetup = this.state.hasLocation && this.state.hasNotifications;
     const rtl = this.state.languageRTL;
     const d = (s, rightAlign = false) =>
       rtl ? [s, styles.rtl, rightAlign ? styles.rightAlign : {}] : s;
-
+    const scrollRequired = this.state.screenHeight > height
     return (
       <View style={styles.background}>
-        {/* NOTE: The title of the app should not be translated */}
-        <Text style={styles.title}>COVID-19 Alert</Text>
-        {isSetup && (
-          <View style={styles.radarContainer}>
-            <Image
-              style={styles.radarLogo}
-              source={require('../assets/images/radar.png')}
-              resizeMode="contain"
-            />
-            <Text style={d(styles.radarText)}>{this.t('scanning')}</Text>
-          </View>
-        )}
-        <Text style={d(styles.body, true)}>{this.t('body')}</Text>
-        {!isSetup && (
-          <View>
-            <Text style={d(styles.body, true)}>{this.t('getStarted')}</Text>
-            {!this.state.hasLocation && (
-              <Text
-                style={d(styles.link)}
-                onPress={this.makeSettingsBackedVerifier(
-                  verifyLocationPermissions,
-                )}>
-                {this.t('locationSharing')}
-              </Text>
-            )}
-            {!this.state.hasNotifications && (
+        <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={scrollRequired} onContentSizeChange={this.onContentSizeChange}>
+          {/* NOTE: The title of the app should not be translated */}
+          <Text style={styles.title}>COVID-19 Alert</Text>
+          {isSetup && (
+            <View style={styles.radarContainer}>
+              <Image
+                style={styles.radarLogo}
+                source={require('../assets/images/radar.png')}
+                resizeMode="contain"
+              />
+              <Text style={d(styles.radarText)}>{this.t('scanning')}</Text>
+            </View>
+          )}
+          <Text style={d(styles.body, true)}>{this.t('body')}</Text>
+          {!isSetup && (
+            <View>
+              <Text style={d(styles.body, true)}>{this.t('getStarted')}</Text>
+              {!this.state.hasLocation && (
+                <Text
+                  style={d(styles.link)}
+                  onPress={this.makeSettingsBackedVerifier(
+                    verifyLocationPermissions,
+                  )}>
+                  {this.t('locationSharing')}
+                </Text>
+              )}
+              {!this.state.hasNotifications && (
+                <Text
+                  style={d(styles.link, true)}
+                  onPress={this.makeSettingsBackedVerifier(
+                    verifyNotificationPermissions,
+                  )}>
+                  {this.t('pushNotifications')}
+                </Text>
+              )}
+            </View>
+          )}
+          {/* TODO: This needs to be a real link */}
+          {isSetup && (
+            <View>
               <Text
                 style={d(styles.link, true)}
-                onPress={this.makeSettingsBackedVerifier(
-                  verifyNotificationPermissions,
-                )}>
-                {this.t('pushNotifications')}
+                onPress={() => this.openInBrowser('https://blog.openmined.org/providing-opensource-privacy-for-covid19/')}>
+                {this.t('privacy')}
               </Text>
-            )}
-          </View>
-        )}
-        {/* TODO: This needs to be a real link */}
-        {isSetup && (
-          <View>
-            <Text
-              style={d(styles.link, true)}
-              onPress={() => this.openInBrowser('https://blog.openmined.org/providing-opensource-privacy-for-covid19/')}>
-              {this.t('privacy')}
-            </Text>
-            <Text
-              style={d(styles.link, true)}
-              onPress={() =>
-                this.openInBrowser('https://opencollective.com/openmined')
-              }>
-              {this.t('support')}
-            </Text>
-          </View>
-        )}
+              <Text
+                style={d(styles.link, true)}
+                onPress={() =>
+                  this.openInBrowser('https://opencollective.com/openmined')
+                }>
+                {this.t('support')}
+              </Text>
+            </View>
+          )}
+        </ScrollView>
         <TouchableOpacity
           style={d(styles.footer)}
           onPress={() => this.openInBrowser('https://openmined.org')}>
