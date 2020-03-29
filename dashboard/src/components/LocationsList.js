@@ -30,7 +30,7 @@ export default ({ locations, ...props }) => {
 
             return (
               <ListItem
-                key={`location-${lng},${lat}.${last_time.toDate().getTime()}`}
+                key={`location-${lng},${lat},${last_time.toDate().getTime()}`}
               >
                 <Text>
                   <strong>Time:</strong> {finalTime}

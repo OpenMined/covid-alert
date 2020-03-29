@@ -1,6 +1,7 @@
-import { Box, Flex } from "@chakra-ui/core";
+import { Box, Button, Flex } from "@chakra-ui/core";
 import { gps2box } from "gps-sector-grid";
-import React, { useEffect, useState } from "react";
+import JSZip from "jszip";
+import React, { useEffect, useRef, useState } from "react";
 import LocationsList from "../components/LocationsList";
 import Map from "../components/Map";
 import Patient from "../components/Patient";
@@ -121,6 +122,78 @@ export default ({ user, toast, toastProps }) => {
     );
   };
 
+  const toPlaceVisits = async function*(takeout) {
+    const zip = await JSZip.loadAsync(takeout);
+    const months = [
+      "JANUARY",
+      "FEBRUARY",
+      "MARCH",
+      "APRIL",
+      "MAY",
+      "JUNE",
+      "JULY",
+      "AUGUST",
+      "SEPTEMBER",
+      "OCTOBER",
+      "NOVEMBER",
+      "DECEMBER"
+    ];
+    const to = new Date();
+    const from = new Date(new Date().getTime() - 86400 * 1000 * 14);
+    const filenames = new Set([
+      `${from.getFullYear()}_${months[from.getMonth()]}`,
+      `${to.getFullYear()}_${months[to.getMonth()]}`
+    ]);
+    for (const filename of filenames) {
+      const content = await zip
+        .folder("Takeout")
+        .folder("Location History")
+        .folder("Semantic Location History")
+        .folder(filename.substring(0, 4))
+        .file(`${filename}.json`)
+        .async("text");
+      yield* JSON.parse(content)
+        ["timelineObjects"].filter(object => "placeVisit" in object)
+        .map(object => object["placeVisit"])
+        .filter(
+          placeVisit =>
+            Number(placeVisit["duration"]["startTimestampMs"]) > from.getTime()
+        );
+    }
+  };
+
+  const handleTakeout = async files => {
+    const locations = [];
+    for (const file of files) {
+      for await (const placeVisit of toPlaceVisits(file)) {
+        const date = new Date(
+          Number(placeVisit["duration"]["startTimestampMs"])
+        );
+
+        const pad = x => x.toString().padStart(2, "0");
+
+        const day = pad(date.getUTCDate());
+        const month = pad(date.getUTCMonth());
+        const year = date.getUTCFullYear();
+        const hour = pad(date.getUTCHours());
+        const minute = pad(date.getUTCMinutes());
+
+        const lat = placeVisit["location"]["latitudeE7"] / 1e7;
+        const lng = placeVisit["location"]["longitudeE7"] / 1e7;
+
+        locations.push({
+          lat,
+          lng,
+          date: `${day}/${month}/${year}`,
+          time: `${hour}:${minute}`
+        });
+      }
+    }
+    reportCoordinates(locations);
+  };
+
+  const takeoutInput = useRef();
+
   useEffect(() => {
     getPatient();
   }, []);
@@ -157,9 +230,24 @@ export default ({ user, toast, toastProps }) => {
               doPatientUpdate={updatePatient}
               mr={[0, 8]}
             />
-            {locations && isPatientReady && (
-              <LocationsList locations={locations} mt={[4, 0]} />
-            )}
+            <Box flexGrow="1">
+              {locations && isPatientReady && (
+                <LocationsList locations={locations} mt={[4, 0]} />
+              )}
+            </Box>
+            <Button
+              variantColor="blue"
+              onClick={() => takeoutInput.current.click()}
+            >
+              Import from Google Takeout zip
+            </Button>
+            <input
+              type="file"
+              accept="application/zip"
+              onChange={e => handleTakeout(e.target.files)}
+              ref={takeoutInput}
+              style={{ display: "none" }}
+            />
           </Flex>
         </Box>
       )}

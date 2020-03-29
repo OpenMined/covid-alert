@@ -8,95 +8,14 @@ import {
   Stack,
   Text
 } from "@chakra-ui/core";
-import JSZip from "jszip";
 import React from "react";
 import { useForm } from "react-hook-form";
-
-async function* toPlaceVisits(takeout) {
-  const zip = await JSZip.loadAsync(takeout);
-  const months = [
-    "JANUARY",
-    "FEBRUARY",
-    "MARCH",
-    "APRIL",
-    "MAY",
-    "JUNE",
-    "JULY",
-    "AUGUST",
-    "SEPTEMBER",
-    "OCTOBER",
-    "NOVEMBER",
-    "DECEMBER"
-  ];
-  const to = new Date();
-  const from = new Date(new Date().getTime() - 86400 * 1000 * 14);
-  const filenames = new Set([
-    `${from.getFullYear()}_${months[from.getMonth()]}`,
-    `${to.getFullYear()}_${months[to.getMonth()]}`
-  ]);
-  for (const filename of filenames) {
-    const content = await zip
-      .folder("Takeout")
-      .folder("Location History")
-      .folder("Semantic Location History")
-      .folder(filename.substring(0, 4))
-      .file(`${filename}.json`)
-      .async("text");
-    yield* JSON.parse(content)
-      ["timelineObjects"].filter(object => "placeVisit" in object)
-      .map(object => object["placeVisit"])
-      .filter(
-        placeVisit =>
-          Number(placeVisit["duration"]["startTimestampMs"]) > from.getTime()
-      );
-  }
-}
 
 export default ({ lat, lng, doLocationAdd }) => {
   const { handleSubmit, errors, register, formState } = useForm();
 
-  const handleTakeout = async files => {
-    const locations = [];
-    for (const file of files) {
-      for await (const placeVisit of toPlaceVisits(file)) {
-        const date = new Date(
-          Number(placeVisit["duration"]["startTimestampMs"])
-        );
-
-        const pad = x => x.toString().padStart(2, "0");
-
-        const day = pad(date.getUTCDate());
-        const month = pad(date.getUTCMonth());
-        const year = date.getUTCFullYear();
-        const hour = pad(date.getUTCHours());
-        const minute = pad(date.getUTCMinutes());
-
-        const lat = placeVisit["location"]["latitudeE7"] / 1e7;
-        const lng = placeVisit["location"]["longitudeE7"] / 1e7;
-
-        locations.push({
-          lat,
-          lng,
-          date: `${day}/${month}/${year}`,
-          time: `${hour}:${minute}`
-        });
-      }
-    }
-    doLocationAdd(locations);
-  };
-
   return (
     <React.Fragment>
-      <Box>
-        <Text>Import from Google Takeout</Text>
-        <input
-          type="file"
-          accept="application/zip"
-          onChange={e => handleTakeout(e.target.files)}
-        />
-      </Box>
-      <hr />
-      <Text>Manually enter a location</Text>
       <form
         onSubmit={handleSubmit(values => {
           values.lat = lat;
