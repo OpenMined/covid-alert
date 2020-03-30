@@ -46,12 +46,14 @@ export default class extends Component {
   }
 
   componentDidMount = async () => {
+    console.log('componentDidMount ^^^^^^^^^^^^^^^^^^');
     this.setupLocationHandlers();
     setupNotifications();
     await this.verify();
   };
 
   componentDidUpdate = async () => {
+    console.log('componentDidUpdate &&&&&&&&&&&&&&&&&');
     await this.verify();
   };
 
@@ -143,6 +145,8 @@ export default class extends Component {
   }
 
   componentWillUnmount = async () => {
+    console.log('componentWillUnmount *******************');
+
     BackgroundGeolocation.removeAllListeners();
   };
 
