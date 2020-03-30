@@ -29,13 +29,11 @@ export default class extends Component {
 
     const {languageCode} = getLocales()[0];
     const supportedLanguages = ['en', 'es', 'it', 'pt', 'fr', 'ru', 'ar', 'zh'];
-    // const finalLanguageCode =
-    //   supportedLanguages.includes(languageCode) &&
-    //   copy.hasOwnProperty(languageCode)
-    //     ? languageCode
-    //     : 'en';
-
-    const finalLanguageCode = 'ar';
+    const finalLanguageCode =
+      supportedLanguages.includes(languageCode) &&
+      copy.hasOwnProperty(languageCode)
+        ? languageCode
+        : 'en';
 
     this.state = {
       hasLocation: false,
@@ -145,8 +143,6 @@ export default class extends Component {
   }
 
   componentWillUnmount = async () => {
-    console.log('componentWillUnmount *******************');
-
     BackgroundGeolocation.removeAllListeners();
   };
 

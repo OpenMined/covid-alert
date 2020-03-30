@@ -27,7 +27,7 @@ const InitI18n = () => {
     const locale = locales.slice().shift();
     const {languageCode} = locale;
     return languageCode;
-    // return 'ru';
+    // return 'ar'; // debug other languages manually
   };
 
   const getDir = () => {
