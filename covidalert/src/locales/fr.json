@@ -1,0 +1,14 @@
+{
+  "common": {
+    "title": "COVID-19 Alert",
+    "message": "Des patients signalés comme porteurs du COVID-19 ont été signalés à moins de 100 m de votre lieu de résidence actuel au cours des 72 dernières heures. Nous vous suggérons, si vous décidez de partir, de le faire calmement et sans précipitation.",
+    "scanning": "Détection en cours",
+    "body": "Cette application enregistre <0>anonymement</0> votre position en arrière-plan et vous envoie une notification lorsque vous êtes à proximté de lieux connus de victimes de COVID-19. <1>Pour que cette application fonctionne, veuillez la laisser ouverte sur votre téléphone.</1>",
+    "getStarted": "Avant de commencer, merci de bien vouloir:",
+    "locationSharing": "Autoriser le partage de localisation (toujours)",
+    "pushNotifications": "Autoriser les notifications push",
+    "privacy": "Nous protégeons votre vie privée?",
+    "support": "Soutenez-nous!",
+    "volunteers": "Proposé par"
+  }
+}

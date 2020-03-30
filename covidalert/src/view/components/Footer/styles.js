@@ -24,11 +24,4 @@ export default StyleSheet.create({
     ...getImageScaled(200, 766, 0.15),
     marginLeft: 10,
   },
-  rtl: {
-    direction: 'rtl',
-  },
-  rightAlign: {
-    alignSelf: 'flex-end',
-    textAlign: 'right',
-  },
 });

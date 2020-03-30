@@ -29,11 +29,13 @@ export default class extends Component {
 
     const {languageCode} = getLocales()[0];
     const supportedLanguages = ['en', 'es', 'it', 'pt', 'fr', 'ru', 'ar', 'zh'];
-    const finalLanguageCode =
-      supportedLanguages.includes(languageCode) &&
-      copy.hasOwnProperty(languageCode)
-        ? languageCode
-        : 'en';
+    // const finalLanguageCode =
+    //   supportedLanguages.includes(languageCode) &&
+    //   copy.hasOwnProperty(languageCode)
+    //     ? languageCode
+    //     : 'en';
+
+    const finalLanguageCode = 'ar';
 
     this.state = {
       hasLocation: false,
@@ -46,14 +48,12 @@ export default class extends Component {
   }
 
   componentDidMount = async () => {
-    console.log('componentDidMount ^^^^^^^^^^^^^^^^^^');
     this.setupLocationHandlers();
     setupNotifications();
     await this.verify();
   };
 
   componentDidUpdate = async () => {
-    console.log('componentDidUpdate &&&&&&&&&&&&&&&&&');
     await this.verify();
   };
 

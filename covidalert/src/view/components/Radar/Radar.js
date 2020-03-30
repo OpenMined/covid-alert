@@ -1,17 +1,11 @@
 import React from 'react';
 import {View, Text, Image} from 'react-native';
-
 import styles from './styles';
-import copy from '../Main/copy';
+import d from '../utils/style';
+import {useTranslation} from 'react-i18next';
 
-const RadarComponent = ({languageCode, languageRTL}) => {
-  const t = key => {
-    return copy[languageCode][key];
-  };
-
-  const rtl = languageRTL;
-  const d = (s, rightAlign = false) =>
-    rtl ? [s, styles.rtl, rightAlign ? styles.rightAlign : {}] : s;
+const RadarComponent = () => {
+  const {t} = useTranslation();
 
   return (
     <View style={styles.radarContainer}>

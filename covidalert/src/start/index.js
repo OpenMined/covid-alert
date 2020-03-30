@@ -8,3 +8,7 @@ const store = storeLayer.init();
 const view = viewLayer.init({store});
 
 export default () => AppRegistry.registerComponent(appName, () => view);
+
+// Old app
+// import App from '../App';
+// export default () => AppRegistry.registerComponent(appName, () => App);

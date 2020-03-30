@@ -1,17 +1,11 @@
 import React from 'react';
 import {Text, Linking, TouchableOpacity, Image} from 'react-native';
-
 import styles from './styles';
-import copy from '../Main/copy';
+import d from '../utils/style';
+import {useTranslation} from 'react-i18next';
 
-const FooterComponent = ({languageCode, languageRTL}) => {
-  const t = key => {
-    return copy[languageCode][key];
-  };
-
-  const rtl = languageRTL;
-  const d = (s, rightAlign = false) =>
-    rtl ? [s, styles.rtl, rightAlign ? styles.rightAlign : {}] : s;
+const FooterComponent = () => {
+  const {t} = useTranslation();
 
   const openInBrowser = url => {
     Linking.openURL(url).catch(err => console.error("Couldn't load page", err));

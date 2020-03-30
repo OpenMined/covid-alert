@@ -1,0 +1,14 @@
+{
+  "common": {
+    "title": "COVID-19 Alert",
+    "message": "Paciente(s) com casos relatados de COVID-19 estiveram dentro de 100m da sua localização atual nas últimas 72 horas. Sugerimos que, se optar por sair, faça-o com calma e silêncio.",
+    "scanning": "Analisando",
+    "body": "Este aplicativo irá registrar <0>anonimamente</0> sua localização enquanto estiver com o app em segundo plano e enviará uma notificação para o seu telefone quando você estiver próximo a locais que foram frequentados por vítimas do COVID-19. <1>Para funcionar, é só deixar o app aberto no seu telefone.</1>",
+    "getStarted": "Para começar, por favor:",
+    "locationSharing": "Ative o compartilhamento de localização (sempre)",
+    "pushNotifications": "Ative as notificações",
+    "privacy": "Como protegemos sua privacidade?",
+    "support": "Como posso apoiar este aplicativo?",
+    "volunteers": "Feito por voluntários da"
+  }
+}

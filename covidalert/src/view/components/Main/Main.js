@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, Image, Linking, TouchableOpacity} from 'react-native';
+import {View} from 'react-native';
 import {getLocales} from 'react-native-localize';
 
 import styles from './styles';
@@ -8,6 +8,8 @@ import RadarComponent from '../Radar';
 import InfoComponent from '../Info';
 import FooterComponent from '../Footer';
 import HeaderComponent from '../Header';
+import BodyComponent from '../Body';
+import SetupComponent from '../Setup';
 
 const {languageCode} = getLocales()[0];
 const supportedLanguages = ['en', 'es', 'it', 'pt', 'fr', 'ru', 'ar', 'zh'];
@@ -16,54 +18,29 @@ const finalLanguageCode =
     ? languageCode
     : 'en';
 
-const MainComponent = () => {
-  const [state, setState] = useState({
+const MainComponent = props => {
+  const [state] = useState({
     hasLocation: false,
     hasNotification: false,
     languageCode: finalLanguageCode,
     languageRTL: finalLanguageCode === 'ar',
   });
 
-  const t = key => {
-    return copy[state.languageCode][key];
-  };
-
   const isSetup = state.hasLocation && state.hasNotifications;
-  const rtl = state.languageRTL;
-  const d = (s, rightAlign = false) =>
-    rtl ? [s, styles.rtl, rightAlign ? styles.rightAlign : {}] : s;
 
   return (
     <View style={styles.background}>
       <HeaderComponent />
-      {isSetup && (
-        <RadarComponent
-          languageCode={state.languageCode}
-          languageRTL={state.languageRTL}
-        />
-      )}
-      <Text style={d(styles.body, true)}>{t('body')}</Text>
+      {isSetup && <RadarComponent />}
+      <BodyComponent />
       {!isSetup && (
-        <View>
-          <Text style={d(styles.body, true)}>{t('getStarted')}</Text>
-          {!state.hasLocation && (
-            <Text style={d(styles.link)}>{t('locationSharing')}</Text>
-          )}
-          {!state.hasNotifications && (
-            <Text style={d(styles.link, true)}>{t('pushNotifications')}</Text>
-          )}
-        </View>
-      )}
-      {isSetup && (
-        <InfoComponent
-          languageCode={state.languageCode}
-          languageRTL={state.languageRTL}
+        <SetupComponent
+          hasLocation={state.hasLocation}
+          hasNotifications={state.hasNotifications}
         />
       )}
-      <FooterComponent
-        languageCode={state.languageCode}
-        languageRTL={state.languageRTL}
-      />
+      {isSetup && <InfoComponent />}
+      <FooterComponent />
     </View>
   );
 };

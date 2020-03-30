@@ -7,11 +7,4 @@ export default StyleSheet.create({
     fontSize: 18,
     marginTop: 15,
   },
-  rtl: {
-    direction: 'rtl',
-  },
-  rightAlign: {
-    alignSelf: 'flex-end',
-    textAlign: 'right',
-  },
 });

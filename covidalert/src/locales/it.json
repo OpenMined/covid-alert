@@ -1,0 +1,14 @@
+{
+  "common": {
+    "title": "COVID-19 Alert",
+    "message": "Paziente(i) diagnosticati di COVID-19 sono stati tra i 100mila nella tua attuale posizione nelle scorse 72 ore. Ti raccomandiamo che se scegli di uscire, tu lo faccia con calme e piano.",
+    "scanning": "Scannerizzando",
+    "body": "Questa app registra <0>anonimamente</0> la tua posizione sullo sfondo ed invia una notifica al tuo telefono quando ti trovi vicino a luoghi dove si sono trovate vittime del COVID-19. <1>Per garantire il funzionamento dell’App mantienila aperta per favore.</1>",
+    "getStarted": "Inizio:",
+    "locationSharing": "Condividi la tua posizione (Sempre)",
+    "pushNotifications": "Attiva le notifiche",
+    "privacy": "Come proteggiamo la tua Privacy?",
+    "support": "Come posso sotenere l’App?",
+    "volunteers": "Realizzata da Volontari da"
+  }
+}

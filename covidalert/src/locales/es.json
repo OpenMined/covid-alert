@@ -1,0 +1,14 @@
+{
+  "common": {
+    "title": "COVID-19 Alert",
+    "message": "Casos confirmados de COVID-19 han estado en un radio de 100m de su localización actual en las pasadas 72 horas. Le recomendamos que, si decide salir, lo haga de manera calmada.",
+    "scanning": "Escaneo activo",
+    "body": "Esta app registra su localización <0>anónimamente</0> y envía una notificación a su teléfono cuando se encuentra cerca de localizaciones conocidas de víctimas de COVID-19. <1>Esta app necesita estar abierta para su correcto funcionamiento.</1>",
+    "getStarted": "Para empezar:",
+    "locationSharing": "Habilitar compartir la localización (siempre)",
+    "pushNotifications": "Habilitar notificaciones",
+    "privacy": "¿Cómo protegemos su privacidad?",
+    "support": "¿Cómo puedo apoyar esta app?",
+    "volunteers": "Hecho por voluntarios de"
+  }
+}
