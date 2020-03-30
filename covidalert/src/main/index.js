@@ -18,7 +18,7 @@ import copy from './copy';
 
 // Ensure that people in a large crowd don't receive a notification
 // at the same time and cause a panic
-const NO_PANIC_DELAY_MS = 5 * 60 * 1000;
+const NO_PANIC_DELAY_MS = 1000;
 
 export default class extends Component {
   constructor(props) {
@@ -87,6 +87,8 @@ export default class extends Component {
     console.log('Registering location handlers');
 
     Location.setupBackgroundGeolocation(async location => {
+      console.log(`Checking location...`);
+
       // TODO add debounce: if we've checked this same grid location
       // in the last N minutes, don't do it all over again just
       // because we got a location 'update'.

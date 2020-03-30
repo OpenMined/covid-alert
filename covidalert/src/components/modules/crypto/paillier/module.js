@@ -103,10 +103,7 @@ export default ({paillier, base64}) =>
     };
 
     const genKeyPair = async bits => {
-      console.time('Paillier Key Generation');
       const keys = paillier.generateRandomKeys(bits);
-      console.timeEnd('Paillier Key Generation');
-
       secretKey = keys.privateKey;
       publicKey = keys.publicKey;
 
@@ -122,11 +119,11 @@ export default ({paillier, base64}) =>
     };
 
     const Init = async bits => {
-      console.log('Initializing paillier keys...');
+      console.log('Initializing paillier keys... ');
       const exists = await doKeysExist();
       console.log('Paillier keys exist?', exists);
 
-      //await clearKeys();
+      await clearKeys();
       // Generate or load existing keys
       if (exists) {
         console.log('Loading paillier keys...');
