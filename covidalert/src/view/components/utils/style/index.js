@@ -11,9 +11,12 @@ const d = (s, rightAlign = false) => {
         rightAlign
           ? {
               alignSelf: 'flex-end',
-              textAlign: 'right',
+              textAlign: 'left',
             }
-          : {},
+          : {
+              alignSelf: 'flex-start',
+              textAlign: 'right',
+            },
       ]
     : s;
 };
