@@ -1,9 +1,9 @@
-import loggerMiddleware from 'redux-logger';
-import {createStore, applyMiddleware} from 'redux';
-import {createRootReducer, initialState} from './reducers';
+import loggerMiddleware from 'redux-logger'
+import { createStore, applyMiddleware } from 'redux'
+import { createRootReducer, initialState } from './reducers'
 
 const initStoreLayer = () => {
-  const storeMiddlewareList = [loggerMiddleware];
+  const storeMiddlewareList = [loggerMiddleware]
 
   // Remove the logger for production
   // if (process.env.NODE_ENV === 'production') {
@@ -13,10 +13,10 @@ const initStoreLayer = () => {
   return createStore(
     createRootReducer(),
     initialState,
-    applyMiddleware(...storeMiddlewareList),
-  );
-};
+    applyMiddleware(...storeMiddlewareList)
+  )
+}
 
 export default {
-  init: initStoreLayer,
-};
+  init: initStoreLayer
+}

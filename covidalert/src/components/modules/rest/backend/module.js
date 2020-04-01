@@ -1,4 +1,4 @@
-export default ({apiProvider}) =>
+export default ({ apiProvider }) =>
   /**
    * Creates adapter for the Backend REST API provider.
    *
@@ -12,7 +12,7 @@ export default ({apiProvider}) =>
      * @returns {Promise<Object>} The data from the URL.
      */
     const gridTensorCompute = (data = {}) =>
-      apiProvider.post('/grid-tensor-computation', data);
+      apiProvider.post('/grid-tensor-computation', data)
 
-    return {gridTensorCompute};
-  };
+    return { gridTensorCompute }
+  }

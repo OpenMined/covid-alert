@@ -1,7 +1,7 @@
-import {Seal} from 'node-seal';
-import {createModuleFactory} from '../../../factory';
-import module from './module';
+// import { Seal } from 'node-seal'
+import { createModuleFactory } from '../../../factory'
+import module from './module'
 
 export default createModuleFactory({
-  seal: Seal,
-})(module);
+  seal: () => console.error('Not implemented')
+})(module)

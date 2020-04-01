@@ -1,15 +1,15 @@
-import React from 'react';
-import {View, Text, Linking} from 'react-native';
+import React from 'react'
+import { View, Text, Linking } from 'react-native'
 
-import styles from './styles';
-import d from '../utils/style';
-import {useTranslation} from 'react-i18next';
+import styles from './styles'
+import d from '../utils/style'
+import { useTranslation } from 'react-i18next'
 
 const InfoComponent = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation()
   const openInBrowser = url => {
-    Linking.openURL(url).catch(err => console.error("Couldn't load page", err));
-  };
+    Linking.openURL(url).catch(err => console.error("Couldn't load page", err))
+  }
 
   return (
     <View>
@@ -25,7 +25,7 @@ const InfoComponent = () => {
         {t('support')}
       </Text>
     </View>
-  );
-};
+  )
+}
 
-export default InfoComponent;
+export default InfoComponent

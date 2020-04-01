@@ -1,15 +1,15 @@
-import React from 'react';
-import {Text, Linking, TouchableOpacity, Image} from 'react-native';
-import styles from './styles';
-import d from '../utils/style';
-import {useTranslation} from 'react-i18next';
+import React from 'react'
+import { Text, Linking, TouchableOpacity, Image } from 'react-native'
+import styles from './styles'
+import d from '../utils/style'
+import { useTranslation } from 'react-i18next'
 
 const FooterComponent = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation()
 
   const openInBrowser = url => {
-    Linking.openURL(url).catch(err => console.error("Couldn't load page", err));
-  };
+    Linking.openURL(url).catch(err => console.error("Couldn't load page", err))
+  }
 
   return (
     <TouchableOpacity
@@ -22,7 +22,7 @@ const FooterComponent = () => {
         resizeMode="contain"
       />
     </TouchableOpacity>
-  );
-};
+  )
+}
 
-export default FooterComponent;
+export default FooterComponent

@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
   body: {
@@ -7,6 +7,6 @@ export default StyleSheet.create({
     fontSize: 18,
     lineHeight: 36,
     marginTop: 20,
-    letterSpacing: 0.5,
-  },
-});
+    letterSpacing: 0.5
+  }
+})

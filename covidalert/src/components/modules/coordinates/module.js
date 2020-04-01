@@ -1,14 +1,14 @@
-export default ({crypto, rest, gps2box, stringifyBigInt}) => {
+export default ({ crypto, rest, gps2box, stringifyBigInt }) => {
   const check = async (lat, lng) => {
-    let {sectorKey, gridTensor} = gps2box(lat, lng);
+    let { sectorKey, gridTensor } = gps2box(lat, lng)
 
-    gridTensor = gridTensor.flat();
+    gridTensor = gridTensor.flat()
 
-    console.log('gridTensor', gridTensor);
+    console.log('gridTensor', gridTensor)
     for (let i = 0; i < gridTensor.length; i++) {
-      gridTensor[i] = crypto.paillier.encrypt(gridTensor[i]);
+      gridTensor[i] = crypto.paillier.encrypt(gridTensor[i])
     }
-    console.log('gridTensor encrypted', gridTensor);
+    console.log('gridTensor encrypted', gridTensor)
 
     const computation = await rest.backend
       .gridTensorCompute(
@@ -17,20 +17,20 @@ export default ({crypto, rest, gps2box, stringifyBigInt}) => {
           gridTensor,
           publicKey: {
             n: crypto.paillier.publicKey.n,
-            g: crypto.paillier.publicKey.g,
-          },
-        }),
+            g: crypto.paillier.publicKey.g
+          }
+        })
       )
       .then(
         r => r.data.result,
-        err => err,
+        err => err
       )
-      .catch(e => console.log(e));
+      .catch(e => console.log(e))
 
-    return crypto.paillier.decrypt(computation).gt(0);
-  };
+    return crypto.paillier.decrypt(computation).gt(0)
+  }
 
   return {
-    check,
-  };
-};
+    check
+  }
+}

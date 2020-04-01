@@ -1,1 +1,1 @@
-export {default} from './Radar';
+export { default } from './Radar'

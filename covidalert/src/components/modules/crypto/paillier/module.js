@@ -1,4 +1,4 @@
-export default ({paillier, base64}) =>
+export default ({ paillier, base64 }) =>
   /**
    * Paillier implementation.
    *
@@ -31,10 +31,10 @@ export default ({paillier, base64}) =>
     evaluate,
     serialize,
     deserialize,
-    fs,
+    fs
   }) => {
-    let publicKey = null;
-    let secretKey = null;
+    let publicKey = null
+    let secretKey = null
 
     // TODO: move this into serialization class
     // http://www.onicos.com/staff/iz/amuse/javascript/expert/utf.txt
@@ -46,14 +46,14 @@ export default ({paillier, base64}) =>
      * This library is free.  You can redistribute it and/or modify it.
      */
     function Utf8ArrayToStr(array) {
-      let out, i, len, c;
-      let char2, char3;
+      let out, i, len, c
+      let char2, char3
 
-      out = '';
-      len = array.length;
-      i = 0;
+      out = ''
+      len = array.length
+      i = 0
       while (i < len) {
-        c = array[i++];
+        c = array[i++]
         // eslint-disable-next-line no-bitwise
         switch (c >> 4) {
           case 0:
@@ -65,92 +65,90 @@ export default ({paillier, base64}) =>
           case 6:
           case 7:
             // 0xxxxxxx
-            out += String.fromCharCode(c);
-            break;
+            out += String.fromCharCode(c)
+            break
           case 12:
           case 13:
             // 110x xxxx   10xx xxxx
-            char2 = array[i++];
+            char2 = array[i++]
             // eslint-disable-next-line no-bitwise
-            out += String.fromCharCode(((c & 0x1f) << 6) | (char2 & 0x3f));
-            break;
+            out += String.fromCharCode(((c & 0x1f) << 6) | (char2 & 0x3f))
+            break
           case 14:
             // 1110 xxxx  10xx xxxx  10xx xxxx
-            char2 = array[i++];
-            char3 = array[i++];
+            char2 = array[i++]
+            char3 = array[i++]
             out += String.fromCharCode(
               // eslint-disable-next-line no-bitwise
               ((c & 0x0f) << 12) |
                 // eslint-disable-next-line no-bitwise
                 ((char2 & 0x3f) << 6) |
                 // eslint-disable-next-line no-bitwise
-                ((char3 & 0x3f) << 0),
-            );
-            break;
+                ((char3 & 0x3f) << 0)
+            )
+            break
         }
       }
 
-      return out;
+      return out
     }
 
     const loadKeys = async () => {
-      secretKey = await fs.read(secretKeyName);
-      publicKey = await fs.read(publicKeyName);
-    };
+      secretKey = await fs.read(secretKeyName)
+      publicKey = await fs.read(publicKeyName)
+    }
 
-    const doKeysExist = () => {
-      return fs.existsMultiple(secretKeyName, publicKeyName);
-    };
+    const doKeysExist = () => fs.existsMultiple(secretKeyName, publicKeyName)
 
     const genKeyPair = async bits => {
-      const keys = paillier.generateRandomKeys(bits);
-      secretKey = keys.privateKey;
-      publicKey = keys.publicKey;
+      const keys = paillier.generateRandomKeys(bits)
+      secretKey = keys.privateKey
+      publicKey = keys.publicKey
 
       // We do not save Switching Keys
       await fs.saveMultiple([
         [secretKeyName, JSON.stringify(secretKey)],
-        [publicKeyName, JSON.stringify(publicKey)],
-      ]);
-    };
+        [publicKeyName, JSON.stringify(publicKey)]
+      ])
+    }
 
     const clearKeys = () => {
-      fs.destroyMultiple(secretKeyName, publicKeyName);
-    };
+      fs.destroyMultiple(secretKeyName, publicKeyName)
+    }
 
     const Init = async bits => {
-      console.log('Initializing paillier keys... ');
-      const exists = await doKeysExist();
-      console.log('Paillier keys exist?', exists);
+      console.log('Initializing paillier keys... ')
+      const exists = await doKeysExist()
+      console.log('Paillier keys exist?', exists)
 
-      await clearKeys();
+      await clearKeys()
       // Generate or load existing keys
       if (exists) {
-        console.log('Loading paillier keys...');
-        await loadKeys();
+        console.log('Loading paillier keys...')
+        await loadKeys()
       } else {
-        console.log('Generating paillier keys...');
-        await genKeyPair(bits);
+        console.log('Generating paillier keys...')
+        await genKeyPair(bits)
       }
-    };
+    }
 
     // Create wrapped implementations
-    const Encode = () => null;
-    const Decode = () => null;
-    const Encrypt = (...args) => publicKey.encrypt.apply(null, args);
-    const Decrypt = (...args) => secretKey.decrypt.apply(null, args);
-    const Evaluate = (fn, ...args) => publicKey[fn].apply(null, args);
+    const Encode = () => null
+    const Decode = () => null
+    const Encrypt = (...args) => publicKey.encrypt.apply(null, args)
+    const Decrypt = (...args) => secretKey.decrypt.apply(null, args)
+    const Evaluate = (fn, ...args) => publicKey[fn].apply(null, args)
 
     // TODO: create a serialization class which uses reflection
     const Serialize = object => {
-      const string = JSON.stringify(object);
-      const bytes = Uint8Array.from(string);
-      return base64.fromByteArray(bytes);
-    };
+      const string = JSON.stringify(object)
+      const bytes = Uint8Array.from(string)
+      return base64.fromByteArray(bytes)
+    }
     const Deserialize = encoded => {
-      const bytes = base64.toByteArray(encoded);
-      return Utf8ArrayToStr(bytes);
-    };
+      const bytes = base64.toByteArray(encoded)
+      return Utf8ArrayToStr(bytes)
+    }
 
     return {
       // Common implementation
@@ -163,10 +161,10 @@ export default ({paillier, base64}) =>
       serialize: serialize(Serialize),
       deserialize: deserialize(Deserialize),
       get publicKey() {
-        return publicKey;
+        return publicKey
       },
       get secretKey() {
-        return secretKey;
-      },
-    };
-  };
+        return secretKey
+      }
+    }
+  }

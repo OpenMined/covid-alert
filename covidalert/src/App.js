@@ -1,39 +1,39 @@
-import React, {Component} from 'react';
-import {View, Text, Image, Linking, TouchableOpacity} from 'react-native';
+import React, { Component } from 'react'
+import { View, Text, Image, Linking, TouchableOpacity } from 'react-native'
 
-import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
-import {getLocales} from 'react-native-localize';
-import PushNotification from 'react-native-push-notification';
-import {openSettings} from 'react-native-permissions';
+import BackgroundGeolocation from '@mauron85/react-native-background-geolocation'
+import { getLocales } from 'react-native-localize'
+import PushNotification from 'react-native-push-notification'
+import { openSettings } from 'react-native-permissions'
 
-import {setupBackgroundGeolocation, getLocationStatus} from './location';
-import {setupNotifications, getNotificationPermissions} from './notifications';
+import { setupBackgroundGeolocation, getLocationStatus } from './location'
+import { setupNotifications, getNotificationPermissions } from './notifications'
 import {
   verifyLocationPermissions,
-  verifyNotificationPermissions,
-} from './requestPermissions';
-import styles from './App.styles';
-import copy from './copy';
-import {generateRandomKeys} from 'paillier-pure';
-import checkCoords from './check-coords';
+  verifyNotificationPermissions
+} from './requestPermissions'
+import styles from './App.styles'
+import copy from './copy'
+import { generateRandomKeys } from 'paillier-pure'
+import checkCoords from './check-coords'
 
 // Ensure that people in a large crowd don't receive a notification
 // at the same time and cause a panic
-const NO_PANIC_DELAY_MS = 5 * 60 * 1000;
+const NO_PANIC_DELAY_MS = 5 * 60 * 1000
 
 export default class extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
-    const {publicKey, privateKey} = generateRandomKeys(1024);
+    const { publicKey, privateKey } = generateRandomKeys(1024)
 
-    const {languageCode} = getLocales()[0];
-    const supportedLanguages = ['en', 'es', 'it', 'pt', 'fr', 'ru', 'ar', 'zh'];
+    const { languageCode } = getLocales()[0]
+    const supportedLanguages = ['en', 'es', 'it', 'pt', 'fr', 'ru', 'ar', 'zh']
     const finalLanguageCode =
       supportedLanguages.includes(languageCode) &&
       copy.hasOwnProperty(languageCode)
         ? languageCode
-        : 'en';
+        : 'en'
 
     this.state = {
       hasLocation: false,
@@ -41,53 +41,53 @@ export default class extends Component {
       languageCode: finalLanguageCode,
       languageRTL: finalLanguageCode === 'ar',
       publicKey,
-      privateKey,
-    };
+      privateKey
+    }
   }
 
   componentDidMount = async () => {
-    this.setupLocationHandlers();
-    setupNotifications();
-    await this.verify();
-  };
+    this.setupLocationHandlers()
+    setupNotifications()
+    await this.verify()
+  }
 
   componentDidUpdate = async () => {
-    await this.verify();
-  };
+    await this.verify()
+  }
 
   verify = async () => {
-    await this.verifyLocationStatus();
-    await this.verifyNotificationStatus();
-  };
+    await this.verifyLocationStatus()
+    await this.verifyNotificationStatus()
+  }
 
   verifyLocationStatus = async () => {
-    const {hasLocation} = this.state;
-    const locationStatus = await getLocationStatus();
+    const { hasLocation } = this.state
+    const locationStatus = await getLocationStatus()
     if (locationStatus.needsStart) {
-      console.log('Attempting to start background location service...');
-      BackgroundGeolocation.start();
+      console.log('Attempting to start background location service...')
+      BackgroundGeolocation.start()
     }
 
     if (!hasLocation && !locationStatus.needsPermission) {
-      this.setState({hasLocation: true});
+      this.setState({ hasLocation: true })
     } else if (hasLocation && locationStatus.needsPermission) {
-      this.setState({hasLocation: false});
+      this.setState({ hasLocation: false })
     }
-  };
+  }
 
   verifyNotificationStatus = async () => {
-    const {hasNotifications} = this.state;
-    const count = await getNotificationPermissions();
+    const { hasNotifications } = this.state
+    const count = await getNotificationPermissions()
     // having any notification permissions is good enough to work.
     if (count > 0 && !hasNotifications) {
-      this.setState({hasNotifications: true});
+      this.setState({ hasNotifications: true })
     } else if (count === 0 && hasNotifications) {
-      this.setState({hasNotifications: false});
+      this.setState({ hasNotifications: false })
     }
-  };
+  }
 
   setupLocationHandlers = () => {
-    console.log('Registering location handlers');
+    console.log('Registering location handlers')
 
     setupBackgroundGeolocation(async location => {
       // TODO add debounce: if we've checked this same grid location
@@ -98,16 +98,16 @@ export default class extends Component {
         this.state.publicKey,
         this.state.privateKey,
         location.latitude,
-        location.longitude,
-      );
-      console.log(`isCovidArea: ${isCovidArea}`);
+        location.longitude
+      )
+      console.log(`isCovidArea: ${isCovidArea}`)
 
       if (isCovidArea) {
         // Send the notification on a "safe" time delay
-        const timeoutMs = Math.floor(Math.random() * NO_PANIC_DELAY_MS) + 1;
-        console.log(`sending notification after ${timeoutMs}`);
+        const timeoutMs = Math.floor(Math.random() * NO_PANIC_DELAY_MS) + 1
+        console.log(`sending notification after ${timeoutMs}`)
         // The message that's sent to someone who has entered an active COVID area
-        const message = this.t('message');
+        const message = this.t('message')
 
         setTimeout(() => {
           PushNotification.localNotification({
@@ -116,12 +116,12 @@ export default class extends Component {
 
             /* iOS and Android properties */
             title: 'COVID Alert',
-            message,
-          });
-        }, timeoutMs);
+            message
+          })
+        }, timeoutMs)
       }
-    }, this.verifyLocationStatus);
-  };
+    }, this.verifyLocationStatus)
+  }
 
   makeSettingsBackedVerifier = verifier => () => {
     verifier().then(verified => {
@@ -129,28 +129,28 @@ export default class extends Component {
         // it *seems* that openSettings may only succeed if called
         // from within the context of a React Component. This makes almost
         // zero sense to me, but just in case, I'm passing the warning along.
-        openSettings().catch(console.error);
+        openSettings().catch(console.error)
       }
-    });
-  };
+    })
+  }
 
   t = key => {
-    return copy[this.state.languageCode][key];
-  };
+    return copy[this.state.languageCode][key]
+  }
 
   openInBrowser(url) {
-    Linking.openURL(url).catch(err => console.error("Couldn't load page", err));
+    Linking.openURL(url).catch(err => console.error("Couldn't load page", err))
   }
 
   componentWillUnmount = async () => {
-    BackgroundGeolocation.removeAllListeners();
-  };
+    BackgroundGeolocation.removeAllListeners()
+  }
 
   render() {
-    const isSetup = this.state.hasLocation && this.state.hasNotifications;
-    const rtl = this.state.languageRTL;
+    const isSetup = this.state.hasLocation && this.state.hasNotifications
+    const rtl = this.state.languageRTL
     const d = (s, rightAlign = false) =>
-      rtl ? [s, styles.rtl, rightAlign ? styles.rightAlign : {}] : s;
+      rtl ? [s, styles.rtl, rightAlign ? styles.rightAlign : {}] : s
 
     return (
       <View style={styles.background}>
@@ -174,7 +174,7 @@ export default class extends Component {
               <Text
                 style={d(styles.link)}
                 onPress={this.makeSettingsBackedVerifier(
-                  verifyLocationPermissions,
+                  verifyLocationPermissions
                 )}>
                 {this.t('locationSharing')}
               </Text>
@@ -183,7 +183,7 @@ export default class extends Component {
               <Text
                 style={d(styles.link, true)}
                 onPress={this.makeSettingsBackedVerifier(
-                  verifyNotificationPermissions,
+                  verifyNotificationPermissions
                 )}>
                 {this.t('pushNotifications')}
               </Text>
@@ -218,6 +218,6 @@ export default class extends Component {
           />
         </TouchableOpacity>
       </View>
-    );
+    )
   }
 }

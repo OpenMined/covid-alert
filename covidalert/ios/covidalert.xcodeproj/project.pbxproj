@@ -23,10 +23,10 @@
 		6C4EDBBE983022E76F8899BD /* libPods-covidalert.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1979778F026BE20519752660 /* libPods-covidalert.a */; };
 		94FBE4C50C32D8ED2B08EECD /* libPods-covidalert-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E4FE273F1C7009542E6E5A6 /* libPods-covidalert-tvOSTests.a */; };
 		960C8B34EC76476F8E954932 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 85D1C13ABCE145AD817ECDA0 /* Rubik-Regular.ttf */; };
-		D384E37D52A143B18A80D281 /* radar.png in Resources */ = {isa = PBXBuildFile; fileRef = 4706EB11E23644B4B1522735 /* radar.png */; };
 		9C4675CF80414A27B7DEF1BA /* gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 14DAA36063924896B397AF68 /* gradient.png */; };
 		AAE4492E426547ADA48C05A3 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = D10A9B676253423FB16E3BD4 /* logo.png */; };
 		B34117170CB54EADAB291281 /* radar-setup.png in Resources */ = {isa = PBXBuildFile; fileRef = 46FCA05457FF45ABB4E9BBE5 /* radar-setup.png */; };
+		D384E37D52A143B18A80D281 /* radar.png in Resources */ = {isa = PBXBuildFile; fileRef = 4706EB11E23644B4B1522735 /* radar.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +59,7 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = covidalert/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = covidalert/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = covidalert/main.m; sourceTree = "<group>"; };
+		14DAA36063924896B397AF68 /* gradient.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = gradient.png; path = ../assets/images/gradient.png; sourceTree = "<group>"; };
 		1979778F026BE20519752660 /* libPods-covidalert.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-covidalert.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A70BE4119A552FE55428DA9 /* Pods-covidalert.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-covidalert.release.xcconfig"; path = "Target Support Files/Pods-covidalert/Pods-covidalert.release.xcconfig"; sourceTree = "<group>"; };
 		20001EE69AA0EBC5AE086C2F /* Pods-covidalert-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-covidalert-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-covidalert-tvOS/Pods-covidalert-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -66,6 +67,7 @@
 		2D02E47B1E0B4A5D006451C7 /* covidalert-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "covidalert-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* covidalert-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "covidalert-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E4FE273F1C7009542E6E5A6 /* libPods-covidalert-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-covidalert-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		46FCA05457FF45ABB4E9BBE5 /* radar-setup.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "radar-setup.png"; path = "../assets/images/radar-setup.png"; sourceTree = "<group>"; };
 		4706EB11E23644B4B1522735 /* radar.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = radar.png; path = ../assets/images/radar.png; sourceTree = "<group>"; };
 		5B6BDFA629872B453A0C710D /* Pods-covidalert-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-covidalert-tvOS.release.xcconfig"; path = "Target Support Files/Pods-covidalert-tvOS/Pods-covidalert-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		6CCCF634DDF63B59F3F1B02A /* Pods-covidalert.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-covidalert.debug.xcconfig"; path = "Target Support Files/Pods-covidalert/Pods-covidalert.debug.xcconfig"; sourceTree = "<group>"; };
@@ -73,15 +75,13 @@
 		6F404038241F33AE00A2DD90 /* covidalert.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = covidalert.entitlements; path = covidalert/covidalert.entitlements; sourceTree = "<group>"; };
 		85D1C13ABCE145AD817ECDA0 /* Rubik-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Regular.ttf"; path = "../assets/fonts/Rubik-Regular.ttf"; sourceTree = "<group>"; };
 		B35C101ACE3FB282469BE0F9 /* Pods-covidalert-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-covidalert-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-covidalert-tvOSTests/Pods-covidalert-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		D10A9B676253423FB16E3BD4 /* logo.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = logo.png; path = ../assets/images/logo.png; sourceTree = "<group>"; };
 		D83C89454658859F2E70332C /* Pods-covidalertTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-covidalertTests.debug.xcconfig"; path = "Target Support Files/Pods-covidalertTests/Pods-covidalertTests.debug.xcconfig"; sourceTree = "<group>"; };
 		D9925F23E4EB4F40A07F84A0 /* Rubik-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Medium.ttf"; path = "../assets/fonts/Rubik-Medium.ttf"; sourceTree = "<group>"; };
 		E1CBE00E3CF5ACDAABA671B5 /* libPods-covidalertTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-covidalertTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7AC54160761A63414B8284D /* libPods-covidalert-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-covidalert-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		14DAA36063924896B397AF68 /* gradient.png */ = {isa = PBXFileReference; name = "gradient.png"; path = "../assets/images/gradient.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		D10A9B676253423FB16E3BD4 /* logo.png */ = {isa = PBXFileReference; name = "logo.png"; path = "../assets/images/logo.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		46FCA05457FF45ABB4E9BBE5 /* radar-setup.png */ = {isa = PBXFileReference; name = "radar-setup.png"; path = "../assets/images/radar-setup.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -323,7 +323,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = 7547M2B49L;
+						DevelopmentTeam = DP2EBXD5CY;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -669,7 +669,7 @@
 				CODE_SIGN_ENTITLEMENTS = covidalert/covidalert.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = 7547M2B49L;
+				DEVELOPMENT_TEAM = DP2EBXD5CY;
 				INFOPLIST_FILE = covidalert/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -677,7 +677,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.covidalert;
+				PRODUCT_BUNDLE_IDENTIFIER = com.covidalert2;
 				PRODUCT_NAME = covidalert;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -690,7 +690,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = covidalert/covidalert.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7547M2B49L;
+				DEVELOPMENT_TEAM = DP2EBXD5CY;
 				INFOPLIST_FILE = covidalert/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -698,7 +698,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.covidalert;
+				PRODUCT_BUNDLE_IDENTIFIER = com.covidalert2;
 				PRODUCT_NAME = covidalert;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

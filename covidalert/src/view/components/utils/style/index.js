@@ -1,4 +1,4 @@
-import i18n from '../../Internationalize/I18n';
+import i18n from '../../Internationalize/I18n'
 
 /**
  * Re-Styles a style based on RTL
@@ -8,14 +8,14 @@ import i18n from '../../Internationalize/I18n';
  * @returns {*}
  */
 const d = (s, rightAlign = false) => {
-  const rtl = i18n.getDir() === 'rtl';
+  const rtl = i18n.getDir() === 'rtl'
   return rtl
     ? {
         ...s,
         direction: 'rtl',
-        textAlign: rightAlign ? 'left' : 'right',
+        textAlign: rightAlign ? 'left' : 'right'
       }
-    : s;
-};
+    : s
+}
 
-export default d;
+export default d

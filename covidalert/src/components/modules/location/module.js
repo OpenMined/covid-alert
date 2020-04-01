@@ -1,4 +1,4 @@
-export default ({platform, backgroundGeolocation}) => {
+export default ({ platform, backgroundGeolocation, LOCATION }) => {
   const BASE_CONFIG = {
     desiredAccuracy: backgroundGeolocation.HIGH_ACCURACY,
     stationaryRadius: 50,
@@ -10,83 +10,83 @@ export default ({platform, backgroundGeolocation}) => {
     interval: 30000,
     fastestInterval: 5000,
     activitiesInterval: 30000,
-    startForeground: true,
-  };
+    startForeground: true
+  }
 
   const setupBackgroundGeolocation = (
     onLocationTask,
     onStart = () => null,
     onStop = () => null,
-    onError = () => null,
+    onError = () => null
   ) => {
-    backgroundGeolocation.configure(BASE_CONFIG);
+    backgroundGeolocation.configure(BASE_CONFIG)
 
     backgroundGeolocation.on('error', error => {
-      console.log('Location error', error);
-      onError(error);
-    });
+      console.log('Location error', error)
+      onError(error)
+    })
 
     backgroundGeolocation.on('start', () => {
-      console.log('Location service has been started');
-      onStart();
-    });
+      console.log('Location service has been started')
+      onStart()
+    })
 
     backgroundGeolocation.on('authorization', status => {
-      console.log('Location service authorization changed', {status});
-    });
+      console.log('Location service authorization changed', { status })
+    })
 
     backgroundGeolocation.on('stop', () => {
-      console.log('Location service has been stopped');
-      onStop();
-    });
+      console.log('Location service has been stopped')
+      onStop()
+    })
 
     backgroundGeolocation.on('stationary', location => {
-      console.log('[STATIONARY]', location);
-    });
+      console.log('[STATIONARY]', location)
+    })
 
     backgroundGeolocation.on('location', location => {
-      console.log('[LOCATION]', location);
+      console.log('[LOCATION]', location)
 
       if (platform.OS === 'android') {
-        onLocationTask(location);
+        onLocationTask(location)
       } else {
         backgroundGeolocation.startTask(taskKey => {
           requestAnimationFrame(() => {
-            onLocationTask(location);
-            backgroundGeolocation.endTask(taskKey);
-          });
-        });
+            onLocationTask(location)
+            backgroundGeolocation.endTask(taskKey)
+          })
+        })
       }
-    });
+    })
 
     // This is odd... maybe something to do with event listeners? Only way I got working was
     // stopping and starting the service.
-    console.log('starting');
-    backgroundGeolocation.stop();
-    backgroundGeolocation.start();
-  };
+    console.log('starting')
+    backgroundGeolocation.stop()
+    backgroundGeolocation.start()
+  }
 
   // business logic translation layer.
   // returns {needsStart, needsPermission}
   const getLocationStatus = async () => {
     const status = await new Promise((resolve, reject) => {
-      backgroundGeolocation.checkStatus(resolve, reject);
-    });
-    const ourStatus = {needsStart: true, needsPermission: true};
+      backgroundGeolocation.checkStatus(resolve, reject)
+    })
+    const ourStatus = { needsStart: true, needsPermission: true }
     if (!status) {
-      return ourStatus;
+      return ourStatus
     }
     if (status.isRunning) {
-      ourStatus.needsStart = false;
+      ourStatus.needsStart = false
     }
     if (status.authorization !== backgroundGeolocation.NOT_AUTHORIZED) {
-      ourStatus.needsPermission = false;
+      ourStatus.needsPermission = false
     }
-    return ourStatus;
-  };
+    return ourStatus
+  }
 
   return {
     setupBackgroundGeolocation,
-    getLocationStatus,
-  };
-};
+    getLocationStatus
+  }
+}

@@ -1,32 +1,21 @@
-import React, {useState} from 'react';
-import {View} from 'react-native';
-import {getLocales} from 'react-native-localize';
+import React, { useState } from 'react'
+import { View } from 'react-native'
 
-import styles from './styles';
-import copy from './copy';
-import RadarComponent from '../Radar';
-import InfoComponent from '../Info';
-import FooterComponent from '../Footer';
-import HeaderComponent from '../Header';
-import BodyComponent from '../Body';
-import SetupComponent from '../Setup';
+import styles from './styles'
+import RadarComponent from '../Radar'
+import InfoComponent from '../Info'
+import FooterComponent from '../Footer'
+import HeaderComponent from '../Header'
+import BodyComponent from '../Body'
+import SetupComponent from '../Setup'
 
-const {languageCode} = getLocales()[0];
-const supportedLanguages = ['en', 'es', 'it', 'pt', 'fr', 'ru', 'ar', 'zh'];
-const finalLanguageCode =
-  supportedLanguages.includes(languageCode) && copy.hasOwnProperty(languageCode)
-    ? languageCode
-    : 'en';
-
-const MainComponent = props => {
+const MainComponent = () => {
   const [state] = useState({
     hasLocation: false,
-    hasNotification: false,
-    languageCode: finalLanguageCode,
-    languageRTL: finalLanguageCode === 'ar',
-  });
+    hasNotification: false
+  })
 
-  const isSetup = state.hasLocation && state.hasNotifications;
+  const isSetup = state.hasLocation && state.hasNotifications
 
   return (
     <View style={styles.background}>
@@ -42,7 +31,7 @@ const MainComponent = props => {
       {isSetup && <InfoComponent />}
       <FooterComponent />
     </View>
-  );
-};
+  )
+}
 
-export default MainComponent;
+export default MainComponent

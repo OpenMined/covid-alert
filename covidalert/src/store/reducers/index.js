@@ -1,15 +1,15 @@
-import {combineReducers} from 'redux';
+import { combineReducers } from 'redux'
 
 import permissions, {
-  initialState as permissionsInitialState,
-} from '../reducers/permissions';
+  initialState as permissionsInitialState
+} from '../reducers/permissions'
 
 export const createRootReducer = () => {
   return combineReducers({
-    permissions,
-  });
-};
+    permissions
+  })
+}
 
 export const initialState = {
-  permissions: permissionsInitialState,
-};
+  permissions: permissionsInitialState
+}

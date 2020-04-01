@@ -1,10 +1,10 @@
-import React from 'react';
-import {Provider} from 'react-redux';
-import MainComponent from './components/Main';
-import Internationalize from './components/Internationalize';
+import React from 'react'
+import { Provider } from 'react-redux'
+import MainComponent from './components/Main'
+import Internationalize from './components/Internationalize'
 
 const App = props => {
-  const {store} = props;
+  const { store } = props
 
   return (
     <Provider store={store}>
@@ -12,7 +12,7 @@ const App = props => {
         <MainComponent />
       </Internationalize>
     </Provider>
-  );
-};
+  )
+}
 
-export default App;
+export default App

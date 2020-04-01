@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
   title: {
@@ -7,6 +7,6 @@ export default StyleSheet.create({
     marginTop: 40,
     fontSize: 30,
     textAlign: 'center',
-    letterSpacing: 0.5,
-  },
-});
+    letterSpacing: 0.5
+  }
+})

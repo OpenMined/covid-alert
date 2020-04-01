@@ -1,23 +1,23 @@
-import {createReducer} from '../utils';
+import { createReducer } from '../utils'
 import {
   ENABLE_LOCATION_REQUEST,
   ENABLE_LOCATION_SUCCESS,
   ENABLE_LOCATION_FAILURE,
   ENABLE_NOTIFICATION_REQUEST,
   ENABLE_NOTIFICATION_SUCCESS,
-  ENABLE_NOTIFICATION_FAILURE,
-} from '../constants/permissions';
+  ENABLE_NOTIFICATION_FAILURE
+} from '../constants/permissions'
 
 export const initialState = {
   location: {
     request: {},
-    settings: {},
+    settings: {}
   },
   notification: {
     request: {},
-    settings: {},
-  },
-};
+    settings: {}
+  }
+}
 
 export default createReducer(initialState, {
   [ENABLE_LOCATION_REQUEST]: setRequestState,
@@ -29,11 +29,11 @@ export default createReducer(initialState, {
         request: {
           ...state.location.request,
           message: 'success',
-          loading: false,
+          loading: false
         },
-        settings: {...action.payload},
-      },
-    };
+        settings: { ...action.payload }
+      }
+    }
   },
   [ENABLE_LOCATION_FAILURE]: setFailureState,
   [ENABLE_NOTIFICATION_REQUEST]: setRequestState,
@@ -45,23 +45,23 @@ export default createReducer(initialState, {
         request: {
           ...state.location.request,
           message: 'success',
-          loading: false,
+          loading: false
         },
-        settings: {...action.payload},
-      },
-    };
+        settings: { ...action.payload }
+      }
+    }
   },
-  [ENABLE_NOTIFICATION_FAILURE]: setFailureState,
-});
+  [ENABLE_NOTIFICATION_FAILURE]: setFailureState
+})
 
 function setRequestState(state) {
   return {
     ...state,
     location: {
       ...state.request,
-      loading: true,
-    },
-  };
+      loading: true
+    }
+  }
 }
 
 function setFailureState(state, action) {
@@ -70,7 +70,7 @@ function setFailureState(state, action) {
     request: {
       ...state.request,
       message: action.payload.message || 'failure',
-      loading: false,
-    },
-  };
+      loading: false
+    }
+  }
 }

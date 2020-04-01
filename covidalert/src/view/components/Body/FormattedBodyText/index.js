@@ -1,1 +1,1 @@
-export {default} from './FormattedBodyText';
+export { default } from './FormattedBodyText'

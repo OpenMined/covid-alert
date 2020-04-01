@@ -1,1 +1,1 @@
-export {default} from './Setup';
+export { default } from './Setup'

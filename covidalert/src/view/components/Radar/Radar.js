@@ -1,11 +1,11 @@
-import React from 'react';
-import {View, Text, Image} from 'react-native';
-import styles from './styles';
-import d from '../utils/style';
-import {useTranslation} from 'react-i18next';
+import React from 'react'
+import { View, Text, Image } from 'react-native'
+import styles from './styles'
+import d from '../utils/style'
+import { useTranslation } from 'react-i18next'
 
 const RadarComponent = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation()
 
   return (
     <View style={styles.radarContainer}>
@@ -16,7 +16,7 @@ const RadarComponent = () => {
       />
       <Text style={d(styles.radarText)}>{t('scanning')}</Text>
     </View>
-  );
-};
+  )
+}
 
-export default RadarComponent;
+export default RadarComponent

@@ -1,2 +1,2 @@
-import {default as Start} from './src/start';
-Start();
+import { default as Start } from './src/start'
+Start()

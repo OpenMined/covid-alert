@@ -1,1 +1,1 @@
-export {default} from './Internationalize';
+export { default } from './Internationalize'

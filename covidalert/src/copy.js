@@ -1,9 +1,9 @@
-import React from 'react';
-import {Text} from 'react-native';
+import React from 'react'
+import { Text } from 'react-native'
 
-import styles from './App.styles';
+import styles from './App.styles'
 
-const B = props => <Text style={styles.bold}>{props.children}</Text>;
+const B = props => <Text style={styles.bold}>{props.children}</Text>
 
 export default {
   en: {
@@ -23,7 +23,7 @@ export default {
     pushNotifications: 'Enable push notifications',
     privacy: 'How do we protect your privacy?',
     support: 'How can I support this app?',
-    volunteers: 'Built by volunteers at',
+    volunteers: 'Built by volunteers at'
   },
   es: {
     message:
@@ -42,7 +42,7 @@ export default {
     pushNotifications: 'Habilitar notificaciones',
     privacy: '¿Cómo protegemos su privacidad?',
     support: '¿Cómo puedo apoyar esta app?',
-    volunteers: 'Hecho por voluntarios de',
+    volunteers: 'Hecho por voluntarios de'
   },
   it: {
     message:
@@ -63,7 +63,7 @@ export default {
     pushNotifications: 'Attiva le notifiche',
     privacy: 'Come proteggiamo la tua Privacy?',
     support: 'Come posso sotenere l’App?',
-    volunteers: 'Realizzata da Volontari da',
+    volunteers: 'Realizzata da Volontari da'
   },
   pt: {
     message:
@@ -83,7 +83,7 @@ export default {
     pushNotifications: 'Ative as notificações',
     privacy: 'Como protegemos sua privacidade?',
     support: 'Como posso apoiar este aplicativo?',
-    volunteers: 'Feito por voluntários da',
+    volunteers: 'Feito por voluntários da'
   },
   fr: {
     message:
@@ -106,7 +106,7 @@ export default {
     pushNotifications: 'Autoriser les notifications push',
     privacy: 'Nous protégeons votre vie privée?',
     support: 'Soutenez-nous!',
-    volunteers: 'Proposé par',
+    volunteers: 'Proposé par'
   },
   ru: {
     message:
@@ -125,7 +125,7 @@ export default {
     pushNotifications: 'Включите пуш-уведомления',
     privacy: 'Как защищены мои личные данные?',
     support: 'Как я могу помочь этому проекту?',
-    volunteers: 'Сделано волонтерами',
+    volunteers: 'Сделано волонтерами'
   },
   ar: {
     message:
@@ -145,7 +145,7 @@ export default {
     pushNotifications: 'تمكين دفع الإشعارات',
     privacy: 'كيف نحمي خصوصيتك؟',
     support: 'كيف يمكنني دعم هذا التطبيق؟',
-    volunteers: 'بناها المتطوعون في',
+    volunteers: 'بناها المتطوعون في'
   },
   zh: {
     message:
@@ -163,6 +163,6 @@ export default {
     pushNotifications: '启用推送通知',
     privacy: '我们如何保护您的隐私?',
     support: '我如何支持此应用?',
-    volunteers: '由多名志愿者开发@',
-  },
-};
+    volunteers: '由多名志愿者开发@'
+  }
+}

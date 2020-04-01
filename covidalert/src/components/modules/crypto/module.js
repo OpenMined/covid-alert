@@ -8,20 +8,20 @@ export default ({
     POLY_MODULUS_DEGREE,
     COEFF_MODULUS_BIT_SIZES,
     PLAIN_MODULUS_BIT_SIZE,
-    EXPAND_MOD_CHAIN,
-  },
+    EXPAND_MOD_CHAIN
+  }
 }) => {
   const defaults = {
     publicKeyName: 'public_key',
     secretKeyName: 'secret_key',
     relinKeyName: 'relin_key',
-    galoisKeyName: 'galois_key',
-  };
+    galoisKeyName: 'galois_key'
+  }
 
   const paillier = homomorphic.createProvider({
     ...defaults,
-    prefix: 'paillier',
-  });
+    prefix: 'paillier'
+  })
 
   const seal = homomorphic.createProvider({
     ...defaults,
@@ -32,12 +32,12 @@ export default ({
       POLY_MODULUS_DEGREE,
       COEFF_MODULUS_BIT_SIZES,
       PLAIN_MODULUS_BIT_SIZE,
-      EXPAND_MOD_CHAIN,
-    },
-  });
+      EXPAND_MOD_CHAIN
+    }
+  })
 
   return {
     paillier: createPaillier(paillier),
-    seal: createSeal(seal),
-  };
-};
+    seal: createSeal(seal)
+  }
+}
