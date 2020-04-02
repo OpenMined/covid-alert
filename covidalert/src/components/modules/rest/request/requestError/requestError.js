@@ -8,9 +8,9 @@ export default class RequestError extends Error {
    * @param {number=} error.statusCode - error status code
    */
   constructor(error = {}) {
-    super();
-    this.message = error.message || 'Unknown Request Error';
-    this.name = error.name || this.constructor.name;
-    this.statusCode = error.statusCode || 500;
+    super()
+    this.message = error.message || 'Unknown Request Error'
+    this.name = error.name || this.constructor.name
+    this.statusCode = error.statusCode || 500
   }
 }

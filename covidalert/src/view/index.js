@@ -1,7 +1,7 @@
 import React from 'react'
 import App from './App'
 
-const initViewLayer = ({ store }) => () => <App store={store} />
+const initViewLayer = () => () => <App />
 
 export default {
   init: initViewLayer

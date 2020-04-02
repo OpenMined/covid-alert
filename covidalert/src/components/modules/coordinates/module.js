@@ -3,31 +3,33 @@ export default ({ crypto, rest, gps2box, stringifyBigInt }) => {
     let { sectorKey, gridTensor } = gps2box(lat, lng)
 
     gridTensor = gridTensor.flat()
+    // for (let i = 0; i < gridTensor.length; i++) {
+    //   console.log('Encrypting tensor number:', i)
+    //   gridTensor[i] = crypto.paillier.encrypt(gridTensor[i])
+    // }
 
-    console.log('gridTensor', gridTensor)
-    for (let i = 0; i < gridTensor.length; i++) {
-      gridTensor[i] = crypto.paillier.encrypt(gridTensor[i])
+    const payload = stringifyBigInt({
+      sectorKey,
+      gridTensor,
+      publicKey: {
+        n: crypto.paillier.publicKey.n,
+        g: crypto.paillier.publicKey.g
+      }
+    })
+    console.log('payload', payload)
+
+    try {
+      const response = await rest.backend.gridTensorCompute(payload)
+
+      const {
+        data: { result }
+      } = response
+
+      const answer = crypto.paillier.decrypt(result)
+      return answer > 0
+    } catch (err) {
+      console.log('Error in request', err)
     }
-    console.log('gridTensor encrypted', gridTensor)
-
-    const computation = await rest.backend
-      .gridTensorCompute(
-        stringifyBigInt({
-          sectorKey,
-          gridTensor,
-          publicKey: {
-            n: crypto.paillier.publicKey.n,
-            g: crypto.paillier.publicKey.g
-          }
-        })
-      )
-      .then(
-        r => r.data.result,
-        err => err
-      )
-      .catch(e => console.log(e))
-
-    return crypto.paillier.decrypt(computation).gt(0)
   }
 
   return {

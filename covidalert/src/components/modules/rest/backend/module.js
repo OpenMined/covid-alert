@@ -1,11 +1,12 @@
-export default ({ apiProvider }) =>
+export default () =>
   /**
    * Creates adapter for the Backend REST API provider.
    *
    * @function
+   * @param {Object} apiProvider API Provider
    * @return {Object} Backend API interface.
    */
-  () => {
+  apiProvider => {
     /**
      * Grid tensor computation
      *

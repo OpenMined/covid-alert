@@ -16,6 +16,8 @@ export default ({ paillier, base64 }) =>
    * @param {Function} options.serialize Serialize impl
    * @param {Function} options.deserialize Deserialize impl
    * @param {Object} options.fs Filesystem API
+   * @param {Object} options.constants Constants
+   * @param {Number} options.constants.KEY_SIZE Key size in bits
    * @return {Object} Paillier implementation
    */
   ({
@@ -31,7 +33,8 @@ export default ({ paillier, base64 }) =>
     evaluate,
     serialize,
     deserialize,
-    fs
+    fs,
+    constants: { KEY_SIZE }
   }) => {
     let publicKey = null
     let secretKey = null
@@ -100,44 +103,42 @@ export default ({ paillier, base64 }) =>
 
     const doKeysExist = () => fs.existsMultiple(secretKeyName, publicKeyName)
 
-    const genKeyPair = async bits => {
-      const keys = paillier.generateRandomKeys(bits)
+    const genKeyPair = async () => {
+      const keys = paillier.generateRandomKeys(KEY_SIZE)
       secretKey = keys.privateKey
       publicKey = keys.publicKey
 
-      // We do not save Switching Keys
       await fs.saveMultiple([
         [secretKeyName, JSON.stringify(secretKey)],
         [publicKeyName, JSON.stringify(publicKey)]
       ])
     }
 
-    const clearKeys = () => {
-      fs.destroyMultiple(secretKeyName, publicKeyName)
-    }
+    const clearKeys = () => fs.destroyMultiple(secretKeyName, publicKeyName)
 
-    const Init = async bits => {
+    const Init = async () => {
       console.log('Initializing paillier keys... ')
       const exists = await doKeysExist()
-      console.log('Paillier keys exist?', exists)
 
       await clearKeys()
       // Generate or load existing keys
-      if (exists) {
+      // if (exists) {
+      if (false) {
         console.log('Loading paillier keys...')
         await loadKeys()
       } else {
         console.log('Generating paillier keys...')
-        await genKeyPair(bits)
+        await genKeyPair()
       }
     }
 
     // Create wrapped implementations
-    const Encode = () => null
-    const Decode = () => null
-    const Encrypt = (...args) => publicKey.encrypt.apply(null, args)
-    const Decrypt = (...args) => secretKey.decrypt.apply(null, args)
-    const Evaluate = (fn, ...args) => publicKey[fn].apply(null, args)
+    const Encrypt = (...args) => publicKey.encrypt.apply(publicKey, args)
+    const Decrypt = (...args) => secretKey.decrypt.apply(secretKey, args)
+    const Evaluate = {
+      add: () => (...args) => publicKey.addition.apply(publicKey, args),
+      multiply: () => (...args) => publicKey.multiply.apply(publicKey, args)
+    }
 
     // TODO: create a serialization class which uses reflection
     const Serialize = object => {
@@ -153,8 +154,8 @@ export default ({ paillier, base64 }) =>
     return {
       // Common implementation
       init: init(Init),
-      encode: encode(Encode), // unused
-      decode: decode(Decode), // unused
+      encode: () => console.log('Unused method'),
+      decode: () => console.log('Unused method'),
       encrypt: encrypt(Encrypt),
       decrypt: decrypt(Decrypt),
       evaluate: evaluate(Evaluate),

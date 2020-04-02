@@ -1,14 +1,11 @@
 import 'react-native-get-random-values'
 import { AppRegistry } from 'react-native'
 import { name as appName } from '../../app.json'
-import storeLayer from '../store'
 import viewLayer from '../view'
 
-const store = storeLayer.init()
-const view = viewLayer.init({ store })
-
+const view = viewLayer.init()
 export default () => AppRegistry.registerComponent(appName, () => view)
 
 // Old app
-// import App from '../App';
-// export default () => AppRegistry.registerComponent(appName, () => App);
+// import App from '../App'
+// export default () => AppRegistry.registerComponent(appName, () => App)

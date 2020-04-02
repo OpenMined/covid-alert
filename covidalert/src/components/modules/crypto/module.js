@@ -1,16 +1,4 @@
-export default ({
-  homomorphic,
-  createPaillier,
-  createSeal,
-  constants: {
-    SCHEME_TYPE,
-    SECURITY_LEVEL,
-    POLY_MODULUS_DEGREE,
-    COEFF_MODULUS_BIT_SIZES,
-    PLAIN_MODULUS_BIT_SIZE,
-    EXPAND_MOD_CHAIN
-  }
-}) => {
+export default ({ homomorphic, createPaillier, createSeal, constants }) => {
   const defaults = {
     publicKeyName: 'public_key',
     secretKeyName: 'secret_key',
@@ -20,20 +8,14 @@ export default ({
 
   const paillier = homomorphic.createProvider({
     ...defaults,
-    prefix: 'paillier'
+    prefix: 'paillier',
+    constants: constants.PAILLIER
   })
 
   const seal = homomorphic.createProvider({
     ...defaults,
     prefix: 'seal',
-    constants: {
-      SCHEME_TYPE,
-      SECURITY_LEVEL,
-      POLY_MODULUS_DEGREE,
-      COEFF_MODULUS_BIT_SIZES,
-      PLAIN_MODULUS_BIT_SIZE,
-      EXPAND_MOD_CHAIN
-    }
+    constants: constants.SEAL
   })
 
   return {

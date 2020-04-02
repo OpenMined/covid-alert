@@ -1,7 +1,7 @@
 export default ({
-  constants: { CLOUD_FUNCTION_URL },
   request,
-  createBackendApi
+  createBackendApi,
+  constants: { CLOUD_FUNCTION_URL }
 }) => {
   const defaults = {
     timeout: 60000,
