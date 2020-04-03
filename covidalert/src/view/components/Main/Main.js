@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { View } from 'react-native'
+import { View, ScrollView, Dimensions } from 'react-native'
 
 import styles from './styles'
 import RadarComponent from '../Radar'
@@ -8,14 +8,15 @@ import FooterComponent from '../Footer'
 import HeaderComponent from '../Header'
 import BodyComponent from '../Body'
 import SetupComponent from '../Setup'
-import { Crypto, Location, Notification } from '../../../components'
+import { Location, Notification } from '../../../components'
 import { useTranslation } from 'react-i18next'
 
 const MainComponent = () => {
   const [state, setState] = useState({
     hasBeenSetUp: false,
     hasLocation: false,
-    hasNotification: false
+    hasNotification: false,
+    screenHeight: 0
   })
 
   const { t } = useTranslation()
@@ -66,7 +67,6 @@ const MainComponent = () => {
     ;(async () => {
       if (!state.hasBeenSetUp) {
         console.log('*********** COMPONENT DID MOUNT **************')
-        await Crypto.paillier.init()
         setupLocationHandlers()
         Notification.setupPushNotifications()
         setState(s => ({ ...s, hasBeenSetUp: true }))
@@ -104,21 +104,35 @@ const MainComponent = () => {
     })()
   }, [verifyNotification, state.hasNotification])
 
+  const onContentSizeChange = (contentWitdth, contentHeight) => {
+    console.log('Content size change...')
+    setState(s => ({ ...s, screenHeight: contentHeight }))
+  }
+
+  const { height } = Dimensions.get('window')
+  const scrollRequired = state.screenHeight > height
+
+  console.log('scrollRequired:', scrollRequired)
   return (
     <View style={styles.background}>
-      <HeaderComponent />
-      {isSetup && <RadarComponent />}
-      <BodyComponent />
-      {!isSetup && (
-        <SetupComponent
-          hasLocation={state.hasLocation}
-          hasNotification={state.hasNotification}
-          onLocationChange={onLocationChange}
-          onNotificationChange={onNotificationChange}
-        />
-      )}
-      {isSetup && <InfoComponent />}
-      <FooterComponent />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        scrollEnabled={true}
+        onContentSizeChange={onContentSizeChange}>
+        <HeaderComponent />
+        {isSetup && <RadarComponent />}
+        <BodyComponent />
+        {!isSetup && (
+          <SetupComponent
+            hasLocation={state.hasLocation}
+            hasNotification={state.hasNotification}
+            onLocationChange={onLocationChange}
+            onNotificationChange={onNotificationChange}
+          />
+        )}
+        {isSetup && <InfoComponent />}
+        <FooterComponent />
+      </ScrollView>
     </View>
   )
 }

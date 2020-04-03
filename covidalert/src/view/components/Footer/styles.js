@@ -7,12 +7,13 @@ const getImageScaled = (height, width, percent) => ({
 
 export default StyleSheet.create({
   footer: {
+    backgroundColor: '#eee',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 'auto',
-    marginBottom: 20
+    marginTop: 20,
+    marginBottom: 0
   },
   footerText: {
     fontFamily: 'Rubik-Regular',

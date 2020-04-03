@@ -1,3 +1,5 @@
+import BackgroundGeolocation from '@mauron85/react-native-background-geolocation'
+
 export default ({ backgroundGeolocation }) => {
   /*
   Store all application constants in this immutable object.
@@ -34,9 +36,9 @@ export default ({ backgroundGeolocation }) => {
       START_ON_BOOT: true,
       STOP_ON_TERMINATE: false,
       LOCATION_PROVIDER: backgroundGeolocation.DISTANCE_FILTER_PROVIDER,
-      INTERVAL: 3000,
-      FASTEST_INTERVAL: 1000,
-      ACTIVITIES_INTERVAL: 3000,
+      INTERVAL: 30000,
+      FASTEST_INTERVAL: 5000,
+      ACTIVITIES_INTERVAL: 30000,
       START_FOREGROUND: true
     }
   })

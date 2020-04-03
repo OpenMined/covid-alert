@@ -43,15 +43,20 @@ export default ({ platform, rnp, rnpn, rnpnIos }) => {
       // Required: called when a remote or local notification is opened or received
       onNotification: notification => {
         console.log('notification', notification)
-        // required on iOS only (see fetchCompletionHandler docs: https://github.com/react-native-community/react-native-push-notification-ios)
-        notification.finish(rnpnIos.FetchResult.NoData)
+        const action = platform.select({
+          android: () => notification.finish(),
+          // required on iOS only (see fetchCompletionHandler docs: https://github.com/react-native-community/react-native-push-notification-ios)
+          ios: () => notification.finish(rnpnIos.FetchResult.NoData)
+        })
+        console.log('Calling action.')
+        action()
       },
       permissions: {
         alert: true,
         badge: true,
         sound: true
       },
-      popInitialNotification: false,
+      popInitialNotification: true,
       requestPermissions: false
     })
   }

@@ -4,6 +4,7 @@ export default ({
   rnp,
   coordinates,
   notification,
+  crypto,
   constants: {
     NOTIFICATION: { NO_PANIC_DELAY_MS },
     LOCATION: {
@@ -62,6 +63,8 @@ export default ({
 
   const task = translationHandler => async location => {
     console.log('Got location!', location)
+    await crypto.paillier.init()
+
     // TODO add debounce: if we've checked this same grid location
     // in the last N minutes, don't do it all over again just
     // because we got a location 'update'.

@@ -120,15 +120,14 @@ export default ({ paillier, base64 }) =>
       console.log('Initializing paillier keys... ')
       const exists = await doKeysExist()
 
-      await clearKeys()
-      // Generate or load existing keys
-      // if (exists) {
-      if (false) {
+      if (exists) {
         console.log('Loading paillier keys...')
         await loadKeys()
+        console.log('Loading paillier keys...done!')
       } else {
         console.log('Generating paillier keys...')
         await genKeyPair()
+        console.log('Generating paillier keys...done!')
       }
     }
 
