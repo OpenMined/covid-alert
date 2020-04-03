@@ -11,12 +11,14 @@ import SetupComponent from '../Setup'
 import { Location, Notification } from '../../../components'
 import { useTranslation } from 'react-i18next'
 
+const { height } = Dimensions.get('window')
+
 const MainComponent = () => {
   const [state, setState] = useState({
     hasBeenSetUp: false,
     hasLocation: false,
     hasNotification: false,
-    screenHeight: 0
+    contentHeight: 0
   })
 
   const { t } = useTranslation()
@@ -106,18 +108,15 @@ const MainComponent = () => {
 
   const onContentSizeChange = (contentWitdth, contentHeight) => {
     console.log('Content size change...')
-    setState(s => ({ ...s, screenHeight: contentHeight }))
+    setState(s => ({ ...s, contentHeight: contentHeight }))
   }
-
-  const { height } = Dimensions.get('window')
-  const scrollRequired = state.screenHeight > height
-
-  console.log('scrollRequired:', scrollRequired)
+  // constant 55 is determined by the styles.
+  const scrollRequired = state.contentHeight > height - 55
   return (
     <View style={styles.background}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        scrollEnabled={true}
+        scrollEnabled={scrollRequired}
         onContentSizeChange={onContentSizeChange}>
         <HeaderComponent />
         {isSetup && <RadarComponent />}

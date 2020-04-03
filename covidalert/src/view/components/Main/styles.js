@@ -7,7 +7,7 @@ export default StyleSheet.create({
     flexDirection: 'column',
     flex: 1,
     paddingTop: 40,
-    paddingBottom: 40,
+    paddingBottom: 15,
     paddingLeft: 40,
     paddingRight: 40
   }

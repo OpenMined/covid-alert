@@ -10,19 +10,25 @@ export default StyleSheet.create({
     backgroundColor: '#eee',
     display: 'flex',
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 20,
-    marginBottom: 0
+    marginBottom: 0,
+    paddingBottom: 0
   },
   footerText: {
     fontFamily: 'Rubik-Regular',
     color: '#666',
     fontSize: 18,
-    letterSpacing: 0.5
+    letterSpacing: 0.5,
+    paddingBottom: 0
   },
   openMinedLogo: {
     ...getImageScaled(200, 766, 0.15),
-    marginLeft: 10
+    marginLeft: 10,
+    paddingTop: 55,
+    paddingBottom: 0,
+    marginBottom: 0
   }
 })
