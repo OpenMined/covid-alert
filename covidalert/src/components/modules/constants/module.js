@@ -7,8 +7,8 @@ export default ({ backgroundGeolocation }) => {
   return Object.freeze({
     INFRASTRUCTURE: {
       CLOUD_FUNCTION_URL:
-        // 'https://us-central1-coronavirus-mapper.cloudfunctions.net/api'
-        'https://google.com'
+        'https://us-central1-coronavirus-mapper.cloudfunctions.net/api'
+      // 'https://google.com'
     },
     NOTIFICATION: {
       // Ensure that people in a large crowd don't receive a notification

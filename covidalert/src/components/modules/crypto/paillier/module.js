@@ -1,4 +1,4 @@
-export default ({ paillier, base64 }) =>
+export default ({ paillier, base64, BigInt }) =>
   /**
    * Paillier implementation.
    *
@@ -16,8 +16,6 @@ export default ({ paillier, base64 }) =>
    * @param {Function} options.serialize Serialize impl
    * @param {Function} options.deserialize Deserialize impl
    * @param {Object} options.fs Filesystem API
-   * @param {Object} options.constants Constants
-   * @param {Number} options.constants.KEY_SIZE Key size in bits
    * @return {Object} Paillier implementation
    */
   ({
@@ -33,13 +31,8 @@ export default ({ paillier, base64 }) =>
     evaluate,
     serialize,
     deserialize,
-    fs,
-    constants: { KEY_SIZE }
+    fs
   }) => {
-    let publicKey = null
-    let secretKey = null
-
-    // TODO: move this into serialization class
     // http://www.onicos.com/staff/iz/amuse/javascript/expert/utf.txt
     /* utf.js - UTF-8 <=> UTF-16 convertion
      *
@@ -95,76 +88,94 @@ export default ({ paillier, base64 }) =>
 
       return out
     }
+    /**
+     * Initializer
+     *
+     * @param {Object} options Paillier Options
+     * @param {String} options.keySize Key size in bits
+     *
+     * @returns {Promise<Paillier>}
+     * @constructor
+     */
+    return async options => {
+      let publicKey = null
+      let secretKey = null
 
-    const loadKeys = async () => {
-      secretKey = await fs.read(secretKeyName)
-      publicKey = await fs.read(publicKeyName)
-    }
+      const genKeyPair = async opts => {
+        const keys = paillier.generateRandomKeys(opts.keySize)
+        secretKey = keys.privateKey
+        publicKey = keys.publicKey
 
-    const doKeysExist = () => fs.existsMultiple(secretKeyName, publicKeyName)
-
-    const genKeyPair = async () => {
-      const keys = paillier.generateRandomKeys(KEY_SIZE)
-      secretKey = keys.privateKey
-      publicKey = keys.publicKey
-
-      await fs.saveMultiple([
-        [secretKeyName, JSON.stringify(secretKey)],
-        [publicKeyName, JSON.stringify(publicKey)]
-      ])
-    }
-
-    const clearKeys = () => fs.destroyMultiple(secretKeyName, publicKeyName)
-
-    const Init = async () => {
-      console.log('Initializing paillier keys... ')
-      const exists = await doKeysExist()
-
-      if (exists) {
-        console.log('Loading paillier keys...')
-        await loadKeys()
-        console.log('Loading paillier keys...done!')
-      } else {
-        console.log('Generating paillier keys...')
-        await genKeyPair()
-        console.log('Generating paillier keys...done!')
+        await fs.saveMultiple([
+          [secretKeyName, JSON.stringify(secretKey)],
+          [publicKeyName, JSON.stringify(publicKey)]
+        ])
       }
-    }
 
-    // Create wrapped implementations
-    const Encrypt = (...args) => publicKey.encrypt.apply(publicKey, args)
-    const Decrypt = (...args) => secretKey.decrypt.apply(secretKey, args)
-    const Evaluate = {
-      add: () => (...args) => publicKey.addition.apply(publicKey, args),
-      multiply: () => (...args) => publicKey.multiply.apply(publicKey, args)
-    }
+      const loadKeys = async () => {
+        const rawSecretKey = await fs.read(secretKeyName)
+        const rawPublicKey = await fs.read(publicKeyName)
 
-    // TODO: create a serialization class which uses reflection
-    const Serialize = object => {
-      const string = JSON.stringify(object)
-      const bytes = Uint8Array.from(string)
-      return base64.fromByteArray(bytes)
-    }
-    const Deserialize = encoded => {
-      const bytes = base64.toByteArray(encoded)
-      return Utf8ArrayToStr(bytes)
-    }
+        const secretKeyObject = JSON.parse(rawSecretKey)
+        const publicKeyObject = JSON.parse(rawPublicKey)
 
-    return {
-      // Common implementation
-      init: init(Init),
-      encode: () => console.log('Unused method'),
-      decode: () => console.log('Unused method'),
-      encrypt: encrypt(Encrypt),
-      decrypt: decrypt(Decrypt),
-      evaluate: evaluate(Evaluate),
-      serialize: serialize(Serialize),
-      deserialize: deserialize(Deserialize),
-      get publicKey() {
-        return publicKey
-      },
-      get secretKey() {
-        return secretKey
+        publicKey = new paillier.PublicKey(
+          BigInt(publicKeyObject.n),
+          BigInt(publicKeyObject.g)
+        )
+        secretKey = new paillier.PrivateKey(
+          BigInt(secretKeyObject.lambda),
+          BigInt(secretKeyObject.mu),
+          publicKey,
+          BigInt(secretKeyObject.p),
+          BigInt(secretKeyObject.q)
+        )
+      }
+
+      const doKeysExist = () => fs.existsMultiple(secretKeyName, publicKeyName)
+
+      const clearKeys = () => fs.destroyMultiple(secretKeyName, publicKeyName)
+
+      // Create wrapped implementations
+      const Encrypt = (...args) => publicKey.encrypt.apply(publicKey, args)
+      const Decrypt = (...args) => secretKey.decrypt.apply(secretKey, args)
+      const Evaluate = {
+        add: () => (...args) => publicKey.addition.apply(publicKey, args),
+        multiply: () => (...args) => publicKey.multiply.apply(publicKey, args)
+      }
+
+      const Serialize = object => {
+        const string = JSON.stringify(object)
+        const bytes = Uint8Array.from(string)
+        return base64.fromByteArray(bytes)
+      }
+      const Deserialize = encoded => {
+        const bytes = base64.toByteArray(encoded)
+        return Utf8ArrayToStr(bytes)
+      }
+
+      if (await doKeysExist()) {
+        console.log('Loading saved keys...')
+        await loadKeys()
+      } else {
+        await genKeyPair(options)
+      }
+
+      return {
+        // Common implementation
+        encode: () => console.log('Unused method'),
+        decode: () => console.log('Unused method'),
+        encrypt: encrypt(Encrypt),
+        decrypt: decrypt(Decrypt),
+        evaluate: evaluate(Evaluate),
+        serialize: serialize(Serialize),
+        deserialize: deserialize(Deserialize),
+        get publicKey() {
+          return publicKey
+        },
+        get secretKey() {
+          return secretKey
+        }
       }
     }
   }

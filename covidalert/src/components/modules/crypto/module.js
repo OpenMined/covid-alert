@@ -1,4 +1,4 @@
-export default ({ homomorphic, createPaillier, createSeal, constants }) => {
+export default ({ homomorphic, createPaillier, createSeal }) => {
   const defaults = {
     publicKeyName: 'public_key',
     secretKeyName: 'secret_key',
@@ -8,14 +8,12 @@ export default ({ homomorphic, createPaillier, createSeal, constants }) => {
 
   const paillier = homomorphic.createProvider({
     ...defaults,
-    prefix: 'paillier',
-    constants: constants.PAILLIER
+    prefix: 'paillier'
   })
 
   const seal = homomorphic.createProvider({
     ...defaults,
-    prefix: 'seal',
-    constants: constants.SEAL
+    prefix: 'seal'
   })
 
   return {

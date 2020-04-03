@@ -4,7 +4,6 @@ export default ({
   rnp,
   coordinates,
   notification,
-  crypto,
   constants: {
     NOTIFICATION: { NO_PANIC_DELAY_MS },
     LOCATION: {
@@ -62,9 +61,6 @@ export default ({
   const openSettings = () => rnp.openSettings()
 
   const task = translationHandler => async location => {
-    console.log('Got location!', location)
-    await crypto.paillier.init()
-
     // TODO add debounce: if we've checked this same grid location
     // in the last N minutes, don't do it all over again just
     // because we got a location 'update'.
@@ -75,7 +71,7 @@ export default ({
     )
     console.log(`isCovidArea: ${isCovidArea}`)
 
-    if (!isCovidArea) {
+    if (isCovidArea) {
       // Send the notification on a "safe" time delay
       const timeoutMs = Math.floor(Math.random() * NO_PANIC_DELAY_MS) + 1
       console.log(`sending notification after ${timeoutMs}`)
@@ -91,7 +87,7 @@ export default ({
           title: 'COVID Alert',
           message
         })
-      }, 3000) //timeoutMs
+      }, timeoutMs)
     }
   }
 

@@ -43,7 +43,6 @@ export default ({ fs }) => {
     const deserialize = impl => (...args) => impl.apply(null, args)
 
     return {
-      ...options,
       publicKeyName,
       secretKeyName,
       relinKeyName,

@@ -26,7 +26,6 @@ const MainComponent = () => {
   const isSetup = state.hasLocation && state.hasNotification
 
   const onLocationChange = useCallback(status => {
-    console.log('Callback location status', status)
     // Status is either a boolean or number
     setState(s => ({
       ...s,
@@ -35,7 +34,6 @@ const MainComponent = () => {
   }, [])
 
   const onNotificationChange = status => {
-    console.log('Callback notification status', status)
     setState({
       ...state,
       hasNotification: status
@@ -59,7 +57,6 @@ const MainComponent = () => {
 
   const verifyNotification = useCallback(async () => {
     console.log('Verifying Notification...')
-
     const count = await Notification.getNotificationPermissions()
     // having any notification permissions is good enough to work.
     return count > 0
@@ -80,8 +77,6 @@ const MainComponent = () => {
       if (!state.hasLocation) {
         console.log('*********** COMPONENT DID UPDATE LOCATION **************')
         const status = await verifyLocation()
-        console.log('Location status', status)
-
         setState(s => ({
           ...s,
           hasLocation: status
@@ -97,7 +92,6 @@ const MainComponent = () => {
           '*********** COMPONENT DID UPDATE NOTIFICATION **************'
         )
         const status = await verifyNotification()
-        console.log('Notification status', status)
         setState(s => ({
           ...s,
           hasNotification: status
@@ -107,7 +101,6 @@ const MainComponent = () => {
   }, [verifyNotification, state.hasNotification])
 
   const onContentSizeChange = (contentWitdth, contentHeight) => {
-    console.log('Content size change...')
     setState(s => ({ ...s, contentHeight: contentHeight }))
   }
   // constant 55 is determined by the styles.

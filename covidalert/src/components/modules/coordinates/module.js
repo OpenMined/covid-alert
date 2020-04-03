@@ -1,19 +1,33 @@
-export default ({ crypto, rest, gps2box, stringifyBigInt }) => {
+export default ({
+  crypto,
+  constants: { KEY_SIZE },
+  rest,
+  gps2box,
+  stringifyBigInt
+}) => {
+  // Create crypto context holder
+  let paillier = null
+
   const check = async (lat, lng) => {
+    if (!paillier) {
+      // Creat the crypto context
+      paillier = await crypto.paillier({ keySize: KEY_SIZE })
+      console.log('paillier *********', paillier)
+    }
     let { sectorKey, gridTensor } = gps2box(lat, lng)
 
     gridTensor = gridTensor.flat()
-    // for (let i = 0; i < gridTensor.length; i++) {
-    //   console.log('Encrypting tensor number:', i)
-    //   gridTensor[i] = crypto.paillier.encrypt(gridTensor[i])
-    // }
+    for (let i = 0; i < gridTensor.length; i++) {
+      console.log('Encrypting tensor number:', i)
+      gridTensor[i] = paillier.encrypt(gridTensor[i])
+    }
 
     const payload = stringifyBigInt({
       sectorKey,
       gridTensor,
       publicKey: {
-        n: crypto.paillier.publicKey.n,
-        g: crypto.paillier.publicKey.g
+        n: paillier.publicKey.n,
+        g: paillier.publicKey.g
       }
     })
     console.log('payload', payload)
@@ -25,7 +39,7 @@ export default ({ crypto, rest, gps2box, stringifyBigInt }) => {
         data: { result }
       } = response
 
-      const answer = crypto.paillier.decrypt(result)
+      const answer = paillier.decrypt(result)
       return answer > 0
     } catch (err) {
       console.log('Error in request', err)
