@@ -131,8 +131,8 @@ const MainComponent = () => {
           />
         )}
         {isSetup && <InfoComponent />}
-        <FooterComponent />
       </ScrollView>
+      <FooterComponent />
     </View>
   )
 }
