@@ -22,6 +22,10 @@ const MainComponent = () => {
 
   const isSetup = state.hasLocation && state.hasNotification
 
+  /*
+  Define handlers to detect when permissions change for
+  location and notifications
+   */
   const onLocationChange = useCallback(status => {
     // Status is either a boolean or number
     setState(s => ({
@@ -29,19 +33,17 @@ const MainComponent = () => {
       hasLocation: status >= 1 // iOS: 1 === always, 2 === while in use
     }))
   }, [])
-
-  const onNotificationChange = status => {
-    setState({
-      ...state,
+  const onNotificationChange = useCallback(status => {
+    setState(s => ({
+      ...s,
       hasNotification: status
-    })
-  }
+    }))
+  }, [])
 
-  const setupLocationHandlers = useCallback(() => {
-    console.log('Registering location handlers')
-    Location.setupBackgroundGeolocation(Location.task(t), onLocationChange)
-  }, [t, onLocationChange])
-
+  /*
+  Define verifiers which detect if the proper permissions have been set.
+  If they aren't set correctly, we render the setup view.
+   */
   const verifyLocation = useCallback(async () => {
     console.log('Verifying Location...')
     const locationStatus = await Location.getLocationStatus()
@@ -51,7 +53,6 @@ const MainComponent = () => {
     }
     return !locationStatus.needsPermission
   }, [])
-
   const verifyNotification = useCallback(async () => {
     console.log('Verifying Notification...')
     const count = await Notification.getNotificationPermissions()
@@ -62,17 +63,20 @@ const MainComponent = () => {
   useEffect(() => {
     ;(async () => {
       if (!state.hasBeenSetUp) {
-        console.log('*********** COMPONENT DID MOUNT **************')
-        setupLocationHandlers()
+        console.log('*********** COMPONENT DID SETUP **************')
+        // In cases where the user previously accepted locations, then subsequently disabled them
+        // we remove the listeners and set up again.
+        Location.removeAllListeners()
+        Location.setupBackgroundGeolocation(Location.task(t), onLocationChange)
         Notification.setupPushNotifications()
         setState(s => ({ ...s, hasBeenSetUp: true }))
       }
     })()
-  }, [setupLocationHandlers, state.hasBeenSetUp])
+  }, [t, onLocationChange, state.hasBeenSetUp])
   useEffect(() => {
     ;(async () => {
       if (!state.hasLocation) {
-        console.log('*********** COMPONENT DID UPDATE LOCATION **************')
+        // console.log('*********** COMPONENT DID UPDATE LOCATION **************')
         const status = await verifyLocation()
         setState(s => ({
           ...s,
@@ -85,9 +89,9 @@ const MainComponent = () => {
   useEffect(() => {
     ;(async () => {
       if (!state.hasNotification) {
-        console.log(
-          '*********** COMPONENT DID UPDATE NOTIFICATION **************'
-        )
+        // console.log(
+        //   '*********** COMPONENT DID UPDATE NOTIFICATION **************'
+        // )
         const status = await verifyNotification()
         setState(s => ({
           ...s,

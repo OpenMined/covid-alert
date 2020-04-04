@@ -1,6 +1,9 @@
 import i18n from 'i18next'
 import * as RNLocalize from 'react-native-localize'
 
+/*
+Import language files
+ */
 import ar from '../../../../locales/ar.json'
 import en from '../../../../locales/en.json'
 import es from '../../../../locales/es.json'
@@ -12,6 +15,7 @@ import ru from '../../../../locales/ru.json'
 import zh from '../../../../locales/zh.json'
 
 const InitI18n = () => {
+  // Define our resources according to the spec
   const resources = {
     ar,
     en,
@@ -24,6 +28,7 @@ const InitI18n = () => {
     zh
   }
 
+  // Utility to grab the current language set by the OS
   const getLanguage = () => {
     const locales = RNLocalize.getLocales()
     const locale = locales.slice().shift()
@@ -32,12 +37,13 @@ const InitI18n = () => {
     // return 'ar'; // debug other languages manually
   }
 
+  // Utility to get the direction of the language. Returns 'rtl', 'ltr'
   const getDir = () => {
     return i18n.dir(i18n.language)
   }
 
   // creating a language detection plugin
-  // http://i18next.com/docs/ownplugin/#languagedetector
+  // https://www.i18next.com/misc/creating-own-plugins
   const languageDetector = {
     type: 'languageDetector',
     async: false, // flags below detection to be sync

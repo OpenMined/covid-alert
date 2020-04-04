@@ -3,8 +3,7 @@ import { AppRegistry } from 'react-native'
 import { name as appName } from '../../app.json'
 import viewLayer from '../view'
 
-const view = viewLayer.init()
-export default () => AppRegistry.registerComponent(appName, () => view)
+export default () => AppRegistry.registerComponent(appName, () => viewLayer)
 
 // Old app
 // import App from '../App'

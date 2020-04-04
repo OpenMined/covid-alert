@@ -14,43 +14,47 @@ const SetupComponent = ({
 }) => {
   const { t } = useTranslation()
 
-  const makeSettingsBackedVerifier = verifier => async () => {
-    const verified = await verifier()
-    console.log('Verified Status:', verified)
-    if (!verified) {
-      await Location.openSettings()
-      // If the user previously denied settings, we cannot request them directly again.
-      // Instead, we redirect to the settings page. We issue a timeout which gets executed
-      // when the user comes back to the app. It appears when the timeout is set to 5 seconds
-      // it will instead execute after the user returns to the application regardless
-      // of the time specified.
-      return await new Promise(resolve =>
-        setTimeout(async () => {
-          console.log('Checked again....')
-          const verifiedAgain = await verifier()
-          return resolve(verifiedAgain)
-        }, 5000)
-      )
-    }
-    return true
-  }
-
-  const locationChange = makeSettingsBackedVerifier(
-    Location.verifyLocationPermissions
-  )
-  const notificationChange = makeSettingsBackedVerifier(
-    Notification.verifyNotificationPermissions
+  const makeSettingsBackedVerifier = useCallback(
+    verifier => async () => {
+      const verified = await verifier()
+      console.log('Verified Status:', verified)
+      if (!verified) {
+        await Location.openSettings()
+        // If the user previously denied settings, we cannot request them directly again.
+        // Instead, we redirect to the settings page. We issue a timeout which gets executed
+        // when the user comes back to the app. This only sometimes works and is not a
+        // guarantee it will be called. It is a best effort to try to help the UX.
+        return await new Promise(resolve =>
+          setTimeout(async () => {
+            console.log('Checked again....')
+            const verifiedAgain = await verifier()
+            return resolve(verifiedAgain)
+          }, 5000)
+        )
+      }
+      return true
+    },
+    []
   )
 
-  const onLocationUpdate = async () => {
+  const locationChange = useCallback(
+    makeSettingsBackedVerifier(Location.verifyLocationPermissions),
+    []
+  )
+  const notificationChange = useCallback(
+    makeSettingsBackedVerifier(Notification.verifyNotificationPermissions),
+    []
+  )
+
+  const onLocationUpdate = useCallback(async () => {
     const status = await locationChange()
     onLocationChange(status)
-  }
+  }, [locationChange, onLocationChange])
 
-  const onNotificationUpdate = async () => {
+  const onNotificationUpdate = useCallback(async () => {
     const status = await notificationChange()
     onNotificationChange(status)
-  }
+  }, [notificationChange, onNotificationChange])
 
   return (
     <View>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { View, Text, Linking } from 'react-native'
 
 import styles from './styles'
@@ -7,9 +7,10 @@ import { useTranslation } from 'react-i18next'
 
 const InfoComponent = () => {
   const { t } = useTranslation()
-  const openInBrowser = url => {
+
+  const openInBrowser = useCallback(url => {
     Linking.openURL(url).catch(err => console.error("Couldn't load page", err))
-  }
+  }, [])
 
   return (
     <View>
