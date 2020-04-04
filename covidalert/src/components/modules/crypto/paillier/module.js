@@ -155,7 +155,6 @@ export default ({ paillier, base64, BigInt }) =>
       }
 
       if (await doKeysExist()) {
-        console.log('Loading saved keys...')
         await loadKeys()
       } else {
         await genKeyPair(options)

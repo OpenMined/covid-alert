@@ -12,7 +12,6 @@ export default ({
     if (!paillier) {
       // Creat the crypto context
       paillier = await crypto.paillier({ keySize: KEY_SIZE })
-      console.log('paillier *********', paillier)
     }
     let { sectorKey, gridTensor } = gps2box(lat, lng)
 
@@ -30,7 +29,6 @@ export default ({
         g: paillier.publicKey.g
       }
     })
-    console.log('payload', payload)
 
     try {
       const response = await rest.backend.gridTensorCompute(payload)

@@ -27,11 +27,6 @@ export default ({ platform, rnp, rnpn, rnpnIos }) => {
     console.log('User followed request notification permissions')
     await rnp.requestNotifications(selectNotificationPermissions())
     const count = await getNotificationPermissions()
-    console.log('COUNT:', count)
-    console.log(
-      'selectNotificationPermissions().length:',
-      selectNotificationPermissions().length
-    )
     return count === selectNotificationPermissions().length
   }
 
@@ -48,7 +43,6 @@ export default ({ platform, rnp, rnpn, rnpnIos }) => {
           // required on iOS only (see fetchCompletionHandler docs: https://github.com/react-native-community/react-native-push-notification-ios)
           ios: () => notification.finish(rnpnIos.FetchResult.NoData)
         })
-        console.log('Calling action.')
         action()
       },
       permissions: {
