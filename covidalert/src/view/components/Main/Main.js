@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { View, ScrollView, Dimensions } from 'react-native'
+import { View, ScrollView } from 'react-native'
 
 import styles from './styles'
 import RadarComponent from '../Radar'
@@ -11,14 +11,11 @@ import SetupComponent from '../Setup'
 import { Location, Notification } from '../../../components'
 import { useTranslation } from 'react-i18next'
 
-const { height } = Dimensions.get('window')
-
 const MainComponent = () => {
   const [state, setState] = useState({
     hasBeenSetUp: false,
     hasLocation: false,
-    hasNotification: false,
-    contentHeight: 0
+    hasNotification: false
   })
 
   const { t } = useTranslation()
@@ -100,17 +97,9 @@ const MainComponent = () => {
     })()
   }, [verifyNotification, state.hasNotification])
 
-  const onContentSizeChange = (contentWitdth, contentHeight) => {
-    setState(s => ({ ...s, contentHeight: contentHeight }))
-  }
-  // constant 55 is determined by the styles.
-  const scrollRequired = state.contentHeight > height - 55
   return (
     <View style={styles.background}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        scrollEnabled={scrollRequired}
-        onContentSizeChange={onContentSizeChange}>
+      <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={true}>
         <HeaderComponent />
         {isSetup && <RadarComponent />}
         <BodyComponent />
