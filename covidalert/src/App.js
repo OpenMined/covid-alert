@@ -195,7 +195,7 @@ export default class extends Component {
           <View>
             <Text
               style={d(styles.link, true)}
-              onPress={() => this.openInBrowser('https://google.com')}>
+              onPress={() => this.openInBrowser('https://blog.openmined.org/providing-opensource-privacy-for-covid19/')}>
               {this.t('privacy')}
             </Text>
             <Text
