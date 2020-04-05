@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {View, Text, Image, Linking, TouchableOpacity} from 'react-native';
 
 import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
+import BigInt from 'big-integer';
 import {getLocales} from 'react-native-localize';
 import PushNotification from 'react-native-push-notification';
 import {openSettings} from 'react-native-permissions';
@@ -14,7 +15,7 @@ import {
 } from './requestPermissions';
 import styles from './App.styles';
 import copy from './copy';
-import {generateRandomKeys} from 'paillier-pure';
+import {generateRandomKeys, PrivateKey, PublicKey} from 'paillier-pure';
 import checkCoords from './check-coords';
 import {storeItem, retrieveItem} from './localStorage';
 
@@ -53,14 +54,26 @@ export default class extends Component {
   };
 
   setUpKeyPair = async () => {
-    let keyPair = await retrieveItem('keyPair');
-    if (keyPair) {
-      keyPair = JSON.parse(keyPair);
+    const keyPairStr = await retrieveItem('keyPair');
+    let publicKey, privateKey;
+    if (keyPairStr) {
+      const keyPairObj = JSON.parse(keyPairStr);
+      const {n, g} = keyPairObj.publicKey;
+      publicKey = new PublicKey(BigInt(n), BigInt(g));
+      const {lambda, mu, p, q} = keyPairObj.privateKey;
+      privateKey = new PrivateKey(
+        BigInt(lambda),
+        BigInt(mu),
+        publicKey,
+        BigInt(p),
+        BigInt(q),
+      );
     } else {
-      keyPair = generateRandomKeys(1024);
-      storeItem('keyPair', JSON.stringify(keyPair));
+      const newKeys = generateRandomKeys(1024);
+      publicKey = newKeys.publicKey;
+      privateKey = newKeys.privateKey;
+      storeItem('keyPair', JSON.stringify({publicKey, privateKey}));
     }
-    const {publicKey, privateKey} = keyPair;
     this.setState({publicKey, privateKey});
   };
 
