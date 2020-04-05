@@ -1,5 +1,16 @@
 # COVID Alert
 
+**NOTE: This repo serves as a demo for the work being done by the Private Set Intersection team here at OpenMined.** You can find their repos here:
+
+- https://github.com/OpenMined/psi.js/
+- https://github.com/OpenMined/PyPSI/
+- https://github.com/OpenMined/KotlinPSI/
+- https://github.com/OpenMined/SwiftPSI/
+
+**We are no longer pursuing a production use-case with this application.** Instead we've decided to contribute to another project: https://github.com/corona-trace
+
+## Folder Structure
+
 - `/covidalert` - React Native App for end-users
 - `/dashboard` - Create React App with Firebase cloud functions for an API and admin dashboard
 - `/designs` - All the related design files
