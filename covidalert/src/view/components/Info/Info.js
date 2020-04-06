@@ -17,7 +17,7 @@ const InfoComponent = () => {
       {/* TODO: This needs to be a real link */}
       <Text
         style={d(styles.link, true)}
-        onPress={() => openInBrowser('https://google.com')}>
+        onPress={() => openInBrowser('https://blog.openmined.org/providing-opensource-privacy-for-covid19/')}>
         {t('privacy')}
       </Text>
       <Text
