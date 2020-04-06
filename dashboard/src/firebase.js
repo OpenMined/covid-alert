@@ -1,11 +1,11 @@
 // TODO: Restructure as a Firebase factory class
 // TODO: Redo subcollection read and writes
 
-import { useState, useEffect } from "react";
-import * as firebase from "firebase/app";
 import "firebase/analytics";
+import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+import { useEffect, useState } from "react";
 
 const config = {
   apiKey: "AIzaSyCefPrb9I_AGrtPxKgAVWaYGf9GqyfAHYw",
@@ -64,25 +64,32 @@ export const createDocument = (collection, values, onSuccess, onError) =>
     .then(doc => onSuccess(doc))
     .catch(error => onError(error));
 
-export const createSubDocument = (
+export const createSubDocuments = (
   collection,
   id,
   subcollection,
   values,
   onSuccess,
   onError
-) =>
-  firebase
+) => {
+  const ref = firebase
     .firestore()
     .collection(collection)
     .doc(id)
-    .collection(subcollection)
-    .add({
-      created_at: firebase.firestore.FieldValue.serverTimestamp(),
-      ...values
-    })
-    .then(doc => onSuccess(doc))
+    .collection(subcollection);
+  return values
+    .reduce(
+      (batch, value) =>
+        batch.set(ref.doc(), {
+          created_at: firebase.firestore.FieldValue.serverTimestamp(),
+          ...value
+        }),
+      firebase.firestore().batch()
+    )
+    .commit()
+    .then(() => onSuccess())
     .catch(error => onError(error));
+};
 
 export const updateDocument = (collection, id, values, onSuccess, onError) =>
   firebase

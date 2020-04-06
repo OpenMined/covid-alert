@@ -1,15 +1,15 @@
-import React from "react";
-import { useForm } from "react-hook-form";
 import {
   Box,
-  Text,
-  Stack,
+  Button,
+  FormControl,
   FormErrorMessage,
   FormLabel,
-  FormControl,
   Input,
-  Button
+  Stack,
+  Text
 } from "@chakra-ui/core";
+import React from "react";
+import { useForm } from "react-hook-form";
 
 export default ({ lat, lng, doLocationAdd }) => {
   const { handleSubmit, errors, register, formState } = useForm();

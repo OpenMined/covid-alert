@@ -1,24 +1,22 @@
-import React, { useState, useRef } from "react";
-import ReactMapGL, { Marker } from "react-map-gl";
-import Geocoder from "react-map-gl-geocoder";
 import {
-  useDisclosure,
   Box,
-  Text,
   Button,
   Modal,
-  ModalOverlay,
+  ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  theme
+  ModalOverlay,
+  Text,
+  theme,
+  useDisclosure
 } from "@chakra-ui/core";
-
-import AddLocationForm from "./AddLocationForm";
-
 import "mapbox-gl/dist/mapbox-gl.css";
+import React, { useRef, useState } from "react";
+import ReactMapGL, { Marker } from "react-map-gl";
+import Geocoder from "react-map-gl-geocoder";
 import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
+import AddLocationForm from "./AddLocationForm";
 
 const MARKER_SIZE = 12;
 
@@ -113,8 +111,12 @@ export default ({ locations, reportCoordinates, ...props }) => {
           onViewportChange={setViewport}
           mapboxApiAccessToken={MAPBOX_TOKEN}
         />
-        {locations.map(({ lng, lat }) => (
-          <Location lng={lng} lat={lat} key={`marker-${lng},${lat}`} />
+        {locations.map(({ lng, lat, last_time }) => (
+          <Location
+            lng={lng}
+            lat={lat}
+            key={`marker-${lng},${lat},${last_time.toDate().getTime()}`}
+          />
         ))}
         <Crosshair />
         <Box position="absolute" right="10px" bottom="85px">
