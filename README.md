@@ -28,6 +28,7 @@ We have support for the following languages:
 - Russian
 - Chinese (Mandarin)
 - Arabic
+- Hindi
 
 We are open to any pull requests to add support for other languages!
 
