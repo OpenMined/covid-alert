@@ -28,6 +28,7 @@ We have support for the following languages:
 - Russian
 - Chinese (Mandarin)
 - Arabic
+- Hindi
 
 We are open to any pull requests to add support for other languages!
 
@@ -72,6 +73,7 @@ Many people have worked on this application within the OpenMined community, many
 - [Jonathan Mondragon](https://www.linkedin.com/in/jonathan-acevedo-mondragon)
 - [Jose Corbacho](https://github.com/mccorby)
 - [Kevin Wang](https://github.com/Kevmo314)
+- [Kritika Prakash](https://github.com/Kritikalcoder)
 - [Maddie Shang](https://github.com/prtfw)
 - [Patrick Cason](https://github.com/cereallarceny)
 - [Peter Gaultney](https://github.com/petergaultney)
