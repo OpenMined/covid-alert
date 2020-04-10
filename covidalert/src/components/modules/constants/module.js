@@ -1,5 +1,3 @@
-import BackgroundGeolocation from '@mauron85/react-native-background-geolocation'
-
 export default ({ backgroundGeolocation }) => {
   /*
   Store all application constants in this immutable object.
@@ -22,10 +20,12 @@ export default ({ backgroundGeolocation }) => {
       SEAL: {
         SCHEME_TYPE: 'BFV',
         SECURITY_LEVEL: 128,
-        POLY_MODULUS_DEGREE: 8192,
-        COEFF_MODULUS_BIT_SIZES: [43, 43, 44, 44, 44],
+        POLY_MODULUS_DEGREE: 4096,
+        COEFF_MODULUS_BIT_SIZES: [36, 36, 37],
         PLAIN_MODULUS_BIT_SIZE: 20,
-        EXPAND_MOD_CHAIN: true
+        EXPAND_MOD_CHAIN: true,
+        GALOIS_STEPS: [0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024],
+        SYMMETRIC: true
       }
     },
     LOCATION: {

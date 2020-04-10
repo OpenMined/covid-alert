@@ -8,7 +8,7 @@ import module from './module'
 export default createModuleFactory({
   rest: Rest,
   crypto: Crypto,
-  constants: Constants.CRYPTO.PAILLIER,
+  constants: Constants.CRYPTO,
   gps2box: GSP.gps2box,
   stringifyBigInt: GSP.stringifyBigInt
 })(module)

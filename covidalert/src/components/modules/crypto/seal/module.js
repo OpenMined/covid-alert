@@ -43,11 +43,13 @@ export default ({ seal }) =>
      * @param {Array<Number>} options.coeffModulusBitSizes Bit sizes of the coefficient modulus
      * @param {Number} [options.plainModulusBitSize] Plain modulus bit size
      * @param {Boolean} options.expandModChain Expand modulus switching chain
+     * @param {Array<Number>} options.galoisSteps Galois Keys to generate
      *
      * @returns {Promise<SEAL>}
      * @constructor
      */
     return async options => {
+      global.document = {}
       const morfix = await seal()
       const VARIABLE_TYPES = {
         CIPHER_TEXT: 'CIPHER_TEXT',
@@ -63,6 +65,8 @@ export default ({ seal }) =>
       let plainModulusBitSize = null
       let plainModulus = null
       let expandModChain = null
+      let symmetric = null
+      let galoisSteps = null
       let parms = null
       let context = null
       let encoder = null
@@ -81,6 +85,8 @@ export default ({ seal }) =>
       console.log(`Coeff Modulus Bit Sizes: ${options.coeffModulusBitSizes}`)
       console.log(`Plain Modulus Bit Size: ${options.plainModulusBitSize}`)
       console.log(`Expand Modulus Chain: ${options.expandModChain}`)
+      console.log(`Galois Steps: ${options.galoisSteps}`)
+      console.log(`Symmetric : ${options.symmetric}`)
 
       const setParameterState = opts => {
         schemeType =
@@ -101,6 +107,8 @@ export default ({ seal }) =>
         coeffModulusBitSizes = Int32Array.from(opts.coeffModulusBitSizes)
         plainModulusBitSize = opts.plainModulusBitSize
         expandModChain = opts.expandModChain
+        galoisSteps = Int32Array.from(opts.galoisSteps)
+        symmetric = opts.symmetric
       }
 
       const createParams = () => {
@@ -141,6 +149,10 @@ export default ({ seal }) =>
         evaluator = morfix.Evaluator(context)
       }
       const createEncryptor = () => {
+        if (symmetric) {
+          encryptor = morfix.Encryptor(context, publicKey, secretKey)
+          return
+        }
         encryptor = morfix.Encryptor(context, publicKey)
       }
       const createDecryptor = () => {
@@ -153,42 +165,48 @@ export default ({ seal }) =>
       const loadKeys = async () => {
         const sKey = morfix.SecretKey()
         const pKey = morfix.PublicKey()
+        // const rKey = morfix.RelinKeys()
         sKey.load(context, await fs.read(secretKeyName))
         pKey.load(context, await fs.read(publicKeyName))
+        // rKey.load(context, await fs.read(relinKeyName))
         secretKey = sKey
         publicKey = pKey
+        // relinKeys = rKey
+        galoisKeys = await fs.read(galoisKeyName)
         createKeyGenerator(context, secretKey, publicKey)
       }
 
       const doKeysExist = async () =>
         fs.existsMultiple(secretKeyName, publicKeyName)
 
-      const clearKeys = () => {
+      const clearKeys = async () =>
         fs.destroyMultiple(
           secretKeyName,
           publicKeyName,
           relinKeyName,
           galoisKeyName
         )
-      }
 
       const genKeyPair = async () => {
         createKeyGenerator(context)
         secretKey = keyGenerator.getSecretKey()
         publicKey = keyGenerator.getPublicKey()
+        //relinKeys = keyGenerator.genRelinKeys()
+
+        // Generate specific galois keys
+        galoisKeys = keyGenerator.galoisKeysSave(
+          galoisSteps,
+          morfix.ComprModeType.deflate
+        )
 
         // We do not save Switching Keys because these take longer
         // to read and load than just creating new ones.
         await fs.saveMultiple([
           [secretKeyName, secretKey.save(morfix.ComprModeType.deflate)],
-          [publicKeyName, publicKey.save(morfix.ComprModeType.deflate)]
+          [publicKeyName, publicKey.save(morfix.ComprModeType.deflate)],
+          //[relinKeyName, relinKeys.save(morfix.ComprModeType.deflate)],
+          [galoisKeyName, galoisKeys]
         ])
-      }
-      const genRelinKeys = () => {
-        relinKeys = keyGenerator.genRelinKeys()
-      }
-      const genGaloisKeys = () => {
-        galoisKeys = keyGenerator.genGaloisKeys()
       }
 
       const cleanUp = () => {
@@ -324,15 +342,12 @@ export default ({ seal }) =>
       setParameterState(options)
       createParams()
       createContext()
+      // await clearKeys()
       if (await doKeysExist()) {
         await loadKeys()
       } else {
         await genKeyPair()
       }
-      // Always generate a fresh set of switching keys
-      // since saving/loading keys is much slower.
-      await genRelinKeys()
-      await genGaloisKeys()
       createEvaluator()
       createEncoder()
       createEncryptor()
@@ -353,9 +368,9 @@ export default ({ seal }) =>
         get secretKey() {
           return secretKey
         },
-        get relinKeys() {
-          return relinKeys
-        },
+        // get relinKeys() {
+        //   return relinKeys
+        // },
         get galoisKeys() {
           return galoisKeys
         }
