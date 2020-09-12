@@ -1,4 +1,16 @@
 module.exports = {
   root: true,
-  extends: '@react-native-community',
-};
+  env: {
+    es6: true,
+    browser: true
+  },
+  extends: [
+    'eslint:recommended',
+    '@react-native-community',
+    'plugin:prettier/recommended'
+  ],
+  parserOptions: {
+    ecmaVersion: 11,
+    sourceType: 'module'
+  }
+}

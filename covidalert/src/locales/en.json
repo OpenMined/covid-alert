@@ -1,0 +1,14 @@
+{
+  "common": {
+    "title": "COVID-19 Alert",
+    "message": "Patient(s) with reported COVID-19 cases have been within 100m of your current location in the past 72 hours. We suggest that you if you choose to leave, please do so calmly and quietly.",
+    "scanning": "Actively Scanning",
+    "body": "This app will <0>anonymously</0> log your location in the background and send a notification to your phone when you’re close to known previous locations of COVID-19 victims. <1>In order to work, please keep this app open on your phone.</1>",
+    "getStarted": "To get started please:",
+    "locationSharing": "Enable location sharing (always)",
+    "pushNotifications": "Enable push notifications",
+    "privacy": "How do we protect your privacy?",
+    "support": "How can I support this app?",
+    "volunteers": "Built by volunteers at"
+  }
+}
