@@ -2,7 +2,7 @@
 
 **NOTE: This repo serves as a demo for the work being done by the Private Set Intersection team here at OpenMined.** You can find their repos here:
 
-- https://github.com/OpenMined/psi.js/
+- https://github.com/OpenMined/PSI/
 - https://github.com/OpenMined/PyPSI/
 - https://github.com/OpenMined/KotlinPSI/
 - https://github.com/OpenMined/SwiftPSI/
